@@ -66,6 +66,7 @@ class Source:
     http_code: int | None = None
     saved_as: str | None = None
     note: str = ""
+    corrected_url: str | None = None
     cited_in: list[str] = field(default_factory=list)
 
     @property
@@ -95,6 +96,38 @@ def collect_sources() -> list[Source]:
                 if existing.url != url:
                     existing.note = f"also cited as {url}"
     return sorted(found.values(), key=lambda s: int(s.src_id.split("-")[1]))
+
+
+OVERRIDES_PATH = Path(__file__).resolve().parent / "source_overrides.json"
+
+
+def load_overrides() -> dict[str, dict[str, str]]:
+    """Return the hand-maintained outcomes for citations the script cannot fetch."""
+    if not OVERRIDES_PATH.exists():
+        return {}
+    raw = json.loads(OVERRIDES_PATH.read_text(encoding="utf-8"))
+    return {key: value for key, value in raw.items() if not key.startswith("_")}
+
+
+def apply_override(source: Source, entry: dict[str, str]) -> None:
+    """Record a hand-retrieved or permanently unavailable outcome on a source.
+
+    Applied before fetching, so the script does not re-request pages a human has
+    already dealt with, and does not keep hammering servers that refuse it.
+    """
+    status = entry.get("status", "")
+    source.note = entry.get("note") or entry.get("reason") or ""
+    source.corrected_url = entry.get("corrected_url") or entry.get("replacement_url")
+
+    if status == "manual":
+        source.status = "manual"
+    elif status == "replaced":
+        source.status = "replaced"
+    elif status == "duplicate_of":
+        source.status = "duplicate"
+        source.note = f"duplicate of {entry.get('of', 'another entry')}. {source.note}".strip()
+    elif status == "unavailable":
+        source.status = "unavailable"
 
 
 def classify(source: Source) -> None:
@@ -191,10 +224,64 @@ def write_manifest(sources: list[Source]) -> None:
         "| Outcome | Count |",
         "|---|---|",
     ]
-    for status in ("saved", "blocked", "dead", "error", "skipped"):
+    order = (
+        "saved",
+        "manual",
+        "replaced",
+        "duplicate",
+        "unavailable",
+        "blocked",
+        "dead",
+        "error",
+        "skipped",
+    )
+    for status in order:
         if status in by_status:
             lines.append(f"| {status} | {len(by_status[status])} |")
     lines += ["", f"Total entries: {len(sources)}", ""]
+
+    if by_status.get("manual"):
+        lines += [
+            "## Retrieved by hand",
+            "",
+            "These servers refuse automated clients, so a person saved them from a",
+            "browser. See `scripts/source_overrides.json`.",
+            "",
+            "| SRC | Corrected URL | Note |",
+            "|---|---|---|",
+        ]
+        for source in by_status["manual"]:
+            corrected = f"<{source.corrected_url}>" if source.corrected_url else "unchanged"
+            lines.append(f"| {source.src_id} | {corrected} | {source.note} |")
+        lines.append("")
+
+    if by_status.get("replaced"):
+        lines += [
+            "## Substituted sources",
+            "",
+            "The original is gone and a different page was used. **Read the note before",
+            "relying on any of these**: a substitute is not automatically equivalent.",
+            "",
+            "| SRC | Replacement | Note |",
+            "|---|---|---|",
+        ]
+        for source in by_status["replaced"]:
+            lines.append(f"| {source.src_id} | <{source.corrected_url}> | {source.note} |")
+        lines.append("")
+
+    if by_status.get("unavailable") or by_status.get("duplicate"):
+        lines += [
+            "## Cannot be archived",
+            "",
+            "Permanently unavailable, or not a real source. Any claim resting on one of",
+            "these needs a new citation or needs removing.",
+            "",
+            "| SRC | Reason |",
+            "|---|---|",
+        ]
+        for source in by_status.get("unavailable", []) + by_status.get("duplicate", []):
+            lines.append(f"| {source.src_id} | {source.note} |")
+        lines.append("")
 
     if by_status.get("blocked"):
         lines += [
@@ -256,6 +343,13 @@ def main() -> int:
     for source in sources:
         classify(source)
 
+    overrides = load_overrides()
+    for source in sources:
+        if source.src_id in overrides:
+            apply_override(source, overrides[source.src_id])
+    handled = {s.src_id for s in sources if s.status != "pending"}
+    to_fetch = [s for s in sources if s.src_id not in handled]
+
     print(
         f"Found {len(sources)} unique citations across {len(list(RESEARCH_DIR.glob('*.md')))} documents."
     )
@@ -263,14 +357,16 @@ def main() -> int:
     session = requests.Session()
     session.headers.update({"User-Agent": USER_AGENT})
 
+    print(f"{len(handled)} handled by scripts/source_overrides.json, {len(to_fetch)} to fetch.")
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
-        futures = [pool.submit(fetch, s, session, dry_run=args.dry_run) for s in sources]
+        futures = [pool.submit(fetch, s, session, dry_run=args.dry_run) for s in to_fetch]
         for done, future in enumerate(concurrent.futures.as_completed(futures), start=1):
             result = future.result()
-            print(f"  [{done:3d}/{len(sources)}] {result.status:8s} {result.src_id}")
+            print(f"  [{done:3d}/{len(to_fetch)}] {result.status:11s} {result.src_id}")
 
     if args.wayback:
-        unreachable = [s for s in sources if s.status in {"blocked", "dead", "error"}]
+        unreachable = [s for s in to_fetch if s.status in {"blocked", "dead", "error"}]
         print(f"Requesting Wayback snapshots for {len(unreachable)} unreachable sources.")
         for source in unreachable:
             request_wayback(source, session)

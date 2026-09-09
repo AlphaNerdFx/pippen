@@ -85,6 +85,17 @@ after an implementation tend to assert what the code *does* rather than what it
 **Record significant decisions as ADRs** in `docs/architecture/decisions/`,
 before acting rather than after. The reasoning outlives the conclusion.
 
+**Never write a polling loop in a shell command.** No `until <cond>; do sleep N;
+done`, no `while true`. A polling loop has no upper bound, so any failure that
+prevents the condition being met turns a wait into a hang, and a hang is
+indistinguishable from slow progress. Use one of these instead:
+
+- foreground with an explicit `timeout`, which is a bound;
+- background execution, then read the output file **once**;
+- a command that exits on its own rather than one that waits for a state.
+
+If a bound genuinely cannot be expressed, say so rather than looping.
+
 ---
 
 ## Project Overview

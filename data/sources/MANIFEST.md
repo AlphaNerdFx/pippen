@@ -13,49 +13,58 @@ python scripts/archive_sources.py
 | Outcome | Count |
 |---|---|
 | saved | 135 |
-| blocked | 15 |
-| dead | 6 |
-| error | 1 |
+| manual | 15 |
+| replaced | 1 |
+| duplicate | 1 |
+| unavailable | 5 |
 
 Total entries: 157
 
-## Save these by hand
+## Retrieved by hand
 
-These servers refuse automated clients. Open each in a browser and
-print to PDF into `data/sources/pdf/` using the filename given.
+These servers refuse automated clients, so a person saved them from a
+browser. See `scripts/source_overrides.json`.
 
-| SRC | Save as | URL |
+| SRC | Corrected URL | Note |
 |---|---|---|
-| SRC-10 | `SRC-010__www-breakthroughbasketball-com.pdf` | <https://www.breakthroughbasketball.com/stats/definitions> |
-| SRC-12 | `SRC-012__basketball-realgm-com.pdf` | <https://basketball.realgm.com/info/glossary> |
-| SRC-17 | `SRC-017__red-library-usd-edu.pdf` | <https://red.library.usd.edu/cgi/viewcontent.cgi?article=1013&context=honors-thesis> |
-| SRC-18 | `SRC-018__www-sports-reference-com.pdf` | <https://www.sports-reference.com/cbb/about/ws.html> |
-| SRC-28 | `SRC-028__sports-stackexchange-com.pdf` | <https://sports.stackexchange.com/questions/13810/how-did-hollinger-come-up-with-his-per-formula> |
-| SRC-64 | `SRC-064__podimo-com.pdf` | <https://podimo.com/en/shows/net-wins-podcast/episode/cf27b826-e62d-5fbe-8b12-e8779a2d10ac> |
-| SRC-73 | `SRC-073__squared2020-com.pdf` | <https://squared2020.com/2019/10/03/exercising-error-quantifying-statistical-tests-under-rapm-part-iv/> |
-| SRC-84 | `SRC-084__www-academia-edu.pdf` | <https://www.academia.edu/120350593/A_method_to_compute_standard_errors_in_per_minute_performance_metrics_in_basketball> |
-| SRC-125 | `SRC-125__air-uniud-it.pdf` | <https://air.uniud.it/retrieve/handle/11390/1195276/509468/IMA_Accepted2020_withname.pdf> |
-| SRC-166 | `SRC-166__www-libhunt-com.pdf` | <https://www.libhunt.com/topic/basketball> |
-| SRC-167 | `SRC-167__www-libhunt-com.pdf` | <https://www.libhunt.com/topic/sports-analytics> |
-| SRC-169 | `SRC-169__dl-acm-org.pdf` | <https://dl.acm.org/doi/10.1145/3292500.3330701> |
-| SRC-176 | `SRC-176__www-techrxiv-org.pdf` | <https://www.techrxiv.org/doi/pdf/10.36227/techrxiv.177006540.07826863/v1> |
-| SRC-211 | `SRC-211__www-xscanhub-com.pdf` | <https://www.xscanhub.com/apis/nba-com> |
-| SRC-221 | `SRC-221__squared2020-com.pdf` | <https://squared2020.com/2026/04/29/the-historical-rapm-project/> |
+| SRC-10 | unchanged | Server refuses automated clients. |
+| SRC-12 | unchanged | Server refuses automated clients. |
+| SRC-17 | unchanged | Institutional repository blocks scripted download. |
+| SRC-18 | unchanged | Sports-Reference blocks automated clients. |
+| SRC-28 | unchanged | Stack Exchange blocks scripted fetches. |
+| SRC-38 | <https://www.si.com/wnba/bringing-advanced-stats-to-wnba-how-to-fix-plus-minus> | The cited URL 404s because of one extra word in the slug: it reads 'to-the-wnba' where the live page is 'to-wnba'. Corrected URL verified live. This is a typo in the bibliography, not a dead link. |
+| SRC-39 | unchanged | Original nbastuffer URL returns 404. Only a screenshot could be recovered. This is the sole support for EPM's 85-90% reliability figure, so that claim now rests on an image of a dead page and must be re-sourced or dropped. |
+| SRC-73 | unchanged | squared2020.com rate-limits automated clients (HTTP 429). |
+| SRC-84 | unchanged | Academia.edu requires a session. |
+| SRC-112 | unchanged | Original bball-index about-the-data URL returns 404. Retrieved via search. Supports the PIPM methodology claims. |
+| SRC-166 | unchanged | LibHunt blocks automated clients. |
+| SRC-167 | unchanged | LibHunt blocks automated clients. |
+| SRC-169 | unchanged | ACM Digital Library requires a session. This is the Optuna paper. |
+| SRC-176 | unchanged | TechRxiv blocks scripted download. |
+| SRC-221 | <https://squared2020.com/2026/04/29/the-historical-rapm-project/> | The Historical RAPM Project. This is the reference the week-4 RAPM validation gate compares against, so it was the highest-priority manual retrieval. |
 
-## Broken citations
+## Substituted sources
 
-These no longer resolve. A claim resting on one of these needs a new
-source or needs removing.
+The original is gone and a different page was used. **Read the note before
+relying on any of these**: a substitute is not automatically equivalent.
 
-| SRC | Problem | Title | URL |
-|---|---|---|---|
-| SRC-38 | HTTP 404 | Bringing Advanced Stats to the WNBA: How to Fix Plus-Minus | <https://www.si.com/wnba/bringing-advanced-stats-to-the-wnba-how-to-fix-plus-minus> |
-| SRC-39 | HTTP 404 | Estimated Plus-Minus - NBAstuffer | <https://www.nbastuffer.com/analytics101/estimated-minus/> |
-| SRC-42 | HTTP 404 | Estimated Plus-Minus (EPM) - NBAstuffer | <https://www.nbastuffer.com/analytics101/estimated-minus/> |
-| SRC-86 | HTTP 404 | [PDF] Predicting NBA Success from NCAA Stats | <https://pages.stat.wisc.edu/~jgillett/451/project/presentations/19.pdf> |
-| SRC-96 | empty response | FiveThirtyEight: NBA playoff predictions | <https://www.espn.com/espn/story/_/id/15581502/nba-playoff-predictions> |
-| SRC-112 | HTTP 404 | About the Data - Basketball Index | <https://www.bball-index.com/about/about-the-data/> |
-| SRC-26 | ConnectionError | The Ultimate PER Guide | <https://www.cryptbeam.com/2022/05/11/the-ultimate-per-guide-untangling-john-hollingers-analytics-lovechild/> |
+| SRC | Replacement | Note |
+|---|---|---|
+| SRC-96 | <https://www.espn.com/nba/story/_/id/48477478/2026-nba-playoff-expert-picks-play-first-round-matchups> | NOT EQUIVALENT. The original was a FiveThirtyEight playoff-prediction piece; the replacement is a 2026 ESPN expert-picks article. Do not treat as support for the original claim without re-reading it. |
+
+## Cannot be archived
+
+Permanently unavailable, or not a real source. Any claim resting on one of
+these needs a new citation or needs removing.
+
+| SRC | Reason |
+|---|---|
+| SRC-26 | cryptbeam.com was a fan site and is no longer active. No archive recovered. The PER formula breakdown it supported is available from SRC-16 (Wikipedia) instead. |
+| SRC-64 | podimo.com is a podcast platform. The cited page is an episode description, not a written source. The research tool appears to have read the description text and treated it as an article. Not citable. |
+| SRC-86 | pages.stat.wisc.edu student presentation, returns 404. Course material, likely removed at semester end. |
+| SRC-125 | air.uniud.it institutional repository refuses automated clients and was not retrieved by hand. Still outstanding. |
+| SRC-211 | xscanhub.com returns HTTP 402 Payment Required. A commercial API directory, not a documentation source. |
+| SRC-42 | duplicate of SRC-39. Same dead URL as SRC-39, cited under a second identifier. |
 
 ## Archived
 

@@ -60,6 +60,24 @@ def test_downloads_a_season() -> None: ...
 
 CI runs `-m "not network"` by default so the suite stays fast and offline-safe.
 
+## Shell scripts and CI steps
+
+Never poll in a loop. `until <cond>; do sleep N; done` and `while true` have no
+upper bound, so any failure that stops the condition being met turns a wait into
+a hang, and a hang looks exactly like slow progress from outside.
+
+```bash
+# Wrong: hangs forever if the file never appears
+until [ -f result.json ]; do sleep 5; done
+
+# Right: bounded, and fails loudly
+timeout 300 ./generate-result.sh
+test -f result.json || { echo "generator produced no result" >&2; exit 1; }
+```
+
+Every long-running CI step carries an explicit `timeout-minutes` for the same
+reason.
+
 ## Commit messages
 
 This project uses [Conventional Commits](https://www.conventionalcommits.org/).

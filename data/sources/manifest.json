@@ -8,6 +8,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-004__en-wikipedia-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "nba_metric_sources.md"
@@ -22,6 +23,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-006__www-sportsvisio-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "nba_metric_sources.md"
@@ -32,10 +34,11 @@
     "title": "Basketball Stats Explained",
     "url": "https://www.breakthroughbasketball.com/stats/definitions",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "Server refuses automated clients.",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -52,6 +55,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-011__bleacherreport-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -64,10 +68,11 @@
     "title": "RealGM Stats Legend",
     "url": "https://basketball.realgm.com/info/glossary",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "Server refuses automated clients.",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "nba_metric_sources.md"
@@ -82,6 +87,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-014__www-nbastuffer-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -95,6 +101,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-015__www-reddit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -111,6 +118,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-016__en-wikipedia-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -123,10 +131,11 @@
     "title": "Win Shares & Rookie Contracts",
     "url": "https://red.library.usd.edu/cgi/viewcontent.cgi?article=1013&context=honors-thesis",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "Institutional repository blocks scripted download.",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -139,10 +148,11 @@
     "title": "Calculating Win Shares",
     "url": "https://www.sports-reference.com/cbb/about/ws.html",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "Sports-Reference blocks automated clients.",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md"
     ]
@@ -156,6 +166,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-020__en-wikipedia-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -169,6 +180,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-021__www-basketball-reference-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "nba_metric_sources.md"
@@ -183,6 +195,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-022__ruor-uottawa-ca.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -196,6 +209,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-023__fansided-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -205,10 +219,11 @@
     "title": "The Ultimate PER Guide",
     "url": "https://www.cryptbeam.com/2022/05/11/the-ultimate-per-guide-untangling-john-hollingers-analytics-lovechild/",
     "kind": "html",
-    "status": "error",
+    "status": "unavailable",
     "http_code": null,
     "saved_as": null,
-    "note": "ConnectionError",
+    "note": "cryptbeam.com was a fan site and is no longer active. No archive recovered. The PER formula breakdown it supported is available from SRC-16 (Wikipedia) instead.",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "nba_metric_sources.md"
@@ -219,10 +234,11 @@
     "title": "How did Hollinger come up with his PER formula?",
     "url": "https://sports.stackexchange.com/questions/13810/how-did-hollinger-come-up-with-his-per-formula",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "Stack Exchange blocks scripted fetches.",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -236,6 +252,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-029__www-reddit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -249,6 +266,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-030__www-reddit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -265,6 +283,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-033__en-wikipedia-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -278,6 +297,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-034__arxiv-2601-15000.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -295,6 +315,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-035__arxiv-2601-15000.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "04_expansion_ideas.md",
       "05_references.md",
@@ -310,6 +331,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-036__dunksandthrees-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "04_expansion_ideas.md",
@@ -328,6 +350,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-037__dunksandthrees-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -339,10 +362,11 @@
     "title": "Bringing Advanced Stats to the WNBA: How to Fix Plus-Minus",
     "url": "https://www.si.com/wnba/bringing-advanced-stats-to-the-wnba-how-to-fix-plus-minus",
     "kind": "html",
-    "status": "dead",
-    "http_code": 404,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "HTTP 404",
+    "note": "The cited URL 404s because of one extra word in the slug: it reads 'to-the-wnba' where the live page is 'to-wnba'. Corrected URL verified live. This is a typo in the bibliography, not a dead link.",
+    "corrected_url": "https://www.si.com/wnba/bringing-advanced-stats-to-wnba-how-to-fix-plus-minus",
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -352,10 +376,11 @@
     "title": "Estimated Plus-Minus - NBAstuffer",
     "url": "https://www.nbastuffer.com/analytics101/estimated-minus/",
     "kind": "html",
-    "status": "dead",
-    "http_code": 404,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "HTTP 404",
+    "note": "Original nbastuffer URL returns 404. Only a screenshot could be recovered. This is the sole support for EPM's 85-90% reliability figure, so that claim now rests on an image of a dead page and must be re-sourced or dropped.",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -372,6 +397,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-040__www-reddit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -387,6 +413,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-041__datafield-dev.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -396,10 +423,11 @@
     "title": "Estimated Plus-Minus (EPM) - NBAstuffer",
     "url": "https://www.nbastuffer.com/analytics101/estimated-minus/",
     "kind": "html",
-    "status": "dead",
-    "http_code": 404,
+    "status": "duplicate",
+    "http_code": null,
     "saved_as": null,
-    "note": "HTTP 404",
+    "note": "duplicate of SRC-39. Same dead URL as SRC-39, cited under a second identifier.",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -413,6 +441,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-043__metricgate-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -426,6 +455,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-044__metricgate-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -442,6 +472,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-045__www-roycewebb-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -455,6 +486,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-046__arxiv-2305-13032.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "04_expansion_ideas.md",
@@ -473,6 +505,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-047__www-basketball-reference-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -489,6 +522,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-048__www-nba-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -502,6 +536,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-049__hoopshabit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "04_expansion_ideas.md",
@@ -520,6 +555,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-050__www-apbr-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -533,6 +569,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-051__www-nbastuffer-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "08_data_pipeline_compliance.md",
@@ -548,6 +585,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-052__basketballstat-home-blog.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "nba_metric_sources.md"
@@ -562,6 +600,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-054__www-reddit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -579,6 +618,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-055__basketballbetstrategy-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "04_expansion_ideas.md",
@@ -596,6 +636,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-056__www-sportsgamblingpodcast-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -609,6 +650,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-057__nbaanalytic-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -622,6 +664,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-061__arxiv-2605-24056.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -631,10 +674,11 @@
     "title": "Net Wins vs. Everything Else",
     "url": "https://podimo.com/en/shows/net-wins-podcast/episode/cf27b826-e62d-5fbe-8b12-e8779a2d10ac",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "unavailable",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "podimo.com is a podcast platform. The cited page is an episode description, not a written source. The research tool appears to have read the description text and treated it as an article. Not citable.",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -648,6 +692,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-067__www-reddit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -664,6 +709,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-068__www-roycewebb-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -677,6 +723,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-069__www-kheljournal-com.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -690,6 +737,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-071__www-dept-aueb-gr.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "nba_metric_sources.md"
@@ -700,10 +748,11 @@
     "title": "Exercising Error: Quantifying Statistical Tests Under RAPM ...",
     "url": "https://squared2020.com/2019/10/03/exercising-error-quantifying-statistical-tests-under-rapm-part-iv/",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 429,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "rate limited; save from a browser",
+    "note": "squared2020.com rate-limits automated clients (HTTP 429).",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -717,6 +766,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-075__basketballanalyticslab-substack-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -730,6 +780,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-076__medium-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -746,6 +797,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-077__betmana-co-uk.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "04_expansion_ideas.md",
@@ -764,6 +816,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-078__www-bball-index-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -779,6 +832,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-080__fivethirtyeight-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "04_expansion_ideas.md",
@@ -796,6 +850,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-081__github-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -809,6 +864,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-082__www-nbastuffer-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -822,6 +878,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-083__www-reddit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -831,10 +888,11 @@
     "title": "A method to compute standard errors in per-minute performance metrics in basketball",
     "url": "https://www.academia.edu/120350593/A_method_to_compute_standard_errors_in_per_minute_performance_metrics_in_basketball",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "Academia.edu requires a session.",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -848,6 +906,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-085__nbaanalytic-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -857,10 +916,11 @@
     "title": "[PDF] Predicting NBA Success from NCAA Stats",
     "url": "https://pages.stat.wisc.edu/~jgillett/451/project/presentations/19.pdf",
     "kind": "pdf",
-    "status": "dead",
-    "http_code": 404,
+    "status": "unavailable",
+    "http_code": null,
     "saved_as": null,
-    "note": "HTTP 404",
+    "note": "pages.stat.wisc.edu student presentation, returns 404. Course material, likely removed at semester end.",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -874,6 +934,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-087__www-nbastuffer-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "04_expansion_ideas.md",
       "05_references.md",
@@ -889,6 +950,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-088__arxiv-2406-09895.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "nba_metric_sources.md"
@@ -903,6 +965,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-089__arxiv-2601-15000.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -919,6 +982,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-090__www-bball-index-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -935,6 +999,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-091__nbaanalytic-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "nba_metric_sources.md"
@@ -949,6 +1014,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-092__apbr-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -965,6 +1031,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-094__www-nbastuffer-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -978,6 +1045,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-095__www-nbastuffer-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -987,10 +1055,11 @@
     "title": "FiveThirtyEight: NBA playoff predictions",
     "url": "https://www.espn.com/espn/story/_/id/15581502/nba-playoff-predictions",
     "kind": "html",
-    "status": "dead",
-    "http_code": 202,
+    "status": "replaced",
+    "http_code": null,
     "saved_as": null,
-    "note": "empty response",
+    "note": "NOT EQUIVALENT. The original was a FiveThirtyEight playoff-prediction piece; the replacement is a 2026 ESPN expert-picks article. Do not treat as support for the original claim without re-reading it.",
+    "corrected_url": "https://www.espn.com/nba/story/_/id/48477478/2026-nba-playoff-expert-picks-play-first-round-matchups",
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1004,6 +1073,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-097__fivethirtyeight-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "04_expansion_ideas.md",
@@ -1021,6 +1091,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-099__fivethirtyeight-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "04_expansion_ideas.md",
@@ -1037,6 +1108,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-101__www-foxsports-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1050,6 +1122,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-102__fivethirtyeight-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1063,6 +1136,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-103__fivethirtyeight-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1076,6 +1150,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-104__fivethirtyeight-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "nba_metric_sources.md"
@@ -1090,6 +1165,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-105__fivethirtyeight-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "04_expansion_ideas.md",
       "05_references.md",
@@ -1105,6 +1181,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-106__www-nbastuffer-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "04_expansion_ideas.md",
       "05_references.md",
@@ -1120,6 +1197,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-108__www-reddit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1133,6 +1211,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-109__www-apbr-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1146,6 +1225,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-110__stanfordsportsanalytics-wordpress-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1159,6 +1239,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-111__wsb-wharton-upenn-edu.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -1171,10 +1252,11 @@
     "title": "About the Data - Basketball Index",
     "url": "https://www.bball-index.com/about/about-the-data/",
     "kind": "html",
-    "status": "dead",
-    "http_code": 404,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "HTTP 404",
+    "note": "Original bball-index about-the-data URL returns 404. Retrieved via search. Supports the PIPM methodology claims.",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "nba_metric_sources.md"
@@ -1189,6 +1271,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-113__fansided-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -1205,6 +1288,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-120__www-bball-index-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1218,6 +1302,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-122__forums-realgm-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1231,6 +1316,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-124__www-reddit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md",
@@ -1243,10 +1329,11 @@
     "title": "Universit\u00e0 degli studi di Udine - UNIUD",
     "url": "https://air.uniud.it/retrieve/handle/11390/1195276/509468/IMA_Accepted2020_withname.pdf",
     "kind": "pdf",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "unavailable",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "air.uniud.it institutional repository refuses automated clients and was not retrieved by hand. Still outstanding.",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1260,6 +1347,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-126__www-bball-index-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1273,6 +1361,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-127__www-nbastuffer-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1286,6 +1375,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-128__nbacouchside-net.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1299,6 +1389,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-129__hive-blog.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1312,6 +1403,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-130__medium-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1325,6 +1417,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-131__www-nbastuffer-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1338,6 +1431,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-132__fivethirtyeight-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "04_expansion_ideas.md",
       "05_references.md",
@@ -1354,6 +1448,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-133__www-nbastuffer-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md"
@@ -1368,6 +1463,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-134__basketballstat-home-blog.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1381,6 +1477,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-135__orlandomagicdaily-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1394,6 +1491,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-136__www-reddit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1407,6 +1505,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-137__www-goldenstateofmind-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1420,6 +1519,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-138__www-informationisbeautifulawards-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "nba_metric_sources.md"
     ]
@@ -1433,6 +1533,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-141__arxiv-2503-23314.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1448,6 +1549,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-142__newgensoft-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1463,6 +1565,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-145__www-hcl-software-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "02_deployment_stack.md",
@@ -1479,6 +1582,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-146__services-google-com.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "02_deployment_stack.md",
@@ -1496,6 +1600,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-148__thecuberesearch-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1511,6 +1616,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-150__creati-ai.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "02_deployment_stack.md",
@@ -1527,6 +1633,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-151__checkthat-ai.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1542,6 +1649,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-153__www-analyticsengineering-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1557,6 +1665,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-154__mlflow-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "02_deployment_stack.md",
@@ -1573,6 +1682,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-155__mlflow-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "02_deployment_stack.md",
       "05_references.md"
@@ -1587,6 +1697,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-156__mlflow-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "02_deployment_stack.md",
@@ -1603,6 +1714,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-158__mlflow-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "02_deployment_stack.md",
       "03_ai_tools_assistance.md",
@@ -1618,6 +1730,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-159__github-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "04_expansion_ideas.md",
       "05_references.md"
@@ -1632,6 +1745,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-160__github-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "04_expansion_ideas.md",
       "05_references.md"
@@ -1646,6 +1760,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-161__kodekloud-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "02_deployment_stack.md",
       "03_ai_tools_assistance.md",
@@ -1661,6 +1776,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-162__github-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "04_expansion_ideas.md",
       "05_references.md"
@@ -1675,6 +1791,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-165__mlflow-openml-io.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "02_deployment_stack.md",
       "03_ai_tools_assistance.md",
@@ -1686,10 +1803,11 @@
     "title": "Top 17 Basketball Open-Source Projects",
     "url": "https://www.libhunt.com/topic/basketball",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "LibHunt blocks automated clients.",
+    "corrected_url": null,
     "cited_in": [
       "04_expansion_ideas.md",
       "05_references.md"
@@ -1700,10 +1818,11 @@
     "title": "Top 23 Sports-Analytic Open-Source Projects",
     "url": "https://www.libhunt.com/topic/sports-analytics",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "LibHunt blocks automated clients.",
+    "corrected_url": null,
     "cited_in": [
       "04_expansion_ideas.md",
       "05_references.md"
@@ -1718,6 +1837,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-168__www-sportsdataverse-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "04_expansion_ideas.md",
       "05_references.md",
@@ -1729,10 +1849,11 @@
     "title": "Optuna: Next-generation Hyperparameter Optimization",
     "url": "https://dl.acm.org/doi/10.1145/3292500.3330701",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "ACM Digital Library requires a session. This is the Optuna paper.",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1748,6 +1869,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-173__optuna-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1763,6 +1885,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-174__www-nytimes-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "04_expansion_ideas.md",
@@ -1780,6 +1903,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-175__meetings-ams-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "05_references.md"
@@ -1790,10 +1914,11 @@
     "title": "Interpretable Athlete Performance Modelling",
     "url": "https://www.techrxiv.org/doi/pdf/10.36227/techrxiv.177006540.07826863/v1",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 403,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "TechRxiv blocks scripted download.",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1809,6 +1934,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-177__learn-microsoft-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1824,6 +1950,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-178__arxiv-2305-02012.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1839,6 +1966,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-179__medium-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1854,6 +1982,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-180__medium-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1869,6 +1998,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-183__medium-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "01_development_pipeline.md",
       "03_ai_tools_assistance.md",
@@ -1884,6 +2014,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-184__pypi-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md"
     ]
@@ -1897,6 +2028,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-187__github-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md"
     ]
@@ -1910,6 +2042,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-188__hoopr-sportsdataverse-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "08_data_pipeline_compliance.md"
@@ -1924,6 +2057,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-190__www-sportsdataverse-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "08_data_pipeline_compliance.md"
@@ -1938,6 +2072,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-191__www-sportsdataverse-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md"
     ]
@@ -1951,6 +2086,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-192__sportsdataverse-r-universe-dev.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md"
     ]
@@ -1964,6 +2100,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-193__hoopr-sportsdataverse-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "07_data_categorization.md",
@@ -1979,6 +2116,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-194__hoopr-sportsdataverse-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "07_data_categorization.md",
@@ -1994,6 +2132,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-195__sportsdataverse-py-sportsdataverse-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md"
     ]
@@ -2007,6 +2146,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-197__www-sportapidata-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "07_data_categorization.md",
@@ -2022,6 +2162,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-198__nbaanalytic-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "07_data_categorization.md",
@@ -2037,6 +2178,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-199__pypi-org.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md"
     ]
@@ -2050,6 +2192,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-203__github-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "07_data_categorization.md",
@@ -2065,6 +2208,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-204__github-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "07_data_categorization.md",
@@ -2080,6 +2224,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-207__datafield-dev.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "07_data_categorization.md",
@@ -2095,6 +2240,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-208__nbaanalytic-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md"
     ]
@@ -2108,6 +2254,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-209__www-apisports-net.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "08_data_pipeline_compliance.md"
@@ -2122,6 +2269,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-210__openpublicapis-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md"
     ]
@@ -2131,10 +2279,11 @@
     "title": "NBA Stats API",
     "url": "https://www.xscanhub.com/apis/nba-com",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 402,
+    "status": "unavailable",
+    "http_code": null,
     "saved_as": null,
-    "note": "server refuses automated clients; save from a browser",
+    "note": "xscanhub.com returns HTTP 402 Payment Required. A commercial API directory, not a documentation source.",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "08_data_pipeline_compliance.md"
@@ -2149,6 +2298,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-212__www-reddit-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "08_data_pipeline_compliance.md"
@@ -2163,6 +2313,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-214__pmc-ncbi-nlm-nih-gov.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "07_data_categorization.md",
@@ -2178,6 +2329,7 @@
     "http_code": null,
     "saved_as": "data/sources/pdf/SRC-215__www2-stat-athens-aueb-gr.pdf",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "07_data_categorization.md",
@@ -2193,6 +2345,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-217__sportradar-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "07_data_categorization.md"
@@ -2207,6 +2360,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-218__dunksandthrees-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "08_data_pipeline_compliance.md"
@@ -2221,6 +2375,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-219__www-darko-app.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "07_data_categorization.md",
       "08_data_pipeline_compliance.md"
@@ -2235,6 +2390,7 @@
     "http_code": null,
     "saved_as": "data/sources/html/SRC-220__medium-com.html",
     "note": "already present",
+    "corrected_url": null,
     "cited_in": [
       "06_data_sources.md",
       "07_data_categorization.md",
@@ -2246,10 +2402,11 @@
     "title": "The Historical RAPM Project",
     "url": "https://squared2020.com/2026/04/29/the-historical-rapm-project/",
     "kind": "html",
-    "status": "blocked",
-    "http_code": 429,
+    "status": "manual",
+    "http_code": null,
     "saved_as": null,
-    "note": "rate limited; save from a browser",
+    "note": "The Historical RAPM Project. This is the reference the week-4 RAPM validation gate compares against, so it was the highest-priority manual retrieval.",
+    "corrected_url": "https://squared2020.com/2026/04/29/the-historical-rapm-project/",
     "cited_in": [
       "08_data_pipeline_compliance.md"
     ]

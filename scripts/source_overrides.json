@@ -1,0 +1,137 @@
+{
+  "_comment": [
+    "Manual outcomes for citations the archiver cannot fetch.",
+    "Checked into git so the knowledge survives regenerating data/sources/.",
+    "status: manual   = retrieved by hand, file listed in saved_from",
+    "        replaced = original dead, a different URL was substituted",
+    "        unavailable = cannot be archived at all; reason given"
+  ],
+  "SRC-10": {
+    "status": "manual",
+    "saved_from": "breakthroughbasketballstats.txt",
+    "kind": "html",
+    "note": "Server refuses automated clients."
+  },
+  "SRC-12": {
+    "status": "manual",
+    "saved_from": "basketballrealgm.txt",
+    "kind": "html",
+    "note": "Server refuses automated clients."
+  },
+  "SRC-17": {
+    "status": "manual",
+    "saved_from": "Win Shares Rookie Contracts in the NBA.pdf",
+    "kind": "pdf",
+    "note": "Institutional repository blocks scripted download."
+  },
+  "SRC-18": {
+    "status": "manual",
+    "saved_from": "sportsreference.txt",
+    "kind": "html",
+    "note": "Sports-Reference blocks automated clients."
+  },
+  "SRC-28": {
+    "status": "manual",
+    "saved_from": "sportsstackexchange.txt",
+    "kind": "html",
+    "note": "Stack Exchange blocks scripted fetches."
+  },
+  "SRC-38": {
+    "status": "manual",
+    "saved_from": "sihowtofixplusminus.txt",
+    "kind": "html",
+    "original_dead": true,
+    "note": "The cited URL 404s because of one extra word in the slug: it reads 'to-the-wnba' where the live page is 'to-wnba'. Corrected URL verified live. This is a typo in the bibliography, not a dead link.",
+    "corrected_url": "https://www.si.com/wnba/bringing-advanced-stats-to-wnba-how-to-fix-plus-minus"
+  },
+  "SRC-39": {
+    "status": "manual",
+    "saved_from": "nbastuffer_estimated_plus_minus.png",
+    "kind": "image",
+    "original_dead": true,
+    "note": "Original nbastuffer URL returns 404. Only a screenshot could be recovered. This is the sole support for EPM's 85-90% reliability figure, so that claim now rests on an image of a dead page and must be re-sourced or dropped."
+  },
+  "SRC-42": {
+    "status": "duplicate_of",
+    "of": "SRC-39",
+    "note": "Same dead URL as SRC-39, cited under a second identifier."
+  },
+  "SRC-73": {
+    "status": "manual",
+    "saved_from": "squared2020.txt",
+    "kind": "html",
+    "note": "squared2020.com rate-limits automated clients (HTTP 429)."
+  },
+  "SRC-84": {
+    "status": "manual",
+    "saved_from": "A_method_to_compute_standard_errors_in_p.pdf",
+    "kind": "pdf",
+    "note": "Academia.edu requires a session."
+  },
+  "SRC-96": {
+    "status": "replaced",
+    "saved_from": "new link for espn prediction playoff.txt",
+    "kind": "url",
+    "replacement_url": "https://www.espn.com/nba/story/_/id/48477478/2026-nba-playoff-expert-picks-play-first-round-matchups",
+    "original_dead": true,
+    "note": "NOT EQUIVALENT. The original was a FiveThirtyEight playoff-prediction piece; the replacement is a 2026 ESPN expert-picks article. Do not treat as support for the original claim without re-reading it."
+  },
+  "SRC-112": {
+    "status": "manual",
+    "saved_from": "basketball index text.txt",
+    "kind": "html",
+    "original_dead": true,
+    "note": "Original bball-index about-the-data URL returns 404. Retrieved via search. Supports the PIPM methodology claims."
+  },
+  "SRC-166": {
+    "status": "manual",
+    "saved_from": "libhunt basketball.txt",
+    "kind": "html",
+    "note": "LibHunt blocks automated clients."
+  },
+  "SRC-167": {
+    "status": "manual",
+    "saved_from": "libhunt sports analytics.txt",
+    "kind": "html",
+    "note": "LibHunt blocks automated clients."
+  },
+  "SRC-169": {
+    "status": "manual",
+    "saved_from": "3292500.3330701.pdf",
+    "kind": "pdf",
+    "note": "ACM Digital Library requires a session. This is the Optuna paper."
+  },
+  "SRC-176": {
+    "status": "manual",
+    "saved_from": "techrxiv.177006540.07826863_v1.pdf",
+    "kind": "pdf",
+    "note": "TechRxiv blocks scripted download."
+  },
+  "SRC-221": {
+    "status": "manual",
+    "saved_from": "squared2020_2.txt",
+    "kind": "html",
+    "note": "The Historical RAPM Project. This is the reference the week-4 RAPM validation gate compares against, so it was the highest-priority manual retrieval.",
+    "corrected_url": "https://squared2020.com/2026/04/29/the-historical-rapm-project/"
+  },
+  "SRC-26": {
+    "status": "unavailable",
+    "reason": "cryptbeam.com was a fan site and is no longer active. No archive recovered. The PER formula breakdown it supported is available from SRC-16 (Wikipedia) instead."
+  },
+  "SRC-64": {
+    "status": "unavailable",
+    "reason": "podimo.com is a podcast platform. The cited page is an episode description, not a written source. The research tool appears to have read the description text and treated it as an article. Not citable."
+  },
+  "SRC-86": {
+    "status": "unavailable",
+    "reason": "pages.stat.wisc.edu student presentation, returns 404. Course material, likely removed at semester end."
+  },
+  "SRC-125": {
+    "status": "unavailable",
+    "reason": "air.uniud.it institutional repository refuses automated clients and was not retrieved by hand. Still outstanding."
+  },
+  "SRC-211": {
+    "status": "unavailable",
+    "reason": "xscanhub.com returns HTTP 402 Payment Required. A commercial API directory, not a documentation source."
+  }
+}
