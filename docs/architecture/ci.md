@@ -47,6 +47,33 @@ begins once the RAPM solver lands.
 make mutants
 ```
 
+### Baseline
+
+The first run on the week-0 codebase generated 93 mutants and killed 62, a
+mutation score of 67 percent. Investigating the survivors exposed five real
+gaps, all since closed:
+
+| Survivor | What no test checked |
+|---|---|
+| Error message emptied | That an unknown stage name lists the valid ones |
+| `parents=True` removed | That a data root several levels deep is created in full |
+| `PYTHONHASHSEED` key corrupted | That seeding pins Python's string-hash salt |
+| `exist_ok=True` flipped | That creating a stage directory twice does not raise |
+| `create` default flipped | That resolving a path has no side effect |
+
+Not every survivor is a defect. Two categories never die:
+
+- **Equivalent mutants**, where the change cannot alter behaviour. Rewriting
+  `encode("utf-8")` as `encode("UTF-8")` is one: Python codec names are
+  case-insensitive.
+- **Environment-dependent mutants**, where the change matters on one platform
+  and not another. Renaming the `data` directory to `DATA` survives on a
+  case-insensitive filesystem such as Windows and dies on Linux, which is why
+  the scheduled run happens on Linux.
+
+A mutation score below 100 percent is therefore normal and expected. The number
+is a prompt to investigate, not a target to hit.
+
 ---
 
 ## Benchmark regression tracking

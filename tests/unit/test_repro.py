@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import random
 
 import numpy as np
@@ -71,6 +72,15 @@ def test_seeding_makes_sampling_repeatable() -> None:
     second = (random.random(), float(np.random.rand()))
 
     assert first == second
+
+
+@pytest.mark.determinism
+def test_seeding_pins_the_string_hash_salt(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Python salts string hashing per process unless PYTHONHASHSEED is set.
+    # Anything iterating a set of player names inherits that randomness.
+    monkeypatch.delenv("PYTHONHASHSEED", raising=False)
+    set_global_seeds(4242)
+    assert os.environ["PYTHONHASHSEED"] == "4242"
 
 
 @pytest.mark.determinism

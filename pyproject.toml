@@ -157,8 +157,7 @@ filterwarnings = ["error::DeprecationWarning:pippen.*"]
 # Mutation testing deliberately breaks the source and checks that a test fails.
 # Coverage proves a line ran; this proves the line was actually verified.
 [tool.mutmut]
-paths_to_mutate = ["src/pippen/"]
-tests_dir = ["tests/"]
+source_paths = ["src/pippen/"]
 # Only offline tests: a mutant must not be killed by a network flake.
 runner = "python -m pytest -x -q -m 'not network and not benchmark' -p no:randomly"
 
