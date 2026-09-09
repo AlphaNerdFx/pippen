@@ -25,8 +25,8 @@ jobs:
     name: Lockfile is in sync
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
       # Fails when pyproject.toml and uv.lock disagree, which is how an
       # unlocked dependency silently breaks reproducibility for everyone else.
       - run: uv lock --check
@@ -35,8 +35,8 @@ jobs:
     name: Results are reproducible
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
         with:
           enable-cache: true
       - run: uv sync --extra dev
@@ -50,8 +50,8 @@ jobs:
     name: Tests pass in random order
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
         with:
           enable-cache: true
       - run: uv sync --extra dev --extra rigour
@@ -63,8 +63,8 @@ jobs:
     name: Performance regression
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
         with:
           enable-cache: true
       - run: uv sync --extra dev --extra rigour
@@ -92,8 +92,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
         with:
           enable-cache: true
       - run: uv sync --extra dev --extra rigour
@@ -103,7 +103,7 @@ jobs:
         run: uv run mutmut run || true
       - name: Summarise survivors
         run: uv run mutmut results | tee mutation-report.txt
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         with:
           name: mutation-report
           path: mutation-report.txt
