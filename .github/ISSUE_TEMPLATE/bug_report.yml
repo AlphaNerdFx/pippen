@@ -21,7 +21,7 @@ body:
     id: version
     attributes:
       label: Version
-      description: Output of `nba-impact version`, or the commit you are on.
+      description: Output of `pippen version`, or the commit you are on.
     validations:
       required: true
   - type: input

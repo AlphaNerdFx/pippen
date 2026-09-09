@@ -1,10 +1,10 @@
-site_name: nba-impact
+site_name: PIPPEN
 site_description: Reliability-adjusted NBA player impact estimates with calibrated uncertainty
-site_url: https://alphanerdfx.github.io/nba-impact/
-repo_url: https://github.com/AlphaNerdFx/nba-impact
-repo_name: AlphaNerdFx/nba-impact
+site_url: https://alphanerdfx.github.io/pippen/
+repo_url: https://github.com/AlphaNerdFx/pippen
+repo_name: AlphaNerdFx/pippen
 edit_uri: edit/main/docs/
-copyright: Copyright &copy; 2026 The nba-impact Authors. Apache-2.0.
+copyright: Copyright &copy; 2026 The PIPPEN Authors. Apache-2.0.
 
 theme:
   name: material
@@ -78,6 +78,7 @@ nav:
   - Architecture:
       - Pipeline: architecture/index.md
       - Deployment: architecture/deployment.md
+      - Continuous integration: architecture/ci.md
   - API reference:
       - paths: reference/paths.md
       - cli: reference/cli.md

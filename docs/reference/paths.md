@@ -1,3 +1,3 @@
-# `nba_impact.paths`
+# `pippen.paths`
 
-::: nba_impact.paths
+::: pippen.paths

@@ -14,5 +14,5 @@ Entries below the `Unreleased` heading are generated from
 
 - Project foundation: packaging, linting, static typing, tests, continuous
   integration, documentation scaffold, and contributor governance.
-- `nba_impact.paths` module resolving the on-disk data layout.
-- `nba-impact` command-line interface with `version` and `paths` commands.
+- `pippen.paths` module resolving the on-disk data layout.
+- `pippen` command-line interface with `version` and `paths` commands.

@@ -12,8 +12,10 @@ the repository is public; this file is the outline.
 - [x] Release workflow using PyPI Trusted Publishing
 - [x] Governance: contributing, code of conduct, security policy, templates
 - [x] Docs site scaffold, building in strict mode
-- [x] `nba_impact.paths` and the CLI skeleton
+- [x] `pippen.paths` and the CLI skeleton
 - [x] Bibliography archiver
+- [x] Rigour pipeline: mutation testing, benchmarks, determinism, lockfile drift
+- [x] Named PIPPEN; Dependabot automation off so every commit has a human author
 - [ ] Push to GitHub, enable Pages, enable private vulnerability reporting
 
 ## Weeks 1-2 — Data layer → **ship: dataset v0**

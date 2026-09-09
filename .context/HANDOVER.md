@@ -23,6 +23,10 @@ full plan. `TODO.md` holds the outline.
 | Orchestration | GitHub Actions | Airflow needs a server there is no budget for |
 | Storage | Parquet plus DuckDB | No database server needed |
 | Kubernetes | Manifests only, tested on kind | Real and tested, without paying for a cluster |
+| Name | PIPPEN | Player Impact from Pooled Priors and Estimated Noise; follows the DARKO/CARMELO convention |
+| Docs | MkDocs only, no Wiki | A wiki is a separate repo, unreviewable, and outside the strict build |
+| Dependabot | Alerts only, no automated PRs | Every commit keeps a human author; `make upgrade` applies updates |
+| Deep CI | Rigour set, not Jenkins or Sonar | Proves the numbers, not just the syntax. See docs/architecture/ci.md |
 
 ## Things a newcomer will get wrong
 
@@ -37,5 +41,5 @@ full plan. `TODO.md` holds the outline.
 
 ## The claim the whole project rests on
 
-Does RAIM predict next-season team net rating better than any single input metric
+Does PIPPEN predict next-season team net rating better than any single input metric
 does, out of sample? It has not been tested yet. If it fails, say so publicly.

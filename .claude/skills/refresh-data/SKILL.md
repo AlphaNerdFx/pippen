@@ -17,14 +17,14 @@ Do not reorder these. Validation before processing is the point.
    user asked for a full refresh.
 
    ```bash
-   uv run nba-impact fetch --seasons 2002-2025
+   uv run pippen fetch --seasons 2002-2025
    ```
 
 2. **Current season from the NBA stats endpoints.** This one always refetches,
    because games are still being played.
 
    ```bash
-   uv run nba-impact fetch --seasons 2026 --force
+   uv run pippen fetch --seasons 2026 --force
    ```
 
    Respect the rate limit. One request per second, no exceptions. Exceeding it
@@ -33,7 +33,7 @@ Do not reorder these. Validation before processing is the point.
 3. **Validate before using anything.**
 
    ```bash
-   uv run nba-impact validate --seasons 2002-2026
+   uv run pippen validate --seasons 2002-2026
    ```
 
 ## What validation checks
@@ -50,7 +50,7 @@ Do not patch files in `data/raw/`. Raw is immutable by design. Redownload the
 affected season instead:
 
 ```bash
-uv run nba-impact fetch --seasons 2019 --force
+uv run pippen fetch --seasons 2019 --force
 ```
 
 If it fails again on the same season, the upstream file is the problem. Record

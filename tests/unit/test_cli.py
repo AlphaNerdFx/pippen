@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typer.testing import CliRunner
 
-from nba_impact import __version__
-from nba_impact.cli import app
+from pippen import __version__
+from pippen.cli import app
 
 runner = CliRunner()
 

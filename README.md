@@ -1,8 +1,10 @@
-# nba-impact
+# PIPPEN
 
-**Reliability-adjusted NBA player impact estimates, with calibrated uncertainty.**
+**Player Impact from Pooled Priors and Estimated Noise.**
 
-[![CI](https://github.com/AlphaNerdFx/nba-impact/actions/workflows/ci.yml/badge.svg)](https://github.com/AlphaNerdFx/nba-impact/actions/workflows/ci.yml)
+Reliability-adjusted NBA player impact estimates, with calibrated uncertainty.
+
+[![CI](https://github.com/AlphaNerdFx/pippen/actions/workflows/ci.yml/badge.svg)](https://github.com/AlphaNerdFx/pippen/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://www.python.org)
 
@@ -28,9 +30,13 @@ statistics has known how to solve for a century. The pipeline:
    player's season into odd and even games and correlating the halves.
 3. **Fuse** the metrics by inverse-variance weighting, so noisier measurements
    count for less.
-4. Report **RAIM** (Reliability-Adjusted Impact Metric) as a value *and an
-   interval*, because a rookie with 200 minutes and a starter with 2,400 minutes
-   should not be quoted with the same confidence.
+4. Report the result as a value **and an interval**, because a rookie with 200
+   minutes and a starter with 2,400 minutes should not be quoted with the same
+   confidence.
+
+Scottie Pippen is the point of the name. He is the canonical player whose box
+score understated what he did, and whose value showed up in what happened to the
+team when he played. That gap is the thing this project measures.
 
 ## What this is not
 
@@ -43,7 +49,7 @@ statistics has known how to solve for a century. The pipeline:
 
 ## The claim under test
 
-> Does RAIM predict next-season team net rating better than any single input
+> Does PIPPEN predict next-season team net rating better than any single input
 > metric does, out of sample?
 
 If the answer is no, the fusion added nothing, and this README will say so.
@@ -54,16 +60,16 @@ Stating a falsifiable claim before running the experiment is the point.
 ## Installation
 
 ```bash
-pip install nba-impact
+pip install pippen
 ```
 
 Development install, using [uv](https://docs.astral.sh/uv/):
 
 ```bash
-git clone https://github.com/AlphaNerdFx/nba-impact
-cd nba-impact
+git clone https://github.com/AlphaNerdFx/pippen
+cd pippen
 uv sync --extra dev
-uv run nba-impact --help
+uv run pippen --help
 ```
 
 Optional extras: `sources` (data downloaders), `fit` (model fitting), `api`,
@@ -72,11 +78,11 @@ Optional extras: `sources` (data downloaders), `fit` (model fitting), `api`,
 ## Quickstart
 
 ```bash
-nba-impact paths                              # where data will be cached
-nba-impact fetch  --seasons 2015-2024         # download play-by-play and box scores
-nba-impact rapm   --seasons 2015-2024 --window 3
-nba-impact train
-nba-impact evaluate                           # runs the claim under test
+pippen paths                              # where data will be cached
+pippen fetch  --seasons 2015-2024         # download play-by-play and box scores
+pippen rapm   --seasons 2015-2024 --window 3
+pippen train
+pippen evaluate                           # runs the claim under test
 ```
 
 ---
@@ -114,7 +120,7 @@ Darryl Blackport, MIT licensed.
 ## Documentation
 
 Full documentation, including the method write-up and its limitations, lives at
-<https://alphanerdfx.github.io/nba-impact/>.
+<https://alphanerdfx.github.io/pippen/>.
 
 - [Method](docs/methodology/) — how reliability is measured and how fusion works
 - [Architecture](docs/architecture/) — pipeline stages and data layout

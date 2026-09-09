@@ -3,14 +3,14 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "nba-impact"
+name = "pippen"
 dynamic = ["version"]
 description = "Reliability-adjusted NBA player impact estimates with calibrated uncertainty"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-authors = [{ name = "The nba-impact Authors" }]
+authors = [{ name = "The PIPPEN Authors" }]
 keywords = ["nba", "basketball", "analytics", "rapm", "sports-analytics", "plus-minus"]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -55,22 +55,29 @@ dev = [
   "types-requests",
   "pandas-stubs",
 ]
+# Slower checks that prove the numbers rather than the syntax. Kept out of `dev`
+# so the everyday install stays fast; CI installs this explicitly.
+rigour = [
+  "mutmut>=3.2",
+  "pytest-benchmark>=5.0",
+  "pytest-randomly>=3.15",
+]
 
 [project.urls]
-Homepage = "https://github.com/AlphaNerdFx/nba-impact"
-Documentation = "https://alphanerdfx.github.io/nba-impact/"
-Repository = "https://github.com/AlphaNerdFx/nba-impact"
-Issues = "https://github.com/AlphaNerdFx/nba-impact/issues"
-Changelog = "https://github.com/AlphaNerdFx/nba-impact/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/AlphaNerdFx/pippen"
+Documentation = "https://alphanerdfx.github.io/pippen/"
+Repository = "https://github.com/AlphaNerdFx/pippen"
+Issues = "https://github.com/AlphaNerdFx/pippen/issues"
+Changelog = "https://github.com/AlphaNerdFx/pippen/blob/main/CHANGELOG.md"
 
 [project.scripts]
-nba-impact = "nba_impact.cli:app"
+pippen = "pippen.cli:app"
 
 [tool.hatch.version]
-path = "src/nba_impact/__init__.py"
+path = "src/pippen/__init__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/nba_impact"]
+packages = ["src/pippen"]
 
 # ---------------------------------------------------------------- ruff
 [tool.ruff]
@@ -78,7 +85,11 @@ line-length = 100
 target-version = "py310"
 src = ["src", "tests"]
 # The research documents are source material and are never reformatted.
-extend-exclude = ["docs/research", ".context", "GLOBAL_SESSION.md", "CLAUDE.md"]
+extend-exclude = [
+  "docs/research", ".context", "GLOBAL_SESSION.md", "CLAUDE.md",
+  # mutmut writes deliberately-broken copies of the source here.
+  "mutants",
+]
 
 [tool.ruff.lint]
 select = [
@@ -130,17 +141,30 @@ ignore_missing_imports = true
 # ---------------------------------------------------------------- pytest
 [tool.pytest.ini_options]
 minversion = "8.0"
-testpaths = ["tests"]
+# Benchmarks are excluded from the default run: they are slow and they need
+# the `rigour` extra. The Rigour workflow targets tests/benchmarks directly.
+testpaths = ["tests/unit", "tests/integration", "tests/property"]
 addopts = "-ra --strict-markers --strict-config"
 markers = [
   "network: test requires network access (deselect with '-m \"not network\"')",
   "slow: test takes more than a few seconds",
+  "benchmark: performance measurement, tracked for regressions across commits",
+  "determinism: asserts an identical result across repeated runs",
 ]
-filterwarnings = ["error::DeprecationWarning:nba_impact.*"]
+filterwarnings = ["error::DeprecationWarning:pippen.*"]
+
+# ---------------------------------------------------------------- mutmut
+# Mutation testing deliberately breaks the source and checks that a test fails.
+# Coverage proves a line ran; this proves the line was actually verified.
+[tool.mutmut]
+paths_to_mutate = ["src/pippen/"]
+tests_dir = ["tests/"]
+# Only offline tests: a mutant must not be killed by a network flake.
+runner = "python -m pytest -x -q -m 'not network and not benchmark' -p no:randomly"
 
 # ---------------------------------------------------------------- coverage
 [tool.coverage.run]
-source = ["src/nba_impact"]
+source = ["src/pippen"]
 branch = true
 
 [tool.coverage.report]

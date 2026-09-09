@@ -1,7 +1,7 @@
-# `nba_impact.cli`
+# `pippen.cli`
 
-The command-line entry point. Run `nba-impact --help` for usage.
+The command-line entry point. Run `pippen --help` for usage.
 
-::: nba_impact.cli
+::: pippen.cli
     options:
       members: ["version", "paths", "fetch", "rapm", "train", "evaluate"]

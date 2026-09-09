@@ -9,7 +9,7 @@ Layout, relative to the data root::
 
 The data root is chosen in this order:
 
-1. the ``NBA_IMPACT_DATA_DIR`` environment variable, if set;
+1. the ``PIPPEN_DATA_DIR`` environment variable, if set;
 2. a ``data/`` directory beside the repository root, when running from a checkout;
 3. the platform user-cache directory, for installed copies of the package.
 """
@@ -22,13 +22,13 @@ from typing import Final
 
 from platformdirs import user_cache_dir
 
-ENV_VAR: Final = "NBA_IMPACT_DATA_DIR"
+ENV_VAR: Final = "PIPPEN_DATA_DIR"
 _STAGES: Final = ("raw", "interim", "processed", "sources")
 
 
 def _repo_data_dir() -> Path | None:
     """Return the checkout's ``data`` directory, or None when not in a checkout."""
-    # paths.py -> nba_impact -> src -> repository root
+    # paths.py -> pippen -> src -> repository root
     candidate = Path(__file__).resolve().parents[2] / "data"
     return candidate if candidate.is_dir() else None
 
@@ -47,7 +47,7 @@ def data_root() -> Path:
     if repo is not None:
         return repo
 
-    return Path(user_cache_dir("nba-impact", appauthor=False))
+    return Path(user_cache_dir("pippen", appauthor=False))
 
 
 def stage_dir(stage: str, *, create: bool = False) -> Path:

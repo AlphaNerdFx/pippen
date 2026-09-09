@@ -56,15 +56,15 @@ Fitting this hierarchically in NumPyro shrinks low-minute players toward the
 league mean automatically and yields a posterior interval for every player, not
 a point estimate.
 
-The output is **RAIM**, the Reliability-Adjusted Impact Metric.
+The output is **PIPPEN**: Player Impact from Pooled Priors and Estimated Noise.
 
 ## How we will know whether it worked
 
-> Does RAIM predict next-season team net rating better than any single input
+> Does PIPPEN predict next-season team net rating better than any single input
 > metric does, out of sample?
 
 Aggregate each metric to team level weighted by minutes, predict the following
-season's net rating, and compare out-of-sample error. If RAIM does not beat its
+season's net rating, and compare out-of-sample error. If PIPPEN does not beat its
 best input, the fusion added nothing, and that result gets published here.
 
 ## What this is not

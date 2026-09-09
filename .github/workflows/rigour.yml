@@ -1,0 +1,110 @@
+# Checks that prove the numbers rather than the syntax.
+#
+# The everyday CI pipeline in ci.yml answers "does the code run and typecheck".
+# This one answers "is the result correct, stable, and still fast".
+
+name: Rigour
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Mutation testing is slow, so it runs weekly rather than per commit.
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  UV_FROZEN: "1"
+
+jobs:
+  lockfile:
+    name: Lockfile is in sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      # Fails when pyproject.toml and uv.lock disagree, which is how an
+      # unlocked dependency silently breaks reproducibility for everyone else.
+      - run: uv lock --check
+
+  determinism:
+    name: Results are reproducible
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --extra dev
+      - name: Run determinism tests twice and compare
+        run: |
+          uv run pytest -m determinism -q --tb=short | tee run-one.txt
+          uv run pytest -m determinism -q --tb=short | tee run-two.txt
+          diff <(grep -c passed run-one.txt) <(grep -c passed run-two.txt)
+
+  test-order:
+    name: Tests pass in random order
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --extra dev --extra rigour
+      # A suite that only passes in one order has tests leaking state into
+      # each other. Random ordering surfaces that.
+      - run: uv run pytest -m "not network and not benchmark" -q -p randomly
+
+  benchmark:
+    name: Performance regression
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --extra dev --extra rigour
+      - name: Run benchmarks
+        run: |
+          uv run pytest tests/benchmarks -m benchmark -p no:randomly \
+            --benchmark-json=benchmark.json
+      - name: Compare against the stored baseline
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: pytest
+          output-file-path: benchmark.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Comment on a pull request when something gets meaningfully slower.
+          comment-on-alert: true
+          alert-threshold: "150%"
+          fail-on-alert: false
+          # Only the main branch updates the stored baseline.
+          auto-push: false
+
+  mutation:
+    name: Mutation testing
+    # Weekly and on demand only. It runs the whole suite once per mutant.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --extra dev --extra rigour
+      - name: Mutate the source and see whether tests notice
+        # Reported, not enforced, until the RAPM solver lands in week 4.
+        # A surviving mutant means a line of code no test actually checks.
+        run: uv run mutmut run || true
+      - name: Summarise survivors
+        run: uv run mutmut results | tee mutation-report.txt
+      - uses: actions/upload-artifact@v5
+        with:
+          name: mutation-report
+          path: mutation-report.txt
+          retention-days: 30

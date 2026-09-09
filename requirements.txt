@@ -14,7 +14,7 @@ cloudpickle==3.1.2
 colorama==0.4.6 ; sys_platform == 'win32'
     # via typer
 duckdb==1.5.5
-    # via nba-impact
+    # via pippen
 idna==3.19
     # via requests
 joblib==1.6.0
@@ -29,34 +29,34 @@ narwhals==2.26.0 ; python_full_version >= '3.11'
     # via scikit-learn
 numpy==2.2.6 ; python_full_version < '3.11'
     # via
-    #   nba-impact
     #   pandas
+    #   pippen
     #   scikit-learn
     #   scipy
 numpy==2.4.6 ; python_full_version == '3.11.*'
     # via
-    #   nba-impact
     #   pandas
+    #   pippen
     #   scikit-learn
     #   scipy
 numpy==2.5.3 ; python_full_version >= '3.12'
     # via
-    #   nba-impact
     #   pandas
+    #   pippen
     #   scikit-learn
     #   scipy
 packaging==26.3
     # via pandera
 pandas==2.3.3 ; python_full_version < '3.11'
-    # via nba-impact
+    # via pippen
 pandas==3.0.5 ; python_full_version >= '3.11'
-    # via nba-impact
+    # via pippen
 pandera==0.33.1
-    # via nba-impact
+    # via pippen
 platformdirs==4.11.8
-    # via nba-impact
+    # via pippen
 pyarrow==25.0.1
-    # via nba-impact
+    # via pippen
 pydantic==2.13.5
     # via pandera
 pydantic-core==2.46.5
@@ -68,39 +68,39 @@ python-dateutil==2.9.0.post0
 pytz==2026.3.post1 ; python_full_version < '3.11'
     # via pandas
 requests==2.34.2
-    # via nba-impact
+    # via pippen
 rich==15.0.0
     # via
-    #   nba-impact
+    #   pippen
     #   typer
 scikit-learn==1.7.2 ; python_full_version < '3.11'
-    # via nba-impact
+    # via pippen
 scikit-learn==1.9.0 ; python_full_version >= '3.11'
-    # via nba-impact
+    # via pippen
 scipy==1.15.3 ; python_full_version < '3.11'
     # via
-    #   nba-impact
+    #   pippen
     #   scikit-learn
 scipy==1.17.1 ; python_full_version == '3.11.*'
     # via
-    #   nba-impact
+    #   pippen
     #   scikit-learn
 scipy==1.18.1 ; python_full_version >= '3.12'
     # via
-    #   nba-impact
+    #   pippen
     #   scikit-learn
 shellingham==1.5.4
     # via typer
 six==1.17.0
     # via python-dateutil
 tenacity==9.1.4
-    # via nba-impact
+    # via pippen
 threadpoolctl==3.6.0
     # via scikit-learn
 typeguard==4.6.0
     # via pandera
 typer==0.27.2
-    # via nba-impact
+    # via pippen
 typing-extensions==4.16.0
     # via
     #   pandera

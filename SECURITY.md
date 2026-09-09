@@ -42,7 +42,7 @@ Out of scope:
 
 ## What this project handles
 
-nba-impact processes public sports statistics. It stores no personal data, no
+pippen processes public sports statistics. It stores no personal data, no
 credentials, and no payment information. The most valuable thing in this
 repository is its release pipeline, so that is where hardening effort goes:
 publishing uses PyPI Trusted Publishing rather than a stored token, and workflow

@@ -3,7 +3,7 @@
 ## From PyPI
 
 ```bash
-pip install nba-impact
+pip install pippen
 ```
 
 Optional extras install only what you need:
@@ -16,7 +16,7 @@ Optional extras install only what you need:
 | `dashboard` | Streamlit, Plotly | Running the dashboard locally |
 
 ```bash
-pip install "nba-impact[sources,fit]"
+pip install "pippen[sources,fit]"
 ```
 
 ## From source
@@ -25,10 +25,10 @@ This project uses [uv](https://docs.astral.sh/uv/), which manages the virtual
 environment and the lockfile together.
 
 ```bash
-git clone https://github.com/AlphaNerdFx/nba-impact
-cd nba-impact
+git clone https://github.com/AlphaNerdFx/pippen
+cd pippen
 uv sync --extra dev
-uv run nba-impact --help
+uv run pippen --help
 ```
 
 !!! note "Why uv rather than pip and venv"

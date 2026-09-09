@@ -1,11 +1,11 @@
 # Quickstart
 
 ```bash
-nba-impact paths                              # where data will be cached
-nba-impact fetch  --seasons 2015-2024         # download play-by-play and box scores
-nba-impact rapm   --seasons 2015-2024 --window 3
-nba-impact train
-nba-impact evaluate
+pippen paths                              # where data will be cached
+pippen fetch  --seasons 2015-2024         # download play-by-play and box scores
+pippen rapm   --seasons 2015-2024 --window 3
+pippen train
+pippen evaluate
 ```
 
 !!! warning "Not implemented yet"
@@ -34,8 +34,8 @@ measurement model that fuses them.
 By default, a `data/` directory beside the repository. Override it:
 
 ```bash
-export NBA_IMPACT_DATA_DIR=/mnt/big-disk/nba
-nba-impact paths
+export PIPPEN_DATA_DIR=/mnt/big-disk/nba
+pippen paths
 ```
 
 Expect roughly 500 MB for 2002 through 2026 of play-by-play.

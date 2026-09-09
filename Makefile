@@ -1,9 +1,9 @@
-# nba-impact developer tasks.
+# pippen developer tasks.
 # Every target here is also what continuous integration runs, so a green
 # `make check` locally means a green pipeline remotely.
 
 .DEFAULT_GOAL := help
-.PHONY: help install format lint typecheck test check clean docs serve-docs lock requirements
+.PHONY: help install format lint typecheck test test-all check clean docs serve-docs lock requirements bench mutants upgrade
 
 help:  ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -43,6 +43,22 @@ lock:  ## Refresh the lockfile
 
 requirements:  ## Regenerate requirements.txt from the lockfile for non-uv users
 	uv export --no-hashes --no-dev --format requirements-txt -o requirements.txt
+
+bench:  ## Run performance benchmarks
+	uv run --extra rigour pytest tests/benchmarks -m benchmark -p no:randomly
+
+mutants:  ## Run mutation testing (slow; proves tests actually assert)
+	uv run --extra rigour mutmut run || true
+	uv run --extra rigour mutmut results
+
+upgrade:  ## Update dependencies to their latest allowed versions
+	# Run this monthly. Dependabot's automated pull requests are deliberately
+	# not enabled, so every commit in this repository has a human author.
+	# Dependabot security *alerts* stay on: they notify without committing.
+	uv lock --upgrade
+	uv sync --extra dev
+	uv export --no-hashes --no-dev --format requirements-txt -o requirements.txt
+	@echo "Review the lockfile diff, run 'make check', then commit."
 
 clean:  ## Remove caches and build artifacts
 	rm -rf build dist site .pytest_cache .ruff_cache .mypy_cache .coverage htmlcov

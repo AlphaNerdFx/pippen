@@ -71,3 +71,8 @@ Thumbs.db
 !.claude/skills/refresh-data/
 !.claude/skills/release/
 skills-lock.json
+
+# Mutation testing workspace and cache
+mutants/
+.mutmut-cache
+mutmut-stats.json

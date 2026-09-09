@@ -29,7 +29,7 @@ jobs:
     # No API token is stored anywhere. Configure the publisher on PyPI first.
     environment:
       name: pypi
-      url: https://pypi.org/p/nba-impact
+      url: https://pypi.org/p/pippen
     permissions:
       id-token: write
     steps:

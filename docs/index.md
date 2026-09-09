@@ -1,4 +1,4 @@
-# nba-impact
+# pippen
 
 **Reliability-adjusted NBA player impact estimates, with calibrated uncertainty.**
 
@@ -19,7 +19,7 @@ number.
 
 ## The claim under test
 
-> Does RAIM predict next-season team net rating better than any single input
+> Does PIPPEN predict next-season team net rating better than any single input
 > metric does, out of sample?
 
 If the answer turns out to be no, that will be published here. A falsifiable

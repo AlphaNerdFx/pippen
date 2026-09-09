@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from nba_impact import paths
+from pippen import paths
 
 
 def test_env_var_overrides_everything(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -15,14 +15,27 @@ def test_env_var_overrides_everything(tmp_path: Path, monkeypatch: pytest.Monkey
 
 
 def test_env_var_expands_user(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(paths.ENV_VAR, "~/nba-impact-data")
+    monkeypatch.setenv(paths.ENV_VAR, "~/pippen-data")
     assert "~" not in str(paths.data_root())
 
 
-def test_repo_checkout_is_used_when_no_override(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_repo_checkout_is_used_when_present(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     monkeypatch.delenv(paths.ENV_VAR, raising=False)
-    root = paths.data_root()
-    assert root.name == "data"
+    checkout_data = tmp_path / "data"
+    checkout_data.mkdir()
+    monkeypatch.setattr(paths, "_repo_data_dir", lambda: checkout_data)
+    assert paths.data_root() == checkout_data
+
+
+def test_falls_back_to_user_cache_outside_a_checkout(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Installed copies of the package have no sibling data directory. Do not
+    # assume a checkout layout here: mutation testing runs from mutants/,
+    # where that assumption is false.
+    monkeypatch.delenv(paths.ENV_VAR, raising=False)
+    monkeypatch.setattr(paths, "_repo_data_dir", lambda: None)
+    assert paths.data_root().name == "pippen"
 
 
 @pytest.mark.parametrize("stage", ["raw", "interim", "processed", "sources"])

@@ -4,7 +4,7 @@ Data never enters git history. It is cached locally and distributed through
 releases.
 
 ```
-$NBA_IMPACT_DATA_DIR/
+$PIPPEN_DATA_DIR/
 ├── raw/          unmodified downloads, exactly as retrieved
 ├── interim/      intermediate tables produced during processing
 ├── processed/    analysis-ready tables, published in dataset releases
@@ -13,7 +13,7 @@ $NBA_IMPACT_DATA_DIR/
 
 The root is resolved in this order:
 
-1. the `NBA_IMPACT_DATA_DIR` environment variable;
+1. the `PIPPEN_DATA_DIR` environment variable;
 2. a `data/` directory beside the repository root, when running from a checkout;
 3. the platform user-cache directory, for installed copies.
 
@@ -39,7 +39,7 @@ redistribution reach it. See [data licensing](licensing.md).
 code with:
 
 ```python
-from nba_impact.paths import season_file
+from pippen.paths import season_file
 
 path = season_file("raw", "play_by_play", 2024)
 ```

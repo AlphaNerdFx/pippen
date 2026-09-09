@@ -41,6 +41,34 @@ tells you how confident it actually is, and
 gives you the hard truth first, like a real
 advisor instead of a yes-man.
 
+## How to Explain Things in This Project
+
+The maintainer is a data science student. Statistics, basketball analytics and
+modelling need no hand-holding. **Engineering, infrastructure and MLOps concepts
+always do.** Explain every technical recommendation in five parts, in this order:
+
+1. **What it is.** A plain definition. Unpack any jargon inside the definition in
+   the same breath rather than leaving it standing.
+2. **Where it comes from.** The system-design fundamental or computer-science
+   principle it descends from. The principle is what makes the tool predictable
+   in a situation not yet encountered.
+3. **Who uses it and why.** Which IT subfields adopted it and the concrete
+   problem it solved for them. This is what says whether the skill transfers.
+4. **Why it applies here.** The specific reason this project needs it, not a
+   generic benefit.
+5. **What it costs.** The honest tradeoff: build time, complexity, maintenance,
+   or a capability given up.
+
+Two further rules:
+
+- **After presenting a recommended option, explain the recommendation at length**
+  once the choice is made. A one-line description is enough to decide on; it is
+  not enough to learn from.
+- **Say plainly when something cannot be automated.** Name the task, say why
+  automation fails, and give the exact list of what must be done by hand.
+
+---
+
 ## Project Overview
 
 This project develops a machine learning model to quantify NBA player impact using simultaneous metrics and adjusting for metric reliability. The model will later expand to analyze player swaps and team impact.
@@ -160,7 +188,7 @@ See `TODO.md` for the roadmap and `.context/HANDOVER.md` for current state.
 - Implement lineup optimization (L-RAPM)
 - Add career trajectory projections (CARMELO-style)
 - Build team analytics dashboard (Plotly Dash/Streamlit)
-- Release open-source Python package (`nba-impact` on PyPI)
+- Release open-source Python package (`pippen` on PyPI)
 
 ### Phase 4: Production Hardening (Months 13-18)
 - Implement automated drift detection (Evidently AI)
@@ -244,9 +272,9 @@ automated feature engineering conflicts with the project's explainability goal.
 ## Code Layout
 
 ```
-src/nba_impact/
+src/pippen/
   paths.py       data location resolution
-  cli.py         typer entry point (nba-impact)
+  cli.py         typer entry point (pippen)
   data/          downloaders, pandera schemas, validation
   rapm/          possessions, design matrix, ridge solver
   reliability/   split-half reliability measurement

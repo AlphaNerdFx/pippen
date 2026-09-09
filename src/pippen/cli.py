@@ -1,4 +1,4 @@
-"""Command-line interface for nba-impact."""
+"""Command-line interface for pippen."""
 
 from __future__ import annotations
 
@@ -8,11 +8,11 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from nba_impact import __version__
-from nba_impact.paths import ENV_VAR, data_root, stage_dir
+from pippen import __version__
+from pippen.paths import ENV_VAR, data_root, stage_dir
 
 app = typer.Typer(
-    name="nba-impact",
+    name="pippen",
     help="Reliability-adjusted NBA player impact estimates.",
     no_args_is_help=True,
     add_completion=False,
@@ -28,8 +28,8 @@ def version() -> None:
 
 @app.command()
 def paths() -> None:
-    """Show where nba-impact reads and writes data on this machine."""
-    table = Table(title="nba-impact data layout")
+    """Show where pippen reads and writes data on this machine."""
+    table = Table(title="pippen data layout")
     table.add_column("Stage", style="bold")
     table.add_column("Path")
     table.add_column("Exists", justify="center")
@@ -73,7 +73,7 @@ def train() -> None:
 
 @app.command()
 def evaluate() -> None:
-    """Compare RAIM against every input metric on next-season team net rating."""
+    """Compare PIPPEN against every input metric on next-season team net rating."""
     raise typer.Exit(_not_yet("evaluate", "week 5-7 of the implementation plan"))
 
 

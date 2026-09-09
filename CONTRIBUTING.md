@@ -1,4 +1,4 @@
-# Contributing to nba-impact
+# Contributing to pippen
 
 Thanks for considering a contribution. This document tells you how to set up,
 what the project expects, and how changes get reviewed.
@@ -19,8 +19,8 @@ what the project expects, and how changes get reviewed.
 This project uses [uv](https://docs.astral.sh/uv/) for environments and locking.
 
 ```bash
-git clone https://github.com/AlphaNerdFx/nba-impact
-cd nba-impact
+git clone https://github.com/AlphaNerdFx/pippen
+cd pippen
 uv sync --extra dev
 uv run pre-commit install
 ```
@@ -94,6 +94,21 @@ If your change alters a published metric, the pull request must include:
 
 A metric that changes silently between versions is not a metric anyone can build
 on.
+
+## Dependency updates
+
+Dependabot's automated pull requests are deliberately switched off, so every
+commit here has a human author. Dependabot **security alerts** remain enabled:
+they notify without committing anything.
+
+Update dependencies yourself, monthly:
+
+```bash
+make upgrade      # uv lock --upgrade, resync, regenerate requirements.txt
+make check        # confirm nothing broke
+```
+
+Then commit the lockfile diff like any other change.
 
 ## Reporting a security issue
 

@@ -1,6 +1,6 @@
 ---
 name: release
-description: Cut a release of the nba-impact package and its dataset. Use when the user asks to publish, tag, ship, or release a version, or to push a new dataset artifact.
+description: Cut a release of the pippen package and its dataset. Use when the user asks to publish, tag, ship, or release a version, or to push a new dataset artifact.
 ---
 
 # Cut a release

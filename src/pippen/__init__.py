@@ -3,7 +3,7 @@
 This package computes player impact from public play-by-play data. It treats
 existing public impact metrics as noisy measurements of one unobserved quantity,
 measures how reliable each measurement is, and fuses them by inverse-variance
-weighting to produce RAIM (Reliability-Adjusted Impact Metric).
+weighting to produce PIPPEN: Player Impact from Pooled Priors and Estimated Noise.
 
 See the project documentation for the method and its limitations.
 """

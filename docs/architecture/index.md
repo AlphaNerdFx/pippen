@@ -43,13 +43,13 @@ sources │ hoopR bulk   │   │ NBA stats    │
 
 | Stage | Module | Output |
 |---|---|---|
-| Download | `nba_impact.data.hoopr`, `nba_impact.data.nba_api` | `raw/` Parquet |
-| Validate | `nba_impact.data.validate` | pass or fail, with a report |
-| Possessions | `nba_impact.rapm.possessions` | stints with lineups |
-| Design matrix | `nba_impact.rapm.design` | sparse matrix |
-| Solve | `nba_impact.rapm.ridge` | coefficients with standard errors |
-| Reliability | `nba_impact.reliability.testretest` | one coefficient per metric |
-| Fusion | `nba_impact.model.fusion` | RAIM with intervals |
+| Download | `pippen.data.hoopr`, `pippen.data.nba_api` | `raw/` Parquet |
+| Validate | `pippen.data.validate` | pass or fail, with a report |
+| Possessions | `pippen.rapm.possessions` | stints with lineups |
+| Design matrix | `pippen.rapm.design` | sparse matrix |
+| Solve | `pippen.rapm.ridge` | coefficients with standard errors |
+| Reliability | `pippen.reliability.testretest` | one coefficient per metric |
+| Fusion | `pippen.model.fusion` | PIPPEN with intervals |
 
 ## Why files rather than a database
 

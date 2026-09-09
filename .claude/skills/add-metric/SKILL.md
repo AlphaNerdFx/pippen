@@ -28,7 +28,7 @@ Record the outcome in `docs/guides/licensing.md`.
 Compute split-half reliability with the Spearman-Brown correction:
 
 ```bash
-uv run nba-impact reliability --metric <name> --seasons 2015-2024
+uv run pippen reliability --metric <name> --seasons 2015-2024
 ```
 
 Below roughly 0.5, the metric is mostly noise and adds nothing but variance.
@@ -48,7 +48,7 @@ than more accurate.
 
 ## Implementation
 
-1. Add the loader to `src/nba_impact/data/`, with a pandera schema.
+1. Add the loader to `src/pippen/data/`, with a pandera schema.
 2. Register it in the metric registry with its licence position.
 3. Add unit tests, plus a property test if it involves parsing.
 4. Refit and rerun the claim under test.
