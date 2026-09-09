@@ -94,6 +94,23 @@ chore(deps): bump pandera to 0.21
 `feat` raises the minor version. `fix` raises the patch version. A `!` after the
 scope, or a `BREAKING CHANGE:` footer, raises the major version.
 
+## Commit trailers
+
+Commit trailers in this repository name humans. A `commit-msg` hook strips
+assistant attribution automatically, so the policy does not depend on anyone
+remembering it.
+
+It is deliberately narrow. `Co-Authored-By` lines naming a person are kept,
+because co-authorship between people is real information, and a mention of a
+tool inside a commit body is left alone. Only whole-line assistant trailers are
+removed. See `scripts/hooks/strip_ai_trailers.py`.
+
+The hook installs with the others:
+
+```bash
+uv run pre-commit install
+```
+
 ## Pull requests
 
 1. Branch from `main`.

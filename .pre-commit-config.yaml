@@ -7,6 +7,10 @@
 # The research documents are source material. They are never rewritten by tooling.
 exclude: '^(docs/research/|\.context/|GLOBAL_SESSION\.md|CLAUDE\.md)'
 
+# Hook types installed by `pre-commit install`. commit-msg is needed for the
+# trailer policy below; without it that hook is written but never runs.
+default_install_hook_types: [pre-commit, commit-msg]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -46,3 +50,10 @@ repos:
         entry: scripts/hooks/no_data_commits.py
         language: script
         pass_filenames: true
+
+      - id: strip-ai-trailers
+        name: strip AI attribution trailers
+        entry: scripts/hooks/strip_ai_trailers.py
+        language: script
+        stages: [commit-msg]
+        always_run: true
