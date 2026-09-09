@@ -4,8 +4,14 @@ State of the project for whoever picks it up next, human or model.
 
 ## Where things stand
 
-Week 0 of the twelve-week plan is complete. The repository builds, lints,
-type-checks and tests green. No data has been ingested and no model exists.
+Week 0 is complete and verified on real infrastructure, not just locally.
+
+- Repository: <https://github.com/AlphaNerdFx/pippen>, public
+- Documentation: <https://alphanerdfx.github.io/pippen/>
+- CI, Rigour and Publish docs all green on GitHub runners
+- No data ingested, no model trained
+
+Next: week 1-2, the data layer.
 
 ## The plan
 

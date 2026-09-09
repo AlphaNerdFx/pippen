@@ -16,7 +16,10 @@ the repository is public; this file is the outline.
 - [x] Bibliography archiver
 - [x] Rigour pipeline: mutation testing, benchmarks, determinism, lockfile drift
 - [x] Named PIPPEN; Dependabot automation off so every commit has a human author
-- [ ] Push to GitHub, enable Pages, enable private vulnerability reporting
+- [x] Push to GitHub, enable Pages and Discussions, disable the wiki
+- [x] Get all three workflows green on a real runner
+- [ ] Enable private vulnerability reporting (repository settings, manual)
+- [ ] Reserve the `pippen` name on PyPI
 
 ## Weeks 1-2 — Data layer → **ship: dataset v0**
 

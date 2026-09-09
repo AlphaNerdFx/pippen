@@ -180,6 +180,39 @@ numbers in the final metric.
 
 ---
 
+## Pinning actions
+
+**What it is.** Every `uses:` line in a workflow names a third-party action and a
+git ref. That ref decides which code GitHub downloads and runs with access to
+the repository.
+
+**Where it comes from.** Dependency pinning, and the same reproducibility
+argument that motivates a lockfile. A reference that can change under you is a
+build that can change under you.
+
+**Who uses it and why.** Anyone whose CI can publish artifacts. Supply-chain
+attacks on build systems work precisely by altering what a mutable reference
+points at, which is why OpenSSF Scorecard checks for it.
+
+**Why it applies here.** The first three runs of this project failed on
+this, in two different ways:
+
+- `astral-sh/setup-uv@v10` resolved to nothing. Version 10.0.1 exists as a
+  release, but Astral stopped publishing bare major tags after v7. **A release
+  existing does not mean a matching major tag exists.**
+- `benchmark-action/github-action-benchmark@v1` had never been valid. That
+  project publishes only full version tags.
+
+Check the tag list, not the release feed:
+
+```bash
+gh api repos/OWNER/NAME/tags --jq '.[].name' | head
+```
+
+**What it costs.** Exact pins do not receive patches automatically, and with
+Dependabot disabled here they are bumped by hand. That is why the two actions
+without major tags are pinned exactly and the rest track a major.
+
 ## Dependency updates
 
 Dependabot's automated pull requests are switched off deliberately, so that every
