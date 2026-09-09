@@ -7,13 +7,17 @@ on:
 permissions:
   contents: read
 
+# Note: astral-sh/setup-uv and github-action-benchmark publish no moving
+# major tag (setup-uv stopped after v7), so both are pinned to an exact
+# version and must be bumped by hand. The rest track a major tag.
+
 jobs:
   build:
     name: Build distribution
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.0.1
       - run: uv build
       - run: uvx twine check dist/*
       - uses: actions/upload-artifact@v7

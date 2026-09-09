@@ -17,6 +17,10 @@ on:
 permissions:
   contents: read
 
+# Note: astral-sh/setup-uv and github-action-benchmark publish no moving
+# major tag (setup-uv stopped after v7), so both are pinned to an exact
+# version and must be bumped by hand. The rest track a major tag.
+
 env:
   UV_FROZEN: "1"
 
@@ -26,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.0.1
       # Fails when pyproject.toml and uv.lock disagree, which is how an
       # unlocked dependency silently breaks reproducibility for everyone else.
       - run: uv lock --check
@@ -36,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: true
       - run: uv sync --extra dev
@@ -51,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: true
       - run: uv sync --extra dev --extra rigour
@@ -64,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: true
       - run: uv sync --extra dev --extra rigour
@@ -73,7 +77,7 @@ jobs:
           uv run pytest tests/benchmarks -m benchmark -p no:randomly \
             --benchmark-json=benchmark.json
       - name: Compare against the stored baseline
-        uses: benchmark-action/github-action-benchmark@v1
+        uses: benchmark-action/github-action-benchmark@v1.22.1
         with:
           tool: pytest
           output-file-path: benchmark.json
@@ -93,7 +97,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: true
       - run: uv sync --extra dev --extra rigour
