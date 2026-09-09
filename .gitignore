@@ -60,3 +60,14 @@ Thumbs.db
 *.swp
 .idea/
 .vscode/
+
+# Third-party agent skills installed via `npx skills`. Kept local, not shared:
+# they are 37 general-purpose skills, several TypeScript-specific, and one of
+# them shadows Claude Code's built-in /code-review. The project's own skills
+# under .claude/skills/{add-metric,refresh-data,release} ARE committed.
+.agents/
+.claude/skills/*
+!.claude/skills/add-metric/
+!.claude/skills/refresh-data/
+!.claude/skills/release/
+skills-lock.json
