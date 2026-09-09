@@ -1,0 +1,85 @@
+site_name: nba-impact
+site_description: Reliability-adjusted NBA player impact estimates with calibrated uncertainty
+site_url: https://alphanerdfx.github.io/nba-impact/
+repo_url: https://github.com/AlphaNerdFx/nba-impact
+repo_name: AlphaNerdFx/nba-impact
+edit_uri: edit/main/docs/
+copyright: Copyright &copy; 2026 The nba-impact Authors. Apache-2.0.
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - content.code.copy
+    - content.action.edit
+    - search.suggest
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+            members_order: source
+            separate_signature: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+# The research corpus stays in the repository as a record, but is not rendered:
+# it is prior work with known broken citations, not project documentation.
+exclude_docs: |
+  research/*.md
+  !research/index.md
+
+nav:
+  - Home: index.md
+  - Guides:
+      - Installation: guides/installation.md
+      - Quickstart: guides/quickstart.md
+      - Data layout: guides/data-layout.md
+      - Data licensing: guides/licensing.md
+  - Method:
+      - Overview: methodology/index.md
+      - RAPM: methodology/rapm.md
+      - Measuring reliability: methodology/reliability.md
+      - Limitations: methodology/limitations.md
+  - Architecture:
+      - Pipeline: architecture/index.md
+      - Deployment: architecture/deployment.md
+  - API reference:
+      - paths: reference/paths.md
+      - cli: reference/cli.md
+  - Research notes:
+      - Overview: research/index.md

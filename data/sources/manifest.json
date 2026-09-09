@@ -1,0 +1,2257 @@
+[
+  {
+    "src_id": "SRC-4",
+    "title": "Basketball statistics - Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Basketball_statistics",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-004__en-wikipedia-org.html",
+    "note": "already present",
+    "cited_in": [
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-6",
+    "title": "Basketball Stats Explained",
+    "url": "https://www.sportsvisio.com/stories/basketball-stats-explained",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-006__www-sportsvisio-com.html",
+    "note": "already present",
+    "cited_in": [
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-10",
+    "title": "Basketball Stats Explained",
+    "url": "https://www.breakthroughbasketball.com/stats/definitions",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-11",
+    "title": "Advanced NBA Stats for Dummies",
+    "url": "https://bleacherreport.com/articles/1813902-advanced-nba-stats-for-dummies",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-011__bleacherreport-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-12",
+    "title": "RealGM Stats Legend",
+    "url": "https://basketball.realgm.com/info/glossary",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-14",
+    "title": "A Beginner's Guide to Analytics-101",
+    "url": "https://www.nbastuffer.com/analytics-101/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-014__www-nbastuffer-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-15",
+    "title": "Basic Advanced Stats Guide",
+    "url": "https://www.reddit.com/r/nba/comments/1j5l0z/basic_advanced_stats_guide/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-015__www-reddit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-16",
+    "title": "Player efficiency rating - Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Player_efficiency_rating",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-016__en-wikipedia-org.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-17",
+    "title": "Win Shares & Rookie Contracts",
+    "url": "https://red.library.usd.edu/cgi/viewcontent.cgi?article=1013&context=honors-thesis",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-18",
+    "title": "Calculating Win Shares",
+    "url": "https://www.sports-reference.com/cbb/about/ws.html",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "07_data_categorization.md"
+    ]
+  },
+  {
+    "src_id": "SRC-20",
+    "title": "John Hollinger - Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/John_Hollinger",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-020__en-wikipedia-org.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-21",
+    "title": "Blog Archive",
+    "url": "https://www.basketball-reference.com/blog/index1c24.html?p=1858",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-021__www-basketball-reference-com.html",
+    "note": "already present",
+    "cited_in": [
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-22",
+    "title": "[PDF] The Home-Court Advantage Effect in NBA Basketball",
+    "url": "https://ruor.uottawa.ca/bitstreams/25ab7e06-5799-4a39-9fe9-232b05d1e844/download",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-022__ruor-uottawa-ca.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-23",
+    "title": "Nylon Calculus: Reinventing PER",
+    "url": "https://fansided.com/2017/01/31/nylon-calculus-reinventing-per/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-023__fansided-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-26",
+    "title": "The Ultimate PER Guide",
+    "url": "https://www.cryptbeam.com/2022/05/11/the-ultimate-per-guide-untangling-john-hollingers-analytics-lovechild/",
+    "kind": "html",
+    "status": "error",
+    "http_code": null,
+    "saved_as": null,
+    "note": "ConnectionError",
+    "cited_in": [
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-28",
+    "title": "How did Hollinger come up with his PER formula?",
+    "url": "https://sports.stackexchange.com/questions/13810/how-did-hollinger-come-up-with-his-per-formula",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-29",
+    "title": "Player Efficiency Rating: A Dying Stat",
+    "url": "https://www.reddit.com/r/nbadiscussion/comments/191zrrz/player_efficiency_rating_a_dying_stat/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-029__www-reddit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-30",
+    "title": "Basketball, Stat: PER",
+    "url": "https://www.reddit.com/r/nbadiscussion/comments/cmrr8x/basketball_stat_player_efficiency_rating_per/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-030__www-reddit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-33",
+    "title": "Adjusted Plus Minus - Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Adjusted_Plus_Minus",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-033__en-wikipedia-org.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-34",
+    "title": "Lineup Regularized Adjusted Plus-Minus",
+    "url": "https://arxiv.org/pdf/2601.15000",
+    "kind": "arxiv",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-034__arxiv-2601-15000.pdf",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-35",
+    "title": "Lineup Regularized Adjusted Plus-Minus",
+    "url": "https://arxiv.org/pdf/2601.15000",
+    "kind": "arxiv",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-035__arxiv-2601-15000.pdf",
+    "note": "already present",
+    "cited_in": [
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "07_data_categorization.md"
+    ]
+  },
+  {
+    "src_id": "SRC-36",
+    "title": "About Estimated Plus-Minus",
+    "url": "https://dunksandthrees.com/about/epm",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-036__dunksandthrees-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-37",
+    "title": "NBA Player Metric Comparison",
+    "url": "https://dunksandthrees.com/blog/metric-comparison",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-037__dunksandthrees-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-38",
+    "title": "Bringing Advanced Stats to the WNBA: How to Fix Plus-Minus",
+    "url": "https://www.si.com/wnba/bringing-advanced-stats-to-the-wnba-how-to-fix-plus-minus",
+    "kind": "html",
+    "status": "dead",
+    "http_code": 404,
+    "saved_as": null,
+    "note": "HTTP 404",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-39",
+    "title": "Estimated Plus-Minus - NBAstuffer",
+    "url": "https://www.nbastuffer.com/analytics101/estimated-minus/",
+    "kind": "html",
+    "status": "dead",
+    "http_code": 404,
+    "saved_as": null,
+    "note": "HTTP 404",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-40",
+    "title": "Using Plus-Minus Stats Responsibly",
+    "url": "https://www.reddit.com/r/nba/comments/1qyyfzk/using_plusminusonoffrapmepmetcbased_stats/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-040__www-reddit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-41",
+    "title": "Chapter 11: Regularized Adjusted Plus-Minus (RAPM)",
+    "url": "https://datafield.dev/professional-basketball-analytics/part-03/chapter-11/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-041__datafield-dev.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-42",
+    "title": "Estimated Plus-Minus (EPM) - NBAstuffer",
+    "url": "https://www.nbastuffer.com/analytics101/estimated-minus/",
+    "kind": "html",
+    "status": "dead",
+    "http_code": 404,
+    "saved_as": null,
+    "note": "HTTP 404",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-43",
+    "title": "Adjusted Plus-Minus Calculator",
+    "url": "https://metricgate.com/docs/adjusted-plus-minus/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-043__metricgate-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-44",
+    "title": "Regularized Adjusted Plus-Minus Calculator",
+    "url": "https://metricgate.com/docs/regularized-adjusted-minus/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-044__metricgate-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-45",
+    "title": "Adjusted Plus-Minus, Explained: The Stat That Drives ...",
+    "url": "https://www.roycewebb.com/p/adjusted-plus-minus-explained",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-045__www-roycewebb-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-46",
+    "title": "Dean Oliver's Four Factors Revisited",
+    "url": "https://arxiv.org/pdf/2305.13032",
+    "kind": "arxiv",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-046__arxiv-2305-13032.pdf",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-47",
+    "title": "About Box Plus/Minus",
+    "url": "https://www.basketball-reference.com/about/bpm2.html",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-047__www-basketball-reference-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-48",
+    "title": "Advanced NBA Statistics Rundown",
+    "url": "https://www.nba.com/heat/news/advanced_nba_statistics_rundown_101104.html",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-048__www-nba-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-49",
+    "title": "NBA Advanced Stats: Four Factors",
+    "url": "https://hoopshabit.com/2014/07/23/nba-advanced-stats-four-factors-winning/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-049__hoopshabit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-50",
+    "title": "Reconstructing Box Plus/Minus",
+    "url": "https://www.apbr.org/metrics/viewtopic.php?t=9689",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-050__www-apbr-org.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-51",
+    "title": "2025-2026 NBA Advanced Team Stats",
+    "url": "https://www.nbastuffer.com/2025-2026-nba-team-stats/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-051__www-nbastuffer-com.html",
+    "note": "already present",
+    "cited_in": [
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-52",
+    "title": "Box Plus/Minus (BPM)",
+    "url": "https://basketballstat.home.blog/2019/08/27/box-plus-minus-bpm/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-052__basketballstat-home-blog.html",
+    "note": "already present",
+    "cited_in": [
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-54",
+    "title": "DBPM and how it's calculated",
+    "url": "https://www.reddit.com/r/nba/comments/1hkymkq/dbpm_and_how_it_s_calculated",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-054__www-reddit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-55",
+    "title": "Basketball Advanced Analytics Betting",
+    "url": "https://basketballbetstrategy.com/articles/basketball-advanced-analytics-betting/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-055__basketballbetstrategy-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-56",
+    "title": "NBA's Most Valuable Statistic Discovered: How To Predict ...",
+    "url": "https://www.sportsgamblingpodcast.com/2020/04/20/nba-most-valuable-statistic/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-056__www-sportsgamblingpodcast-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-57",
+    "title": "The Four Factors: The Stats That Actually Decide Basketball ...",
+    "url": "https://nbaanalytic.com/articles/four-factors.html",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-057__nbaanalytic-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-61",
+    "title": "Possession-Level Player Impact in the Pre-Play-by-Play NBA Era",
+    "url": "https://arxiv.org/pdf/2605.24056",
+    "kind": "arxiv",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-061__arxiv-2605-24056.pdf",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-64",
+    "title": "Net Wins vs. Everything Else",
+    "url": "https://podimo.com/en/shows/net-wins-podcast/episode/cf27b826-e62d-5fbe-8b12-e8779a2d10ac",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-67",
+    "title": "Four year study of predictive accuracy",
+    "url": "https://www.reddit.com/r/nba/comments/75j489/oc_four_year_study_of_the_predictive_accuracy_of/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-067__www-reddit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-68",
+    "title": "An NBA first: Introducing standard errors for box-score metrics",
+    "url": "https://www.roycewebb.com/p/an-nba-first-introducing-standard",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-068__www-roycewebb-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-69",
+    "title": "A method to compute standard errors in per-minute performance ...",
+    "url": "https://www.kheljournal.com/archives/2019/vol6issue4/PartA/6-2-23-144.pdf",
+    "kind": "pdf",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-069__www-kheljournal-com.pdf",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-71",
+    "title": "MSc IN STATISTICS",
+    "url": "https://www.dept.aueb.gr/sites/default/files/stat/diplomatikes/pdf/Damoulaki.pdf",
+    "kind": "pdf",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-071__www-dept-aueb-gr.pdf",
+    "note": "already present",
+    "cited_in": [
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-73",
+    "title": "Exercising Error: Quantifying Statistical Tests Under RAPM ...",
+    "url": "https://squared2020.com/2019/10/03/exercising-error-quantifying-statistical-tests-under-rapm-part-iv/",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 429,
+    "saved_as": null,
+    "note": "rate limited; save from a browser",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-75",
+    "title": "Dean Oliver's \"4 Factors\" Explored",
+    "url": "https://basketballanalyticslab.substack.com/p/dean-olivers-4-factors-explored",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-075__basketballanalyticslab-substack-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-76",
+    "title": "Guide to NBA Advanced Metrics",
+    "url": "https://medium.com/hot-shot-nba/guide-to-nba-advanced-metrics-621b4030c2fa",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-076__medium-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-77",
+    "title": "Basketball Analytics for Betting",
+    "url": "https://betmana.co.uk/guide/basketball-analytics-for-betting/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-077__betmana-co-uk.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-78",
+    "title": "LEBRON Introduction",
+    "url": "https://www.bball-index.com/lebron-introduction/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-078__www-bball-index-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-80",
+    "title": "Is Lebron Still A Dominating...",
+    "url": "https://fivethirtyeight.com/features/winners-and-losers-in-our-updated-nba-season-predictions/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-080__fivethirtyeight-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-81",
+    "title": "GitHub - Neil-Paine-1/NBA-elo",
+    "url": "https://github.com/Neil-Paine-1/NBA-elo",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-081__github-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-82",
+    "title": "LEBRON Metric in Basketball Explained",
+    "url": "https://www.nbastuffer.com/analytics101/lebron/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-082__www-nbastuffer-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-83",
+    "title": "Methodologies for EPM and LEBRON",
+    "url": "https://www.reddit.com/r/nba/comments/1bcxrx3/methodologies_for_epm_and_lebron/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-083__www-reddit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-84",
+    "title": "A method to compute standard errors in per-minute performance metrics in basketball",
+    "url": "https://www.academia.edu/120350593/A_method_to_compute_standard_errors_in_per_minute_performance_metrics_in_basketball",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-85",
+    "title": "Box Plus/Minus, EPM, and All-in-One Metrics: A Practical ...",
+    "url": "https://nbaanalytic.com/articles/bpm-epm-all-in-one.html",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-085__nbaanalytic-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-86",
+    "title": "[PDF] Predicting NBA Success from NCAA Stats",
+    "url": "https://pages.stat.wisc.edu/~jgillett/451/project/presentations/19.pdf",
+    "kind": "pdf",
+    "status": "dead",
+    "http_code": 404,
+    "saved_as": null,
+    "note": "HTTP 404",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-87",
+    "title": "RAPTOR Explained",
+    "url": "https://www.nbastuffer.com/analytics101/raptor/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-087__www-nbastuffer-com.html",
+    "note": "already present",
+    "cited_in": [
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-88",
+    "title": "Lasso Multinomial Performance Indicators",
+    "url": "https://arxiv.org/pdf/2406.09895",
+    "kind": "arxiv",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-088__arxiv-2406-09895.pdf",
+    "note": "already present",
+    "cited_in": [
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-89",
+    "title": "Lineup Regularized Adjusted Plus-Minus",
+    "url": "https://arxiv.org/pdf/2601.15000",
+    "kind": "arxiv",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-089__arxiv-2601-15000.pdf",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-90",
+    "title": "Player Impact Plus-Minus",
+    "url": "https://www.bball-index.com/player-impact-plus-minus/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-090__www-bball-index-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-91",
+    "title": "Why Plus-Minus Needs a Thousand Games",
+    "url": "https://nbaanalytic.com/articles/plus-minus-rapm-noise.html",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-091__nbaanalytic-com.html",
+    "note": "already present",
+    "cited_in": [
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-92",
+    "title": "APBRmetrics",
+    "url": "https://apbr.org/metrics/viewtopic.php?t=9995",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-092__apbr-org.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-94",
+    "title": "Regularized Adjusted Plus-Minus xRAPM Explained",
+    "url": "https://www.nbastuffer.com/analytics101/regularized-adjusted-plus-minus-rapm/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-094__www-nbastuffer-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-95",
+    "title": "NBA Plus-Minus & Impact Metrics in Basketball Explained",
+    "url": "https://www.nbastuffer.com/analytics101/nba-plus-minus/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-095__www-nbastuffer-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-96",
+    "title": "FiveThirtyEight: NBA playoff predictions",
+    "url": "https://www.espn.com/espn/story/_/id/15581502/nba-playoff-predictions",
+    "kind": "html",
+    "status": "dead",
+    "http_code": 202,
+    "saved_as": null,
+    "note": "empty response",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-97",
+    "title": "We're Predicting The Career Of Every NBA Player",
+    "url": "https://fivethirtyeight.com/features/how-were-predicting-nba-player-career/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-097__fivethirtyeight-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-99",
+    "title": "What's New In Our NBA Player Projections",
+    "url": "https://fivethirtyeight.com/features/whats-new-in-our-nba-player-projections-for-2017-18/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-099__fivethirtyeight-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-101",
+    "title": "FiveThirtyEight's CARM-Elo projections weigh in on the Pistons",
+    "url": "https://www.foxsports.com/stories/nba/fivethirtyeights-carm-elo-projections-weigh-in-on-the-pistons",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-101__www-foxsports-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-102",
+    "title": "What Our NBA Projections Got Right (And Wrong) Last Season",
+    "url": "https://fivethirtyeight.com/features/what-our-nba-projections-got-right-and-wrong-last-season/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-102__fivethirtyeight-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-103",
+    "title": "How Our 2015-16 NBA Predictions Work",
+    "url": "https://fivethirtyeight.com/features/how-our-2015-16-nba-predictions-work/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-103__fivethirtyeight-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-104",
+    "title": "What's New In Our NBA Projections For 2016-17",
+    "url": "https://fivethirtyeight.com/features/whats-new-in-our-nba-projections-for-2016-17/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-104__fivethirtyeight-com.html",
+    "note": "already present",
+    "cited_in": [
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-105",
+    "title": "Our NBA Player Projections Are Ready",
+    "url": "https://fivethirtyeight.com/features/our-nba-player-projections-are-ready-for-2018-19/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-105__fivethirtyeight-com.html",
+    "note": "already present",
+    "cited_in": [
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-106",
+    "title": "CARMELO Explained",
+    "url": "https://www.nbastuffer.com/analytics101/carmelo/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-106__www-nbastuffer-com.html",
+    "note": "already present",
+    "cited_in": [
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-108",
+    "title": "How good is TPA for determining how good a player is?",
+    "url": "https://www.reddit.com/r/nba/comments/a1c4u2/how_good_is_tpa_for_determining_how_good_a_player/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-108__www-reddit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-109",
+    "title": "APBRmetrics",
+    "url": "https://www.apbr.org/metrics/viewtopic.php?t=9848",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-109__www-apbr-org.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-110",
+    "title": "In Search of a Winning Strategy: Comparing FiveThirtyEight.com's CARM-Elo Predictions to Las Vegas Point Spreads",
+    "url": "https://stanfordsportsanalytics.wordpress.com/2017/06/18/in-search-of-a-winning-strategy-comparing-fivethirtyeight-coms-carm-elo-predictions-to-las-vegas-point-spreads/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-110__stanfordsportsanalytics-wordpress-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-111",
+    "title": "Algorithmic NBA Player Acquisition",
+    "url": "https://wsb.wharton.upenn.edu/wp-content/uploads/2023/12/Brill_2023_Q.pdf",
+    "kind": "pdf",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-111__wsb-wharton-upenn-edu.pdf",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-112",
+    "title": "About the Data - Basketball Index",
+    "url": "https://www.bball-index.com/about/about-the-data/",
+    "kind": "html",
+    "status": "dead",
+    "http_code": 404,
+    "saved_as": null,
+    "note": "HTTP 404",
+    "cited_in": [
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-113",
+    "title": "Nylon Calculus: Introducing PIPM",
+    "url": "https://fansided.com/2018/01/11/nylon-calculus-introducing-player-impact-plus-minus/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-113__fansided-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-120",
+    "title": "LEBRON Box Prior",
+    "url": "https://www.bball-index.com/lebron-box-prior/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-120__www-bball-index-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-122",
+    "title": "RealGM Forums",
+    "url": "https://forums.realgm.com/boards/viewtopic.php?t=1769873",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-122__forums-realgm-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-124",
+    "title": "Now that RAPTOR and RAPM are gone",
+    "url": "https://www.reddit.com/r/nba/comments/16zza0y/now_that_raptor_and_rapm_are_gone_what_are_the/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-124__www-reddit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-125",
+    "title": "Universit\u00e0 degli studi di Udine - UNIUD",
+    "url": "https://air.uniud.it/retrieve/handle/11390/1195276/509468/IMA_Accepted2020_withname.pdf",
+    "kind": "pdf",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-126",
+    "title": "Checking in on the Lakers Using BBall Index Stats",
+    "url": "https://www.bball-index.com/laker-check-in/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-126__www-bball-index-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-127",
+    "title": "Player Impact Plus-Minus (PIPM) - NBAstuffer",
+    "url": "https://www.nbastuffer.com/analytics101/player-impact-plus-minus/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-127__www-nbastuffer-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-128",
+    "title": "Introducing NBA Stable Player Impact (SPI)",
+    "url": "https://nbacouchside.net/2022/11/05/introducing-nba-stable-player-impact-spi/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-128__nbacouchside-net.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-129",
+    "title": "NBA: PIPM proves Doncic offensive king, Trae Young defensive liability and Rozier is hella overpaid!",
+    "url": "https://hive.blog/nba/@wolfgangsport/nba-pipm-proves-doncic-offensive-king-trae-young-defensive-liability-and-rozier-is-hella-overpaid",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-129__hive-blog.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-130",
+    "title": "Developing An Updated Tracking Plus-Minus Metric",
+    "url": "https://medium.com/@NBAcouchside/developing-an-updated-tracking-plus-minus-metric-51ae1a4afe17",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-130__medium-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-131",
+    "title": "Analytics 101 - Page 4 of 5",
+    "url": "https://www.nbastuffer.com/analytics101/page/4/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-131__www-nbastuffer-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-132",
+    "title": "The Top 50 NBA Draft Prospects",
+    "url": "https://fivethirtyeight.com/features/the-top-50-nba-draft-prospects-according-to-our-carmelo-projections/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-132__fivethirtyeight-com.html",
+    "note": "already present",
+    "cited_in": [
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-133",
+    "title": "DARKO Explained",
+    "url": "https://www.nbastuffer.com/analytics101/darko-daily-plus-minus/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-133__www-nbastuffer-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-134",
+    "title": "CARMELO - Basketball, Stat",
+    "url": "https://basketballstat.home.blog/2019/09/16/carmelo/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-134__basketballstat-home-blog.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-135",
+    "title": "FiveThirtyEight projections analysis: Orlando Magic",
+    "url": "https://orlandomagicdaily.com/2016/07/25/fivethirtyeight-projections-analysis-orlando-magic/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-135__orlandomagicdaily-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-136",
+    "title": "Can someone explain FiveThirtyEight's CARMELO projections please",
+    "url": "https://www.reddit.com/r/nba/comments/6kdaz6/can_someone_explain_fivethirtyeights_carmelo/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-136__www-reddit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-137",
+    "title": "The (in)exact science of predicting players' careers",
+    "url": "https://www.goldenstateofmind.com/2015/10/10/9491499/nba-player-predictions-nate-silver-statistics-carmelo",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-137__www-goldenstateofmind-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-138",
+    "title": "CARMELO NBA Player Projections",
+    "url": "https://www.informationisbeautifulawards.com/projects/1821-carmelo-nba-player-projections",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-138__www-informationisbeautifulawards-com.html",
+    "note": "already present",
+    "cited_in": [
+      "nba_metric_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-141",
+    "title": "SPIO: LLM-Based Multi-Agent Planning",
+    "url": "https://arxiv.org/pdf/2503.23314",
+    "kind": "arxiv",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-141__arxiv-2503-23314.pdf",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-142",
+    "title": "AI-first Automated Data Science",
+    "url": "https://newgensoft.com/platform/artificial-intelligence-data-science/automated-data-science/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-142__newgensoft-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-145",
+    "title": "HCL AION",
+    "url": "https://www.hcl-software.com/aion",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-145__www-hcl-software-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "02_deployment_stack.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-146",
+    "title": "Practitioners guide to MLOps",
+    "url": "https://services.google.com/fh/files/misc/practitioners_guide_to_mlops_whitepaper.pdf",
+    "kind": "pdf",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-146__services-google-com.pdf",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "02_deployment_stack.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-148",
+    "title": "Automated Machine Learning",
+    "url": "https://thecuberesearch.com/automated-machine-learning-assessing-available-solutions/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-148__thecuberesearch-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-150",
+    "title": "AutoML-Agent",
+    "url": "https://creati.ai/ai-tools/automl-agent/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-150__creati-ai.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "02_deployment_stack.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-151",
+    "title": "H2O.ai",
+    "url": "https://checkthat.ai/brands/h2o-ai",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-151__checkthat-ai.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-153",
+    "title": "Top AI Data Assistants",
+    "url": "https://www.analyticsengineering.com/resources/best-ai-data-assistants-for-analytics-professionals",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-153__www-analyticsengineering-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-154",
+    "title": "Develop ML model with MLflow",
+    "url": "https://mlflow.org/docs/latest/ml/deployment/deploy-model-to-kubernetes/tutorial/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-154__mlflow-org.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "02_deployment_stack.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-155",
+    "title": "Develop ML model with MLflow",
+    "url": "https://mlflow.org/docs/3.3.0rc0/ml/deployment/deploy-model-to-kubernetes/tutorial/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-155__mlflow-org.html",
+    "note": "already present",
+    "cited_in": [
+      "02_deployment_stack.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-156",
+    "title": "Why Monitor Model Drift",
+    "url": "https://mlflow.org/articles/why-monitor-model-drift-production/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-156__mlflow-org.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "02_deployment_stack.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-158",
+    "title": "Best practices for model monitoring",
+    "url": "https://mlflow.org/articles/tags/best-practices-for-model-monitoring/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-158__mlflow-org.html",
+    "note": "already present",
+    "cited_in": [
+      "02_deployment_stack.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-159",
+    "title": "GitHub - NBA Analytics",
+    "url": "https://github.com/topics/nba-analytics",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-159__github-com.html",
+    "note": "already present",
+    "cited_in": [
+      "04_expansion_ideas.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-160",
+    "title": "GitHub - BasketTracking",
+    "url": "https://github.com/Basket-Analytics/BasketTracking",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-160__github-com.html",
+    "note": "already present",
+    "cited_in": [
+      "04_expansion_ideas.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-161",
+    "title": "Model Monitoring in MLOps",
+    "url": "https://kodekloud.com/blog/model-monitoring-in-mlops/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-161__kodekloud-com.html",
+    "note": "already present",
+    "cited_in": [
+      "02_deployment_stack.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-162",
+    "title": "GitHub - hoopR",
+    "url": "https://github.com/sportsdataverse/hoopR",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-162__github-com.html",
+    "note": "already present",
+    "cited_in": [
+      "04_expansion_ideas.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-165",
+    "title": "Deploy MLflow Model to Kubernetes",
+    "url": "https://mlflow.openml.io/docs/latest/ml/deployment/deploy-model-to-kubernetes/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-165__mlflow-openml-io.html",
+    "note": "already present",
+    "cited_in": [
+      "02_deployment_stack.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-166",
+    "title": "Top 17 Basketball Open-Source Projects",
+    "url": "https://www.libhunt.com/topic/basketball",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "04_expansion_ideas.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-167",
+    "title": "Top 23 Sports-Analytic Open-Source Projects",
+    "url": "https://www.libhunt.com/topic/sports-analytics",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "04_expansion_ideas.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-168",
+    "title": "About - SportsDataverse",
+    "url": "https://www.sportsdataverse.org/about",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-168__www-sportsdataverse-org.html",
+    "note": "already present",
+    "cited_in": [
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "06_data_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-169",
+    "title": "Optuna: Next-generation Hyperparameter Optimization",
+    "url": "https://dl.acm.org/doi/10.1145/3292500.3330701",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-173",
+    "title": "Optuna Documentation",
+    "url": "https://optuna.org/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-173__optuna-org.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-174",
+    "title": "Introducing DARKO",
+    "url": "https://www.nytimes.com/athletic/2613015/2021/05/26/introducing-darko-an-nba-playoffs-game-projection-and-betting-guide/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-174__www-nytimes-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "04_expansion_ideas.md",
+      "05_references.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-175",
+    "title": "Implementing ML Models for NBA Game Predictions",
+    "url": "https://meetings.ams.org/math/jmm2026/meetingapp.cgi/Paper/57046",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-175__meetings-ams-org.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-176",
+    "title": "Interpretable Athlete Performance Modelling",
+    "url": "https://www.techrxiv.org/doi/pdf/10.36227/techrxiv.177006540.07826863/v1",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 403,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-177",
+    "title": "Hyperparameter tuning with Optuna",
+    "url": "https://learn.microsoft.com/en-us/azure/databricks/machine-learning/automl-hyperparam-tuning/optuna",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-177__learn-microsoft-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-178",
+    "title": "Explainable AI Methods",
+    "url": "https://arxiv.org/pdf/2305.02012",
+    "kind": "arxiv",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-178__arxiv-2305-02012.pdf",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-179",
+    "title": "Hyperparameter tuning with Optuna",
+    "url": "https://medium.com/@fawwazmts/hyperparameter-tuning-with-optuna-8e806b654f90",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-179__medium-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-180",
+    "title": "Machine Learning Optimization with Optuna",
+    "url": "https://medium.com/data-science/machine-learning-optimization-with-optuna-57593d700e52",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-180__medium-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-183",
+    "title": "Bayesian Sorcery for Hyperparameter Optimization",
+    "url": "https://medium.com/@becaye-balde/bayesian-sorcery-for-hyperparameter-optimization-using-optuna-1ee4517e89a",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-183__medium-com.html",
+    "note": "already present",
+    "cited_in": [
+      "01_development_pipeline.md",
+      "03_ai_tools_assistance.md",
+      "05_references.md"
+    ]
+  },
+  {
+    "src_id": "SRC-184",
+    "title": "sportsdataverse - PyPI",
+    "url": "https://pypi.org/project/sportsdataverse/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-184__pypi-org.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-187",
+    "title": "hoopR-nba-data",
+    "url": "https://github.com/sportsdataverse/hoopR-nba-data",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-187__github-com.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-188",
+    "title": "hoopR Documentation",
+    "url": "https://hoopr.sportsdataverse.org/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-188__hoopr-sportsdataverse-org.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-190",
+    "title": "SportsDataverse Packages",
+    "url": "https://www.sportsdataverse.org/packages",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-190__www-sportsdataverse-org.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-191",
+    "title": "Blog - SportsDataverse",
+    "url": "https://www.sportsdataverse.org/blog",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-191__www-sportsdataverse-org.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-192",
+    "title": "hoopR: Access Men's Basketball Play by Play Data",
+    "url": "https://sportsdataverse.r-universe.dev/hoopR",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-192__sportsdataverse-r-universe-dev.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-193",
+    "title": "hoopR Package Index",
+    "url": "https://hoopr.sportsdataverse.org/reference/index.html",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-193__hoopr-sportsdataverse-org.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-194",
+    "title": "Getting Started with hoopR",
+    "url": "https://hoopr.sportsdataverse.org/articles/getting-started-hoopR.html",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-194__hoopr-sportsdataverse-org.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-195",
+    "title": "sdv-py",
+    "url": "https://sportsdataverse-py.sportsdataverse.org/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-195__sportsdataverse-py-sportsdataverse-org.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-197",
+    "title": "NBA Data API",
+    "url": "https://www.sportapidata.com/nba-data-api",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-197__www-sportapidata-com.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-198",
+    "title": "Every Free Public Basketball Data Source",
+    "url": "https://nbaanalytic.com/articles/free-basketball-data-sources-ranked.html",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-198__nbaanalytic-com.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-199",
+    "title": "nba_api",
+    "url": "https://pypi.org/project/nba_api/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-199__pypi-org.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-203",
+    "title": "swar/nba_api",
+    "url": "https://github.com/swar/nba_api",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-203__github-com.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-204",
+    "title": "basketball_reference_scraper",
+    "url": "https://github.com/vishaalagartha/basketball_reference_scraper",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-204__github-com.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-207",
+    "title": "Chapter 2: Data Sources and Collection",
+    "url": "https://datafield.dev/professional-basketball-analytics/part-01/chapter-02/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-207__datafield-dev.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-208",
+    "title": "Getting Started with nba_api",
+    "url": "https://nbaanalytic.com/articles/nba-api-getting-started.html",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-208__nbaanalytic-com.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-209",
+    "title": "Basketball-Reference API",
+    "url": "https://www.apisports.net/providers/basketball-reference",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-209__www-apisports-net.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-210",
+    "title": "NBA API - Free Public APIs",
+    "url": "https://openpublicapis.com/api/nba-api",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-210__openpublicapis-com.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md"
+    ]
+  },
+  {
+    "src_id": "SRC-211",
+    "title": "NBA Stats API",
+    "url": "https://www.xscanhub.com/apis/nba-com",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 402,
+    "saved_as": null,
+    "note": "server refuses automated clients; save from a browser",
+    "cited_in": [
+      "06_data_sources.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-212",
+    "title": "Does anyone here have experience bypassing",
+    "url": "https://www.reddit.com/r/sportsanalytics/comments/11doqfg/does_anyone_here_have_experience_bypassing_the/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-212__www-reddit-com.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-214",
+    "title": "A Bayesian two-stage framework",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12671482/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-214__pmc-ncbi-nlm-nih-gov.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-215",
+    "title": "Play-by-play data analysis",
+    "url": "http://www2.stat-athens.aueb.gr/~jbn/conferences/MathSport_presentations/TRACK%20B/B9%20-%20Game%20Strategy%20&%20Decision%20Making/Grasseti_Play-by-play%20data%20Analysis.pdf",
+    "kind": "pdf",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/pdf/SRC-215__www2-stat-athens-aueb-gr.pdf",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-217",
+    "title": "Explaining Synergy's New Player Impact Stats",
+    "url": "https://sportradar.com/content-hub/blog/explaining-synergys-new-player-impact-stats/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-217__sportradar-com.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "07_data_categorization.md"
+    ]
+  },
+  {
+    "src_id": "SRC-218",
+    "title": "Dunks & Threes",
+    "url": "https://dunksandthrees.com/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-218__dunksandthrees-com.html",
+    "note": "already present",
+    "cited_in": [
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-219",
+    "title": "DARKO DPM",
+    "url": "https://www.darko.app/",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-219__www-darko-app.html",
+    "note": "already present",
+    "cited_in": [
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-220",
+    "title": "NBA Player Value Models",
+    "url": "https://medium.com/@johnchenmbb/calculating-rapm-steps-1-and-2-of-my-summer-plan-1a78e1476b1f",
+    "kind": "html",
+    "status": "saved",
+    "http_code": null,
+    "saved_as": "data/sources/html/SRC-220__medium-com.html",
+    "note": "already present",
+    "cited_in": [
+      "06_data_sources.md",
+      "07_data_categorization.md",
+      "08_data_pipeline_compliance.md"
+    ]
+  },
+  {
+    "src_id": "SRC-221",
+    "title": "The Historical RAPM Project",
+    "url": "https://squared2020.com/2026/04/29/the-historical-rapm-project/",
+    "kind": "html",
+    "status": "blocked",
+    "http_code": 429,
+    "saved_as": null,
+    "note": "rate limited; save from a browser",
+    "cited_in": [
+      "08_data_pipeline_compliance.md"
+    ]
+  }
+]

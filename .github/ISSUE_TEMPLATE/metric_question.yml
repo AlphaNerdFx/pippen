@@ -1,0 +1,23 @@
+name: Metric or method question
+description: A number looks wrong, or the method needs explaining.
+labels: ["method"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Disagreements about the numbers are welcome and useful. Please be specific
+        enough that the claim can be checked.
+  - type: textarea
+    id: observation
+    attributes:
+      label: What you observed
+      description: Which player, which season, which metric, and what value.
+    validations:
+      required: true
+  - type: textarea
+    id: expectation
+    attributes:
+      label: Why you think it is wrong
+      description: What you compared it against, and what that source says.
+    validations:
+      required: true

@@ -1,0 +1,48 @@
+# Hooks run on `git commit`. They catch what CI would catch, seconds after you
+# write the code instead of minutes after you push it.
+#
+# Install once:  uv run pre-commit install
+# Run manually:  uv run pre-commit run --all-files
+
+# The research documents are source material. They are never rewritten by tooling.
+exclude: '^(docs/research/|\.context/|GLOBAL_SESSION\.md|CLAUDE\.md)'
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-added-large-files
+        args: [--maxkb=512]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.6
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy (strict)
+        entry: uv run mypy
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: no-data-commits
+        name: block committing data payloads
+        entry: scripts/hooks/no_data_commits.py
+        language: script
+        pass_filenames: true
