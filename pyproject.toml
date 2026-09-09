@@ -135,6 +135,8 @@ module = [
   "pbpstats.*", "nba_api.*", "duckdb.*", "sklearn.*", "scipy.*",
   "numpyro.*", "jax.*", "lightgbm.*", "shap.*", "optuna.*", "mlflow.*",
   "streamlit.*", "plotly.*", "pandera.*",
+  # Only present with the `rigour` extra, which the lint job does not install.
+  "pytest_benchmark.*",
 ]
 ignore_missing_imports = true
 

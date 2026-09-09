@@ -30,6 +30,10 @@ jobs:
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: true
+          # mypy targets 3.10, the minimum this package supports. It must run on
+          # that version too: on a newer interpreter it resolves newer dependency
+          # stubs, and numpy's use PEP 695 syntax that a 3.10 target cannot parse.
+          python-version: "3.10"
       - run: uv sync --extra dev
       - name: ruff check
         run: uv run ruff check --output-format=github .

@@ -76,18 +76,28 @@ jobs:
         run: |
           uv run pytest tests/benchmarks -m benchmark -p no:randomly \
             --benchmark-json=benchmark.json
+      # History is kept in a cached JSON file rather than on a gh-pages branch,
+      # because Pages here is built from Actions and no such branch exists.
+      # Cache entries expire after 7 days idle, so history is best-effort until
+      # there is enough of it to justify a dedicated branch.
+      - name: Restore benchmark history
+        uses: actions/cache@v6
+        with:
+          path: ./cache
+          key: benchmark-history-${{ github.run_id }}
+          restore-keys: benchmark-history-
+
       - name: Compare against the stored baseline
         uses: benchmark-action/github-action-benchmark@v1.22.1
         with:
           tool: pytest
           output-file-path: benchmark.json
+          external-data-json-path: ./cache/benchmark-data.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
           # Comment on a pull request when something gets meaningfully slower.
           comment-on-alert: true
           alert-threshold: "150%"
           fail-on-alert: false
-          # Only the main branch updates the stored baseline.
-          auto-push: false
 
   mutation:
     name: Mutation testing
