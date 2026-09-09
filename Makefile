@@ -47,4 +47,3 @@ requirements:  ## Regenerate requirements.txt from the lockfile for non-uv users
 clean:  ## Remove caches and build artifacts
 	rm -rf build dist site .pytest_cache .ruff_cache .mypy_cache .coverage htmlcov
 	find . -type d -name __pycache__ -not -path './.venv/*' -exec rm -rf {} +
-

@@ -234,7 +234,7 @@ def write_manifest(sources: list[Source]) -> None:
 
     (OUTPUT_DIR / "MANIFEST.md").write_text("\n".join(lines), encoding="utf-8")
     (OUTPUT_DIR / "manifest.json").write_text(
-        json.dumps([asdict(s) for s in sources], indent=2), encoding="utf-8"
+        json.dumps([asdict(s) for s in sources], indent=2) + "\n", encoding="utf-8"
     )
 
 
