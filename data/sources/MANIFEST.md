@@ -12,11 +12,11 @@ python scripts/archive_sources.py
 
 | Outcome | Count |
 |---|---|
-| saved | 135 |
-| manual | 15 |
+| saved | 125 |
+| manual | 16 |
 | replaced | 1 |
-| duplicate | 1 |
-| unavailable | 5 |
+| duplicate | 3 |
+| unavailable | 12 |
 
 Total entries: 157
 
@@ -37,6 +37,7 @@ browser. See `scripts/source_overrides.json`.
 | SRC-73 | unchanged | squared2020.com rate-limits automated clients (HTTP 429). |
 | SRC-84 | unchanged | Academia.edu requires a session. |
 | SRC-112 | unchanged | Original bball-index about-the-data URL returns 404. Retrieved via search. Supports the PIPM methodology claims. |
+| SRC-125 | unchanged | Institutional repository at air.uniud.it refuses automated clients. |
 | SRC-166 | unchanged | LibHunt blocks automated clients. |
 | SRC-167 | unchanged | LibHunt blocks automated clients. |
 | SRC-169 | unchanged | ACM Digital Library requires a session. This is the Optuna paper. |
@@ -61,10 +62,19 @@ these needs a new citation or needs removing.
 |---|---|
 | SRC-26 | cryptbeam.com was a fan site and is no longer active. No archive recovered. The PER formula breakdown it supported is available from SRC-16 (Wikipedia) instead. |
 | SRC-64 | podimo.com is a podcast platform. The cited page is an episode description, not a written source. The research tool appears to have read the description text and treated it as an article. Not citable. |
+| SRC-80 | FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported RAPTOR's use of tracking data (Tier 2). |
 | SRC-86 | pages.stat.wisc.edu student presentation, returns 404. Course material, likely removed at semester end. |
-| SRC-125 | air.uniud.it institutional repository refuses automated clients and was not retrieved by hand. Still outstanding. |
+| SRC-97 | FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO's historical-comparables method. |
+| SRC-99 | FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO's RPM plus BPM input weighting. |
+| SRC-102 | FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO projection accuracy claims. |
+| SRC-103 | FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported the 2015-16 prediction methodology. |
+| SRC-104 | FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO's historical comparables. |
+| SRC-105 | FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO's WARP output definition. |
+| SRC-132 | FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO draft-prospect projections. |
 | SRC-211 | xscanhub.com returns HTTP 402 Payment Required. A commercial API directory, not a documentation source. |
+| SRC-35 | duplicate of SRC-34. arXiv 2601.15000 (L-RAPM), already archived under SRC-34. |
 | SRC-42 | duplicate of SRC-39. Same dead URL as SRC-39, cited under a second identifier. |
+| SRC-89 | duplicate of SRC-34. arXiv 2601.15000 (L-RAPM), already archived under SRC-34. |
 
 ## Archived
 
@@ -84,7 +94,6 @@ these needs a new citation or needs removing.
 | SRC-30 | html | `data/sources/html/SRC-030__www-reddit-com.html` | Basketball, Stat: PER |
 | SRC-33 | html | `data/sources/html/SRC-033__en-wikipedia-org.html` | Adjusted Plus Minus - Wikipedia |
 | SRC-34 | arxiv | `data/sources/pdf/SRC-034__arxiv-2601-15000.pdf` | Lineup Regularized Adjusted Plus-Minus |
-| SRC-35 | arxiv | `data/sources/pdf/SRC-035__arxiv-2601-15000.pdf` | Lineup Regularized Adjusted Plus-Minus |
 | SRC-36 | html | `data/sources/html/SRC-036__dunksandthrees-com.html` | About Estimated Plus-Minus |
 | SRC-37 | html | `data/sources/html/SRC-037__dunksandthrees-com.html` | NBA Player Metric Comparison |
 | SRC-40 | html | `data/sources/html/SRC-040__www-reddit-com.html` | Using Plus-Minus Stats Responsibly |
@@ -112,26 +121,18 @@ these needs a new citation or needs removing.
 | SRC-76 | html | `data/sources/html/SRC-076__medium-com.html` | Guide to NBA Advanced Metrics |
 | SRC-77 | html | `data/sources/html/SRC-077__betmana-co-uk.html` | Basketball Analytics for Betting |
 | SRC-78 | html | `data/sources/html/SRC-078__www-bball-index-com.html` | LEBRON Introduction |
-| SRC-80 | html | `data/sources/html/SRC-080__fivethirtyeight-com.html` | Is Lebron Still A Dominating... |
 | SRC-81 | html | `data/sources/html/SRC-081__github-com.html` | GitHub - Neil-Paine-1/NBA-elo |
 | SRC-82 | html | `data/sources/html/SRC-082__www-nbastuffer-com.html` | LEBRON Metric in Basketball Explained |
 | SRC-83 | html | `data/sources/html/SRC-083__www-reddit-com.html` | Methodologies for EPM and LEBRON |
 | SRC-85 | html | `data/sources/html/SRC-085__nbaanalytic-com.html` | Box Plus/Minus, EPM, and All-in-One Metrics: A Practical ... |
 | SRC-87 | html | `data/sources/html/SRC-087__www-nbastuffer-com.html` | RAPTOR Explained |
 | SRC-88 | arxiv | `data/sources/pdf/SRC-088__arxiv-2406-09895.pdf` | Lasso Multinomial Performance Indicators |
-| SRC-89 | arxiv | `data/sources/pdf/SRC-089__arxiv-2601-15000.pdf` | Lineup Regularized Adjusted Plus-Minus |
 | SRC-90 | html | `data/sources/html/SRC-090__www-bball-index-com.html` | Player Impact Plus-Minus |
 | SRC-91 | html | `data/sources/html/SRC-091__nbaanalytic-com.html` | Why Plus-Minus Needs a Thousand Games |
 | SRC-92 | html | `data/sources/html/SRC-092__apbr-org.html` | APBRmetrics |
 | SRC-94 | html | `data/sources/html/SRC-094__www-nbastuffer-com.html` | Regularized Adjusted Plus-Minus xRAPM Explained |
 | SRC-95 | html | `data/sources/html/SRC-095__www-nbastuffer-com.html` | NBA Plus-Minus & Impact Metrics in Basketball Explained |
-| SRC-97 | html | `data/sources/html/SRC-097__fivethirtyeight-com.html` | We're Predicting The Career Of Every NBA Player |
-| SRC-99 | html | `data/sources/html/SRC-099__fivethirtyeight-com.html` | What's New In Our NBA Player Projections |
 | SRC-101 | html | `data/sources/html/SRC-101__www-foxsports-com.html` | FiveThirtyEight's CARM-Elo projections weigh in on the Pistons |
-| SRC-102 | html | `data/sources/html/SRC-102__fivethirtyeight-com.html` | What Our NBA Projections Got Right (And Wrong) Last Season |
-| SRC-103 | html | `data/sources/html/SRC-103__fivethirtyeight-com.html` | How Our 2015-16 NBA Predictions Work |
-| SRC-104 | html | `data/sources/html/SRC-104__fivethirtyeight-com.html` | What's New In Our NBA Projections For 2016-17 |
-| SRC-105 | html | `data/sources/html/SRC-105__fivethirtyeight-com.html` | Our NBA Player Projections Are Ready |
 | SRC-106 | html | `data/sources/html/SRC-106__www-nbastuffer-com.html` | CARMELO Explained |
 | SRC-108 | html | `data/sources/html/SRC-108__www-reddit-com.html` | How good is TPA for determining how good a player is? |
 | SRC-109 | html | `data/sources/html/SRC-109__www-apbr-org.html` | APBRmetrics |
@@ -147,7 +148,6 @@ these needs a new citation or needs removing.
 | SRC-129 | html | `data/sources/html/SRC-129__hive-blog.html` | NBA: PIPM proves Doncic offensive king, Trae Young defensive liability and Rozier is hella overpaid! |
 | SRC-130 | html | `data/sources/html/SRC-130__medium-com.html` | Developing An Updated Tracking Plus-Minus Metric |
 | SRC-131 | html | `data/sources/html/SRC-131__www-nbastuffer-com.html` | Analytics 101 - Page 4 of 5 |
-| SRC-132 | html | `data/sources/html/SRC-132__fivethirtyeight-com.html` | The Top 50 NBA Draft Prospects |
 | SRC-133 | html | `data/sources/html/SRC-133__www-nbastuffer-com.html` | DARKO Explained |
 | SRC-134 | html | `data/sources/html/SRC-134__basketballstat-home-blog.html` | CARMELO - Basketball, Stat |
 | SRC-135 | html | `data/sources/html/SRC-135__orlandomagicdaily-com.html` | FiveThirtyEight projections analysis: Orlando Magic |

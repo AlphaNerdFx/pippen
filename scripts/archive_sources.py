@@ -142,6 +142,31 @@ def classify(source: Source) -> None:
         source.kind = "html"
 
 
+def display_path(path: Path) -> str:
+    """Return a path relative to the repository when possible, else absolute.
+
+    The archive normally sits inside the checkout, but the output directory is
+    configurable and tests point it elsewhere. Assuming containment turns a
+    relocated archive into a crash.
+    """
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
+
+
+def registrable_domain(url: str) -> str:
+    """Return the last two labels of a URL's host, lowercased.
+
+    Enough to tell fivethirtyeight.com from abcnews.com without pulling in a
+    public-suffix list. Subdomains are deliberately ignored, since a move from
+    ``www.`` to a bare host is not a hijack.
+    """
+    host = urlparse(url).netloc.lower().split(":")[0].removeprefix("www.")
+    labels = host.split(".")
+    return ".".join(labels[-2:]) if len(labels) >= 2 else host
+
+
 def fetch(source: Source, session: requests.Session, *, dry_run: bool) -> Source:
     """Download one source, recording the outcome on the dataclass."""
     if dry_run:
@@ -153,7 +178,7 @@ def fetch(source: Source, session: requests.Session, *, dry_run: bool) -> Source
 
     if target.exists() and target.stat().st_size > 0:
         source.status = "saved"
-        source.saved_as = str(target.relative_to(REPO_ROOT))
+        source.saved_as = display_path(target)
         source.note = "already present"
         return source
 
@@ -163,6 +188,16 @@ def fetch(source: Source, session: requests.Session, *, dry_run: bool) -> Source
     except requests.RequestException as exc:
         source.status = "error"
         source.note = type(exc).__name__
+        return source
+
+    landed = registrable_domain(response.url)
+    wanted = registrable_domain(source.url)
+    if wanted and landed and wanted != landed:
+        source.status = "redirected"
+        source.note = (
+            f"redirects off-site to {landed}; the original page is gone. "
+            "Nothing useful can be archived."
+        )
         return source
 
     if response.status_code in {401, 402, 403, 429}:
@@ -185,7 +220,7 @@ def fetch(source: Source, session: requests.Session, *, dry_run: bool) -> Source
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(response.content)
     source.status = "saved"
-    source.saved_as = str(target.relative_to(REPO_ROOT))
+    source.saved_as = display_path(target)
     time.sleep(POLITE_DELAY)
     return source
 
@@ -267,6 +302,21 @@ def write_manifest(sources: list[Source]) -> None:
         ]
         for source in by_status["replaced"]:
             lines.append(f"| {source.src_id} | <{source.corrected_url}> | {source.note} |")
+        lines.append("")
+
+    if by_status.get("redirected"):
+        lines += [
+            "## Redirected off-site",
+            "",
+            "The server answered, but with a different publication's page. The original",
+            "is gone. These returned HTTP 200, which is why a naive archiver records them",
+            "as saved.",
+            "",
+            "| SRC | Requested | Note |",
+            "|---|---|---|",
+        ]
+        for source in by_status["redirected"]:
+            lines.append(f"| {source.src_id} | <{source.url}> | {source.note} |")
         lines.append("")
 
     if by_status.get("unavailable") or by_status.get("duplicate"):

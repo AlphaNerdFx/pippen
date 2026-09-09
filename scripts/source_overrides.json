@@ -127,11 +127,55 @@
     "reason": "pages.stat.wisc.edu student presentation, returns 404. Course material, likely removed at semester end."
   },
   "SRC-125": {
-    "status": "unavailable",
-    "reason": "air.uniud.it institutional repository refuses automated clients and was not retrieved by hand. Still outstanding."
+    "status": "manual",
+    "saved_from": "univeristi_de_udini.pdf",
+    "kind": "pdf",
+    "note": "Institutional repository at air.uniud.it refuses automated clients."
   },
   "SRC-211": {
     "status": "unavailable",
     "reason": "xscanhub.com returns HTTP 402 Payment Required. A commercial API directory, not a documentation source."
+  },
+  "SRC-80": {
+    "status": "unavailable",
+    "reason": "FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported RAPTOR's use of tracking data (Tier 2)."
+  },
+  "SRC-97": {
+    "status": "unavailable",
+    "reason": "FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO's historical-comparables method."
+  },
+  "SRC-99": {
+    "status": "unavailable",
+    "reason": "FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO's RPM plus BPM input weighting."
+  },
+  "SRC-102": {
+    "status": "unavailable",
+    "reason": "FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO projection accuracy claims."
+  },
+  "SRC-103": {
+    "status": "unavailable",
+    "reason": "FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported the 2015-16 prediction methodology."
+  },
+  "SRC-104": {
+    "status": "unavailable",
+    "reason": "FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO's historical comparables."
+  },
+  "SRC-105": {
+    "status": "unavailable",
+    "reason": "FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO's WARP output definition."
+  },
+  "SRC-132": {
+    "status": "unavailable",
+    "reason": "FiveThirtyEight was shut down and its archive removed. The URL now redirects to abcnews.com/politics, so nothing of the original page survives. Supported CARMELO draft-prospect projections."
+  },
+  "SRC-35": {
+    "status": "duplicate_of",
+    "of": "SRC-34",
+    "note": "arXiv 2601.15000 (L-RAPM), already archived under SRC-34."
+  },
+  "SRC-89": {
+    "status": "duplicate_of",
+    "of": "SRC-34",
+    "note": "arXiv 2601.15000 (L-RAPM), already archived under SRC-34."
   }
 }
