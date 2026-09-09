@@ -69,6 +69,24 @@ Two further rules:
 
 ---
 
+## Development Workflow
+
+**Implement first, then test.** Do not write test bodies before the
+implementation exists. When both the tests and the code come from the same
+reading of a prompt, a misunderstanding is encoded in the tests and then
+satisfied by the code, and the pair is self-consistently wrong. Tests come after
+the behaviour has been reviewed.
+
+After writing tests, run mutation testing on anything numerical. Tests written
+after an implementation tend to assert what the code *does* rather than what it
+*should do*, and mutation testing is the check on that. See
+`docs/architecture/ci.md`.
+
+**Record significant decisions as ADRs** in `docs/architecture/decisions/`,
+before acting rather than after. The reasoning outlives the conclusion.
+
+---
+
 ## Project Overview
 
 This project develops a machine learning model to quantify NBA player impact using simultaneous metrics and adjusting for metric reliability. The model will later expand to analyze player swaps and team impact.
