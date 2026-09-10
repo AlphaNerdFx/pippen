@@ -122,9 +122,9 @@ Darryl Blackport, MIT licensed.
 Full documentation, including the method write-up and its limitations, lives at
 <https://alphanerdfx.github.io/pippen/>.
 
-- [Method](docs/methodology/) — how reliability is measured and how fusion works
-- [Architecture](docs/architecture/) — pipeline stages and data layout
-- [Research notes](docs/research/) — the background survey this project grew from
+- [Method](docs/methodology/). How reliability is measured and how fusion works.
+- [Architecture](docs/architecture/). Pipeline stages and data layout.
+- [Research notes](docs/research/). The background survey this project grew from.
 
 ## Contributing
 

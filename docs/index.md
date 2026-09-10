@@ -29,10 +29,10 @@ claim stated before the experiment is what separates research from a demo.
 
 <div class="grid cards" markdown>
 
-- **[Installation](guides/installation.md)** — get it running
-- **[Quickstart](guides/quickstart.md)** — the five commands that matter
-- **[Method](methodology/index.md)** — how the metric is built
-- **[Limitations](methodology/limitations.md)** — read before quoting a number
+- [Installation](guides/installation.md). Get it running.
+- [Quickstart](guides/quickstart.md). The five commands that matter.
+- [Method](methodology/index.md). How the metric is built.
+- [Limitations](methodology/limitations.md). Read before quoting a number.
 
 </div>
 

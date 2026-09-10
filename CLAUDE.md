@@ -69,6 +69,83 @@ Two further rules:
 
 ---
 
+## Writing Style
+
+Applies to documentation, commit messages, code comments, and replies to the
+maintainer.
+
+- No em dashes anywhere. Use a comma, a full stop, or restructure the sentence.
+- Bold sparingly. If most paragraphs carry bold, none of it carries weight.
+  Reserve it for the single thing a reader must not miss on a page.
+- Technical and professional, but recognisably written by a person.
+- Avoid the contrast-reveal construction. Sentences shaped like "it is not about
+  X, it is about Y" or "this was not caused by X, it was actually Y" read as
+  generated. State the thing directly and let the contrast be implied.
+- Avoid filler openers: "it is worth noting", "at the end of the day", "the key
+  insight here", "there are several ways to look at this".
+- Prefer concrete nouns and verbs to abstractions. Name the file, the function,
+  the number.
+
+---
+
+## Explaining Concepts and Tools
+
+The five-part structure above is the floor, not the ceiling. When a tool or
+concept is introduced into this codebase, the explanation carries all of the
+following.
+
+1. **The full run-up.** Trace the idea from where it started to what it is now.
+   A one-paragraph catch-up is not enough. The maintainer should be able to
+   reason about the tool in situations this project has not met yet.
+2. **Historic origin.** Which older technology or idea it descends from, and
+   what problem that older thing existed to solve. Understanding the ancestor
+   explains the shape of the descendant.
+3. **Concurrent usage.** Which areas of software and AI development use it at
+   the same time, and for what. This is what tells the maintainer whether the
+   skill transfers to a job.
+4. **Feature-level justification.** Not "we use MLflow" but which MLflow
+   features, for which purpose, and why those rather than other MLflow features
+   or a competing tool. Name what was rejected and why.
+5. **Code from this repository.** Show the actual snippet from this codebase,
+   not a generic example, and walk through the parts that matter.
+6. **Intersections.** When the tool meets other code here, explain both sides
+   and why the combination is better than either alone.
+
+---
+
+## Keeping the Project in Scope
+
+Three skills are used deliberately and repeatedly, not just when asked.
+
+| Skill | When | Why |
+|---|---|---|
+| `/teach` | After each significant implementation | The maintainer learns the concepts rather than only receiving code |
+| `/grill-me`, `/grilling` | Before building anything non-trivial | Stress-tests a plan while changing it is still cheap |
+
+The `teach` skill writes a stateful workspace (`MISSION.md`, `lessons/`,
+`reference/`, `learning-records/`) into its working directory. Run it with the
+working directory set to `docs/learning/` so a public repository root does not
+fill up with teaching scaffolding.
+
+---
+
+## Sub-agent Orchestration
+
+Agents run in parallel when their file scopes are disjoint, sequentially when
+they are not. Two constraints are real and neither is negotiable.
+
+- **Disjoint file scope.** Two agents editing the same file in one working tree
+  will clobber each other. Assign each agent an explicit list of files it may
+  touch, and tell it to report rather than edit anything outside that list.
+- **Staggered verification.** Concurrent `uv` invocations contend for the same
+  environment and lockfile. Two agents running the test suite at the same moment
+  can have one killed. Let agents implement in parallel, then verify in turn.
+
+After each agent finishes: run `/code-review` on its changes, then `/teach` on
+what the implementation demonstrates. Only then commit.
+
+---
+
 ## Development Workflow
 
 **Implement first, then test.** Do not write test bodies before the

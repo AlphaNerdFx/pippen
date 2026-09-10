@@ -69,10 +69,10 @@ The measured fraction lands near 0.44.
 **Verified** against two archived sources in this project's own bibliography:
 
 > "The 0.44 estimates how many possessions free throws actually cost (most trips
-> are two shots, but and-ones and technicals skew it)." — SRC-6
+> are two shots, but and-ones and technicals skew it)." (SRC-6)
 
 > "The 0.44 coefficient in the TS% formula estimates the portion of free throw
-> attempts that represent actual possessions" — SRC-55
+> attempts that represent actual possessions" (SRC-55)
 
 **Three things follow.**
 
