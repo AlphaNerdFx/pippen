@@ -58,10 +58,10 @@ Limit: mixed. The code is agent-parallel. The hoopR bulk download is a direct
 file fetch and takes minutes. The NBA stats client is network-bound at one
 request per second.
 
-- [ ] hoopR bulk Parquet downloader, 2002 to present
-- [ ] NBA stats client with rate limiting and backoff
-- [ ] pandera schemas for every table
-- [ ] Validation: completeness, consistency, accuracy, temporal integrity
+- [x] hoopR bulk Parquet downloader, 2002 to present
+- [x] NBA stats client with rate limiting and backoff
+- [x] pandera schemas for every table
+- [x] Validation: completeness, consistency, accuracy, temporal integrity
 - [ ] Nightly refresh workflow
 - [ ] Measure the possession coefficient per season instead of hard-coding 0.44
 - [x] Save the browser-only citations by hand (16 archived)
