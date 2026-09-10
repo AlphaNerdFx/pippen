@@ -143,11 +143,11 @@ See `TODO.md` for the roadmap and `.context/HANDOVER.md` for current state.
 **Tier 1 (High Reliability, 85-95%):**
 - EPM (Estimated Plus-Minus) - 85-90% reliability [SRC-36][SRC-39]
 - DARKO/DPM (Daily Adjusted and Regressed Kalman Optimized) - 85-90% reliability [SRC-111][SRC-133]
-- RAPM (Regularized Adjusted Plus-Minus) - 80-85% reliability [SRC-34][SRC-44]
 - Net Rating (team-level) - 90-95% reliability [SRC-55][SRC-77]
 - Four Factors (eFG%, TOV%, OREB%, FTR) - ~95% variance explained [SRC-46][SRC-77]
 
 **Tier 2 (Moderate-High Reliability, 75-85%):**
+- RAPM (Regularized Adjusted Plus-Minus) - 80-85% reliability [SRC-34][SRC-44]
 - PIPM (Player Impact Plus-Minus) - 80-85% reliability [SRC-90][SRC-113]
 - RPM/LEBRON/RAPTOR - 80-85% reliability [SRC-37][SRC-78][SRC-80]
 - BPM (OBPM only; exclude DBPM) - 70-75% overall, 85%+ for offense [SRC-47][SRC-54]
@@ -286,6 +286,22 @@ it are wrong and the code deliberately departs from them.
 | SRC-39 supports EPM's 85-90% reliability | That URL returns **404**. The figure has no live source. Reliability is now **measured**, not cited. |
 | Scrape stats.nba.com for bulk history | `hoopR-nba-data` publishes 2002-2026 as Parquet under **CC BY 4.0**. Download, do not scrape. |
 
+Two contradictions inside the research itself, found by reading it end to end:
+
+- **RAPM's tier was wrong in this file.** Both `nba_metrics_reliability_report.md`
+  and the ranking table in `nba_metrics_detailed_report.md` place RAPM in **Tier 2**
+  at 80-85%, which is what their own tier boundaries require. This file previously
+  promoted it to Tier 1. Corrected above. It matters because RAPM is the project's
+  ground truth, so overstating its reliability by a tier would flow into everything
+  downstream.
+- **The 0.44 possession constant is criticised and relied upon at the same time.**
+  PER is marked down partly because "constants like 0.44 are outdated", yet 0.44
+  appears in the endorsed formulas for Pace, TOV%, TS% and USG%, which sit in
+  Tier 1 and Tier 2. Either the constant is acceptable or it is not; it cannot be
+  a flaw in one metric and a foundation in four others.
+
+Both are examples of why this project measures reliability instead of citing it.
+
 Two further cautions:
 
 - **hoopR play-by-play has no on-court lineup column.** It is ESPN-sourced and carries event
@@ -329,8 +345,8 @@ src/pippen/
 
 | Tier | Reliability | Metrics | Use Case |
 |------|-------------|---------|----------|
-| **Tier 1** | 85-95% | EPM, DARKO, RAPM, Net Rating, Four Factors | Primary targets/features |
-| **Tier 2** | 75-85% | PIPM, RPM, LEBRON, RAPTOR, WS/48, OBPM | Secondary features |
+| **Tier 1** | 85-95% | EPM, DARKO, Net Rating, Four Factors, Team PIE | Primary targets/features |
+| **Tier 2** | 75-85% | **RAPM**, PIPM, RPM, LEBRON, RAPTOR, WS/48, OBPM | Secondary features |
 | **Tier 3** | 60-75% | PIE, TS%, AST%, REB%, TPA, VORP | Tertiary features, validation |
 | **Tier 4** | 50-65% | PER, DBPM, APM | Exclude or heavily downweight |
 
