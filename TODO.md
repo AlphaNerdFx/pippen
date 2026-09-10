@@ -18,8 +18,9 @@ the repository is public; this file is the outline.
 - [x] Named PIPPEN; Dependabot automation off so every commit has a human author
 - [x] Push to GitHub, enable Pages and Discussions, disable the wiki
 - [x] Get all three workflows green on a real runner
-- [ ] Enable private vulnerability reporting (repository settings, manual)
-- [ ] Reserve the `pippen` name on PyPI
+- [x] Enable private vulnerability reporting and Dependabot alerts
+- [x] Reserve the `pippen` name on PyPI (0.0.0, name reservation only)
+- [x] Audit the source research and record every contradiction in an errata
 
 ## Weeks 1-2 — Data layer → **ship: dataset v0**
 
