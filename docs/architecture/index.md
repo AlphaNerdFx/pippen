@@ -41,15 +41,22 @@ sources │ hoopR bulk   │   │ NBA stats    │
 
 ## Stage responsibilities
 
-| Stage | Module | Output |
-|---|---|---|
-| Download | `pippen.data.hoopr`, `pippen.data.nba_api` | `raw/` Parquet |
-| Validate | `pippen.data.validate` | pass or fail, with a report |
-| Possessions | `pippen.rapm.possessions` | stints with lineups |
-| Design matrix | `pippen.rapm.design` | sparse matrix |
-| Solve | `pippen.rapm.ridge` | coefficients with standard errors |
-| Reliability | `pippen.reliability.testretest` | one coefficient per metric |
-| Fusion | `pippen.model.fusion` | PIPPEN with intervals |
+| Stage | Module | Output | Status |
+|---|---|---|---|
+| Download | `pippen.data.hoopr`, `pippen.data.nba_api` | `raw/` Parquet | Built |
+| Shape validation | `pippen.data.schemas` | validated frame, or a report of every failure | Built |
+| Dataset validation | `pippen.data.validate` | pass, fail or skip per check | In progress |
+| Possessions | `pippen.rapm.possessions` | stints with lineups | Planned |
+| Design matrix | `pippen.rapm.design` | sparse matrix | Planned |
+| Solve | `pippen.rapm.ridge` | coefficients with standard errors | Planned |
+| Reliability | `pippen.reliability.testretest` | one coefficient per metric | Planned |
+| Fusion | `pippen.model.fusion` | PIPPEN with intervals | Planned |
+
+Two validation stages appear because they catch different things. A schema sees
+one table and checks its columns, dtypes and per-row constraints. Dataset
+validation sees several tables at once and checks the properties that only
+exist between them, such as whether every game in the schedule appears in the
+play-by-play.
 
 ## Why files rather than a database
 

@@ -86,6 +86,10 @@ nav:
           - 0002 Outcome-gated phases: architecture/decisions/0002-outcome-gated-phases.md
   - API reference:
       - paths: reference/paths.md
+      - repro: reference/repro.md
       - cli: reference/cli.md
+      - data.hoopr: reference/data-hoopr.md
+      - data.nba_api: reference/data-nba-api.md
+      - data.schemas: reference/data-schemas.md
   - Research notes:
       - Overview: research/index.md
