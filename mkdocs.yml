@@ -75,6 +75,7 @@ nav:
       - RAPM: methodology/rapm.md
       - Measuring reliability: methodology/reliability.md
       - Limitations: methodology/limitations.md
+      - Errata in the research: methodology/errata.md
   - Architecture:
       - Pipeline: architecture/index.md
       - Deployment: architecture/deployment.md

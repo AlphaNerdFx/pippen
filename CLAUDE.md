@@ -286,21 +286,29 @@ it are wrong and the code deliberately departs from them.
 | SRC-39 supports EPM's 85-90% reliability | That URL returns **404**. The figure has no live source. Reliability is now **measured**, not cited. |
 | Scrape stats.nba.com for bulk history | `hoopR-nba-data` publishes 2002-2026 as Parquet under **CC BY 4.0**. Download, do not scrape. |
 
-Two contradictions inside the research itself, found by reading it end to end:
+Contradictions inside the research itself are catalogued in
+`docs/methodology/errata.md`. The research files are **never edited**, so the
+errata is where corrections live. The three that affect day-to-day work:
 
-- **RAPM's tier was wrong in this file.** Both `nba_metrics_reliability_report.md`
-  and the ranking table in `nba_metrics_detailed_report.md` place RAPM in **Tier 2**
-  at 80-85%, which is what their own tier boundaries require. This file previously
-  promoted it to Tier 1. Corrected above. It matters because RAPM is the project's
-  ground truth, so overstating its reliability by a tier would flow into everything
-  downstream.
-- **The 0.44 possession constant is criticised and relied upon at the same time.**
-  PER is marked down partly because "constants like 0.44 are outdated", yet 0.44
-  appears in the endorsed formulas for Pace, TOV%, TS% and USG%, which sit in
-  Tier 1 and Tier 2. Either the constant is acceptable or it is not; it cannot be
-  a flaw in one metric and a foundation in four others.
+- **RAPM is Tier 2, not Tier 1.** Corrected above. Both research reports file it
+  under Tier 2 at 80-85%, which their own boundaries require. RAPM is the
+  project's ground truth, so the overstatement would have flowed downstream.
+- **Tier labels were applied inconsistently.** D-EPM and D-RAPM both score
+  80-85%, yet one is labelled Tier 1 and the other Tier 2. The tiers were
+  assigned by impression and numbered afterwards, which is the strongest single
+  argument for measuring reliability rather than citing it.
+- **0.44 is not an arbitrary constant, and the criticism of PER is wrong.** It
+  estimates the fraction of free throw attempts that consume a possession, since
+  a two-shot foul ends one possession rather than two and an and-one ends none.
+  The same constant serves the same purpose in Pace, TOV%, TS% and USG%. It is
+  **not** the two-versus-three adjustment; that is eFG%'s `0.5 × 3PM`. The real
+  objections to PER, which stand on their own, are box-score-only defence, no
+  context adjustment, fitted event weights, and forced renormalisation to 15.
 
-Both are examples of why this project measures reliability instead of citing it.
+**Consequence for the pipeline:** the legitimate version of the complaint is that
+the true fraction drifts with rule changes, and it applies to every metric rather
+than to PER. **Measure the possession coefficient per season** from play-by-play
+rather than hard-coding 0.44, and treat the fixed value as the baseline.
 
 Two further cautions:
 
