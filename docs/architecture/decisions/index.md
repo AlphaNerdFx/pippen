@@ -33,3 +33,4 @@ to write the record before acting rather than after.
 | ID | Title | Status |
 |---|---|---|
 | [0001](0001-python-as-orchestration-layer.md) | Python as the orchestration layer | Accepted |
+| [0002](0002-outcome-gated-phases.md) | Outcome-gated phases instead of time-boxed weeks | Accepted |

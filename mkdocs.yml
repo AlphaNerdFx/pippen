@@ -83,6 +83,7 @@ nav:
       - Decisions:
           - Overview: architecture/decisions/index.md
           - 0001 Python as orchestration: architecture/decisions/0001-python-as-orchestration-layer.md
+          - 0002 Outcome-gated phases: architecture/decisions/0002-outcome-gated-phases.md
   - API reference:
       - paths: reference/paths.md
       - cli: reference/cli.md

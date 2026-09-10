@@ -1,11 +1,30 @@
 # Roadmap
 
-Twelve weeks to first public release. Five shipping events. Tracked as issues once
-the repository is public; this file is the outline.
+Phases are gated by outcomes, not by dates. Each one declares what must be true
+before it starts, what must be true before it is finished, and what actually
+limits it. The reasoning is in
+[ADR 0002](docs/architecture/decisions/0002-outcome-gated-phases.md).
 
-## Week 0: Foundation
+## How to read the limit column
 
-Ships: public repository
+| Limit | Meaning | Do more agents help? |
+|---|---|---|
+| Agent-parallel | Well specified, verifiable, splits across files | Yes, substantially |
+| Network-bound | Capped by a rate limit we chose to honour | No |
+| Compute-bound | CPU time on a fixed algorithm | No, only better algorithms |
+| Judgement | Needs a decision from the maintainer | No |
+| Review-bound | Capped by how fast one person can check the output | No, they make it worse |
+
+---
+
+## Phase 0: Foundation
+
+Status: complete. Took 13 hours and 18 commits.
+
+Entry: none.
+Done when: the repository is public, three workflows pass on a real runner, the
+docs site is live, and the package name is reserved.
+Limit: agent-parallel.
 
 - [x] `git init`, Apache-2.0 licence, `.gitignore` that blocks data
 - [x] `pyproject.toml` with uv, ruff, mypy strict, pytest
@@ -23,10 +42,21 @@ Ships: public repository
 - [x] Enable private vulnerability reporting and Dependabot alerts
 - [x] Reserve the `pippen` name on PyPI (0.0.0, name reservation only)
 - [x] Audit the source research and record every contradiction in an errata
+- [x] Writing, explanation, scope and orchestration rules in CLAUDE.md
 
-## Weeks 1-2: Data layer
+---
 
-Ships: dataset v0
+## Phase 1: Data layer
+
+Ships: dataset v0.
+
+Entry: Phase 0 complete.
+Done when: a clean checkout can run one command and end up with validated
+play-by-play and box scores on disk for 2015 to 2024, with every table passing
+its schema and every game in the schedule accounted for.
+Limit: mixed. The code is agent-parallel. The hoopR bulk download is a direct
+file fetch and takes minutes. The NBA stats client is network-bound at one
+request per second.
 
 - [ ] hoopR bulk Parquet downloader, 2002 to present
 - [ ] NBA stats client with rate limiting and backoff
@@ -41,63 +71,126 @@ Ships: dataset v0
   possible: `docs/research/` is a protected record and is never edited. The errata
   page is the resolution, and it names each dead source and what it used to support.
 
-## Weeks 3-4: RAPM
+---
 
-Ships: validation report
+## Phase 2: RAPM
+
+Ships: a validation report.
+
+Entry: Phase 1 done, with possession-level data on disk.
+Done when: computed multi-season RAPM reaches Spearman correlation above 0.85
+against a published multi-season RAPM, possession counts reconcile to official
+box scores within one percent, and bootstrap standard errors shrink as seasons
+are added.
+Limit: network-bound to fetch possessions, then compute-bound for the solve,
+then judgement at the gate.
 
 - [ ] Possession and stint extraction via pbpstats
 - [ ] Sparse design matrix builder
 - [ ] Ridge solver, cross-validated lambda, multi-season windows
 - [ ] Bootstrap standard errors
 - [ ] Property tests: possessions reconcile, five a side, order invariance
-- [ ] **Decision gate:** Spearman above 0.85 against published RAPM
+- [ ] Decision gate: Spearman above 0.85 against published RAPM
 
-## Weeks 5-7: The measurement model
+If the gate fails and cannot be fixed within a reasonable effort, the target
+switches to next-season team net rating, which needs no external reference. That
+is the maintainer's decision, not an automatic fallback.
+
+---
+
+## Phase 3: The measurement model
+
+Entry: Phase 2 gate passed, or the fallback target agreed.
+Done when: the claim under test has been run out of sample and the answer is
+published either way, and the credible intervals are calibrated so that roughly
+90 percent of held-out values land inside the 90 percent interval.
+Limit: compute-bound for fitting, judgement for the result.
 
 - [ ] Split-half reliability with Spearman-Brown correction
 - [ ] NumPyro hierarchical fusion model
 - [ ] LightGBM and ridge baselines, tuned with Optuna, tracked in MLflow
 - [ ] SHAP attributions
 - [ ] Interval calibration check
-- [ ] **Run the claim under test and publish the answer either way**
+- [ ] Run the claim under test and publish the answer either way
 
-## Week 8: Package
+The claim: does PIPPEN predict next-season team net rating better than any single
+input metric does, out of sample? A negative answer is a result and gets
+published as one.
 
-Ships: v0.1.0 on PyPI
+---
+
+## Phase 4: Package
+
+Ships: v0.1.0 on PyPI.
+
+Entry: Phase 3 has produced numbers worth installing.
+Done when: `pip install pippen` gives a working metric, and the release was
+published by the workflow rather than by hand.
+Limit: agent-parallel, with one manual step that cannot be automated.
 
 - [ ] Freeze the public API, complete docstrings
-- [ ] Configure Trusted Publishing on PyPI
+- [ ] Configure Trusted Publishing on PyPI (manual, needs the maintainer's login)
 - [ ] Zenodo integration for a citable DOI
 
-## Week 9: API
+---
 
-Ships: live endpoint
+## Phase 5: Serving
+
+Ships: a live endpoint.
+
+Entry: Phase 4 released.
+Done when: a public URL returns a player's estimate with its interval, and the
+container image builds from a clean checkout.
+Limit: agent-parallel, with a manual deployment step.
 
 - [ ] FastAPI service with request and response models
 - [ ] Multi-stage Dockerfile, non-root
 - [ ] Deploy to Hugging Face Spaces
 - [ ] KServe manifests, validated against a local kind cluster
 
-## Week 10: Dashboard
+---
 
-Ships: public dashboard
+## Phase 6: Dashboard
+
+Ships: a public dashboard.
+
+Entry: Phase 5 serving estimates.
+Done when: a visitor can look up a player, see the interval, and read what the
+metric cannot tell them without having to go looking for it.
+Limit: review-bound. Design judgement does not delegate well.
 
 - [ ] Player lookup with credible intervals
 - [ ] Player comparison
 - [ ] Measured reliability of each input, shown honestly
 - [ ] A page saying what the metric cannot tell you
 
-## Week 11: Automation
+---
+
+## Phase 7: Automation
+
+Entry: Phase 5 complete.
+Done when: a scheduled run refreshes data, retrains, and publishes without
+anyone touching it, and a drift report appears in the docs.
+Limit: agent-parallel.
 
 - [ ] Scheduled refresh, retrain, publish
 - [ ] Evidently drift report rendered into the docs
 - [ ] Model card
 
-## Week 12: Launch
+---
+
+## Phase 8: Launch
+
+Entry: Phases 3 and 4 complete. The dashboard is optional for this.
+Done when: the method is written up including its limitations, and it has been
+put in front of people who will argue with it.
+Limit: judgement and writing. Does not delegate.
 
 - [ ] Method write-up, including limitations
 - [ ] Post to r/nbaanalytics and the APBRmetrics forum
 - [ ] Consider a Journal of Open Source Software submission
+
+---
 
 ## Deliberately out of scope
 
