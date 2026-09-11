@@ -1,0 +1,158 @@
+# Keeps the current season's cached data current. Nothing here is committed:
+# data/ is gitignored and a pre-commit hook blocks data files from ever
+# reaching git, so this workflow's only job is to prove that a fresh copy of
+# the current season, sitting on this ephemeral runner, is fetchable and
+# internally consistent right now.
+
+name: Refresh data
+
+on:
+  schedule:
+    # Daily, during the NBA season only (October's tip-off through the June
+    # Finals; July-September is the off-season and there is nothing new to
+    # fetch, so the job simply does not fire then).
+    #
+    # Time of day: 13:00 UTC. hoopR is ESPN-sourced (see hoopr.py) and
+    # republishes on its own schedule, which is undocumented in any source
+    # this project cites, so the hour below is inferred, not confirmed. The
+    # latest NBA tip-offs are West Coast games starting around 22:00-22:30
+    # Pacific; at roughly 2.5-3 hours a game, the last final whistle lands
+    # near 01:00-01:30 Pacific, i.e. 08:30-09:30 UTC depending on daylight
+    # saving. Running at 13:00 UTC leaves a buffer of several hours past the
+    # latest possible final whistle for both ESPN's own box score to post and
+    # hoopR's ingestion to catch up, before this workflow reads it. Running
+    # any earlier risks silently fetching yesterday's slate, which would pass
+    # validation and look fine. If a run is ever observed to have missed the
+    # previous night's games, push this later rather than earlier.
+    - cron: "0 13 * 1-6,10-12 *"
+  workflow_dispatch:
+
+# A second run should not overlap a first: both would be downloading the
+# same files to two independent runners, which wastes runner minutes without
+# corrupting anything (downloads land in a fresh, isolated workspace each
+# time; see hoopr.py's atomic-write-then-rename). Cancelling the older run
+# in favour of the newer one is safe for the same reason ci.yml cancels: the
+# work is fully idempotent, so nothing is lost by abandoning a redundant copy
+# of it.
+concurrency:
+  group: refresh-data-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+# Note: astral-sh/setup-uv publishes no moving major tag (it stopped after
+# v7), so it is pinned to an exact version here, matching ci.yml and
+# rigour.yml, and must be bumped by hand.
+
+env:
+  UV_FROZEN: "1"
+
+jobs:
+  refresh:
+    name: Refresh current season
+    runs-on: ubuntu-latest
+    # Four HTTP downloads plus a validation pass over one season. Each
+    # download is internally bounded (30s per request, 4 attempts with
+    # capped exponential backoff -- see hoopr.py), so this is generous
+    # headroom, not a number chosen to fit observed runtime; it exists so a
+    # stuck runner is killed instead of burning an hour doing nothing.
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+      # Fetching and validating only need the base install: pandas, pyarrow,
+      # requests, typer, rich and pandera are all core dependencies (see
+      # pyproject.toml). No --extra is needed, unlike ci.yml's jobs.
+      - run: uv sync
+
+      - name: Determine the current NBA season
+        id: season
+        run: |
+          # Season end year, matching the convention documented in hoopr.py:
+          # the season that starts in October of year Y-1 is labelled Y
+          # (2023-24 is season 2024). It is "current" under that label from
+          # the October it starts through the following September, which
+          # covers both the in-season months and the July-September
+          # off-season, because no later season takes over the label until
+          # the next October does. So: October, November or December means
+          # the new season has just begun and the label is year+1; any other
+          # month means the season labelled with the current year is still
+          # the one in effect.
+          #
+          # `10#` forces base-10 arithmetic. Without it, bash treats a
+          # zero-padded month like "09" as an invalid octal literal and
+          # errors out.
+          month=$(date -u +%m)
+          year=$(date -u +%Y)
+          if [ "$((10#$month))" -ge 10 ]; then
+            season=$((year + 1))
+          else
+            season=$year
+          fi
+          echo "season=$season" >> "$GITHUB_OUTPUT"
+          echo "Resolved current season: $season"
+
+      # The schedule is published as one file covering every season, not one
+      # per season (see is_master_dataset in hoopr.py); --seasons is a
+      # required flag but is ignored for this dataset. It is force-refetched
+      # because it grows and corrects throughout a live season, and the CLI
+      # only ever re-downloads an already-present master file when told to.
+      - name: Fetch master schedule
+        run: >
+          uv run pippen fetch --seasons ${{ steps.season.outputs.season }}
+          --dataset schedules --force
+
+      # Play-by-play, player box scores and team box scores are the three
+      # per-season tables pippen validate cross-checks against the schedule.
+      # Each is force-refetched for the same reason as the schedule: the
+      # current season's file for these games is still changing.
+      - name: Fetch play-by-play
+        run: >
+          uv run pippen fetch --seasons ${{ steps.season.outputs.season }}
+          --dataset play_by_play --force
+
+      - name: Fetch player box scores
+        run: >
+          uv run pippen fetch --seasons ${{ steps.season.outputs.season }}
+          --dataset player_box --force
+
+      - name: Fetch team box scores
+        run: >
+          uv run pippen fetch --seasons ${{ steps.season.outputs.season }}
+          --dataset team_box --force
+
+      # pippen validate exits non-zero on any failed check, which fails this
+      # step and therefore the job: a refresh that silently ingests broken
+      # data is worse than one that does not run. The default GitHub Actions
+      # bash shell runs with pipefail already on, so `tee` capturing the
+      # output to a file does not hide that non-zero exit from the step.
+      - name: Validate the season
+        id: validate
+        run: >
+          uv run pippen validate --seasons ${{ steps.season.outputs.season }}
+          | tee validation-report.txt
+
+      # Runs even when validation (or an earlier fetch) failed, so the report
+      # is available without re-running anything. If a fetch step failed
+      # before this one, validation never ran and no report file exists;
+      # upload-artifact's default if-no-files-found behaviour is to warn, not
+      # fail, so that case does not mask the real failure with a second one.
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: validation-report
+          path: validation-report.txt
+          retention-days: 30
+
+      # No cleanup step follows a failed fetch or a failed validation on
+      # purpose. This job runs on a GitHub-hosted runner: a fresh VM,
+      # provisioned for this job alone and destroyed the moment it ends,
+      # regardless of outcome. Nothing written under data/ survives past this
+      # job -- there is no cache or artifact upload of data/ itself -- and
+      # nothing here ever commits it, so a partially-fetched season left on
+      # disk at failure time costs nothing and there is nothing to clean up
+      # by hand.

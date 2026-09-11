@@ -213,6 +213,62 @@ gh api repos/OWNER/NAME/tags --jq '.[].name' | head
 Dependabot disabled here they are bumped by hand. That is why the two actions
 without major tags are pinned exactly and the rest track a major.
 
+## Scheduled data refresh
+
+`ci.yml` and `rigour.yml` both run against every change. `refresh-data.yml` runs
+on a clock instead: it exists to answer a question neither of those can, which
+is whether the *data*, not the code, is still current.
+
+**What it is.** A workflow that runs on a cron schedule rather than on a push
+or pull request. GitHub Actions triggers it at a fixed time regardless of
+whether anything in the repository changed, in addition to a manual
+`workflow_dispatch` trigger for an on-demand run.
+
+**Where it comes from.** The `cron` job, from Unix system administration:
+a daemon that wakes up on a schedule and runs a command, used since the 1970s
+for anything that needs to happen periodically without a human remembering to
+start it. GitHub Actions' `schedule` trigger is that same idea, hosted.
+
+**Who uses it and why.** Any pipeline that ingests from a source outside its
+own control: a nightly ETL job pulling from a partner API, a scraper checking
+for new listings, a security scanner re-running against yesterday's
+dependencies to catch a vulnerability disclosed after the last commit. The
+common thread is that the check has nothing to do with a code change and
+everything to do with time passing.
+
+**Why it applies here.** `pippen`'s own tests and lint checks say nothing about
+whether `data/raw/` reflects last night's games. hoopR publishes new
+`play_by_play`, `player_box` and `team_box` files, and updates the master
+schedule, on its own timetable, not this repository's. Without a scheduled
+job, staleness is silent: nothing about a green `ci.yml` run tells anyone that
+the cached data is three weeks old. `refresh-data.yml` re-downloads the
+current season with `--force` and runs `pippen validate` against the result,
+so a broken or stale upstream file turns into a failed GitHub Actions run
+instead of an unnoticed gap.
+
+The workflow determines "current season" from the run date rather than a
+hardcoded year, using the season-end-year convention documented in
+`hoopr.py`: a season that starts in October of year Y-1 is labelled Y, and it
+keeps that label through the following September. It schedules at 13:00 UTC,
+chosen as a buffer past the latest West Coast games can plausibly finish,
+since hoopR's own publish time is not documented in any source this project
+cites; if a run is ever caught missing the previous night's games, that hour
+needs pushing back, and the workflow says so in its own comments.
+
+On a validation failure, the job fails and uploads the validation report as
+an artifact, and nothing is cleaned up afterward. Both halves of that follow
+from the same fact: the runner is a fresh virtual machine that GitHub destroys
+at the end of the job. A partially-fetched season sitting in `data/raw/` when
+the job ends costs nothing, because that filesystem never persists and this
+workflow never commits from it, data never enters git regardless.
+
+**What it costs.** A scheduled job runs whether or not anything needed
+refreshing, which spends runner minutes during the season even on nights when
+hoopR published nothing new; `pippen fetch --force` cannot tell the
+difference in advance, only after redownloading. The schedule is also a
+guess about hoopR's publish time rather than a documented fact, so it may
+need retuning once real failures show the actual cadence.
+
 ## Dependency updates
 
 Dependabot's automated pull requests are switched off deliberately, so that every
