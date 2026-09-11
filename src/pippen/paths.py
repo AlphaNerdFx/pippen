@@ -73,6 +73,30 @@ def stage_dir(stage: str, *, create: bool = False) -> Path:
     return path
 
 
+def dataset_file(stage: str, dataset: str, filename: str, *, create: bool = False) -> Path:
+    """Return the path for a dataset file that is not split by season.
+
+    Some sources publish one file covering every season rather than one file
+    per season. The hoopR schedule is one: a single table spanning 2002 to
+    2027. Giving it a season-numbered path would mean storing the same file
+    once per season.
+
+    Args:
+        stage: Pipeline stage, as accepted by :func:`stage_dir`.
+        dataset: Dataset name, for example ``schedules``.
+        filename: File name without an extension, for example
+            ``nba_schedule_master``.
+        create: When true, create the parent directory if missing.
+
+    Returns:
+        The full path to the dataset's Parquet file.
+    """
+    directory = stage_dir(stage) / dataset
+    if create:
+        directory.mkdir(parents=True, exist_ok=True)
+    return directory / f"{filename}.parquet"
+
+
 def season_file(stage: str, dataset: str, season: int, *, create: bool = False) -> Path:
     """Return the Parquet path for one dataset and one season.
 

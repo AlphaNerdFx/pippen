@@ -118,3 +118,30 @@ def test_season_file_creates_parent_on_request(
     target = paths.season_file("raw", "player_box", 2024, create=True)
     assert target.parent.is_dir()
     assert not target.exists()
+
+
+def test_dataset_file_is_season_independent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Some sources publish one file covering every season. Giving it a
+    # season-numbered path would store the same file once per season.
+    monkeypatch.setenv(paths.ENV_VAR, str(tmp_path))
+    target = paths.dataset_file("raw", "schedules", "nba_schedule_master")
+    assert target.name == "nba_schedule_master.parquet"
+    assert target.parent.name == "schedules"
+
+
+def test_dataset_file_does_not_create_by_default(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv(paths.ENV_VAR, str(tmp_path))
+    assert not paths.dataset_file("raw", "schedules", "master").parent.exists()
+
+
+def test_dataset_file_creates_parent_on_request(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv(paths.ENV_VAR, str(tmp_path))
+    target = paths.dataset_file("raw", "schedules", "master", create=True)
+    assert target.parent.is_dir()
+    assert not target.exists()

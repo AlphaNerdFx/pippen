@@ -121,18 +121,30 @@ def check_schedule_and_play_by_play_agree(
     if play_by_play is None:
         return _skip(check, "play_by_play")
 
-    scheduled = set(schedule["game_id"].dropna().unique())
+    # A postponed game is on the schedule and was never played, so it has no
+    # events and never will. Counting it as missing data would make this check
+    # fail on every real season, and a check that always fails gets ignored.
+    # Verified on 2024: two postponed games, both status_type_completed False.
+    playable = schedule
+    if "status_type_completed" in schedule.columns:
+        playable = schedule.loc[schedule["status_type_completed"].fillna(False).astype(bool)]
+
+    scheduled = set(playable["game_id"].dropna().unique())
     played = set(play_by_play["game_id"].dropna().unique())
 
     missing_pbp = scheduled - played
     unscheduled = played - scheduled
     if not missing_pbp and not unscheduled:
-        return CheckResult(check, "passed", f"all {len(scheduled)} scheduled games have events")
+        excluded = len(schedule) - len(playable)
+        note = f", {excluded} not played" if excluded else ""
+        return CheckResult(
+            check, "passed", f"all {len(scheduled)} completed games have events{note}"
+        )
 
     problems = []
     if missing_pbp:
         problems.append(
-            f"{len(missing_pbp)} scheduled games have no events ({_sample(missing_pbp)})"
+            f"{len(missing_pbp)} completed games have no events ({_sample(missing_pbp)})"
         )
     if unscheduled:
         problems.append(
@@ -212,10 +224,21 @@ def check_teams_match_the_schedule(
     if play_by_play is None:
         return _skip(check, "play_by_play")
 
-    from_schedule = schedule.set_index("game_id")[["home_team_id", "away_team_id"]]
-    from_events = (
-        play_by_play.groupby("game_id")[["home_team_id", "away_team_id"]].first().astype("Int64")
-    )
+    # The two sources name the same thing differently. The schedule uses
+    # home_id and away_id; the play-by-play uses home_team_id and
+    # away_team_id. Both were verified against real 2024 files.
+    schedule_columns = ["home_id", "away_id"]
+    event_columns = ["home_team_id", "away_team_id"]
+    if any(column not in schedule.columns for column in schedule_columns):
+        return _skip(check, f"one of {schedule_columns} in schedules")
+    if any(column not in play_by_play.columns for column in event_columns):
+        return _skip(check, f"one of {event_columns} in play_by_play")
+
+    from_schedule = schedule.set_index("game_id")[schedule_columns]
+    from_schedule.columns = ["home", "away"]
+    from_events = play_by_play.groupby("game_id")[event_columns].first()
+    from_events.columns = ["home", "away"]
+    from_events = from_events.astype("Int64")
     shared = from_schedule.index.intersection(from_events.index)
     if len(shared) == 0:
         return CheckResult(check, "skipped", "the two tables share no game identifiers")

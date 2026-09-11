@@ -64,7 +64,8 @@ def _player_box(rows: int = 2) -> pd.DataFrame:
             "athlete_id": [203_999 + i for i in range(rows)],
             "team_id": [1_610_612_743] * rows,
             "minutes": [34.5] * rows,
-            "field_goal_pct": [0.52] * rows,
+            "field_goals_made": [9.0] * rows,
+            "field_goals_attempted": [17.0] * rows,
         }
     )
 
@@ -75,7 +76,9 @@ def _team_box() -> pd.DataFrame:
             "game_id": [401_585_000, 401_585_000],
             "season": [2024, 2024],
             "team_id": [1_610_612_743, 1_610_612_747],
-            "field_goal_pct": [0.48, 0.51],
+            "field_goals_made": [40.0, 42.0],
+            "field_goals_attempted": [88.0, 85.0],
+            "field_goal_pct": [45.5, 49.4],
         }
     )
 
@@ -86,8 +89,8 @@ def _schedules(rows: int = 2) -> pd.DataFrame:
             "game_id": [401_585_000 + i for i in range(rows)],
             "season": [2024] * rows,
             "game_date": ["2024-01-15"] * rows,
-            "home_team_id": [1_610_612_743] * rows,
-            "away_team_id": [1_610_612_747] * rows,
+            "home_id": [1_610_612_743] * rows,
+            "away_id": [1_610_612_747] * rows,
         }
     )
 
@@ -185,12 +188,33 @@ def test_a_period_below_one_fails() -> None:
         schemas.validate(frame, "play_by_play")
 
 
-@pytest.mark.parametrize("bad_pct", [1.5, -0.1])
-def test_a_percentage_outside_zero_to_one_fails(bad_pct: float) -> None:
-    frame = _player_box()
+@pytest.mark.parametrize("bad_pct", [150.0, -0.1])
+def test_a_percentage_outside_its_range_fails(bad_pct: float) -> None:
+    # team_box is the table that carries a percentage. player_box does not,
+    # which the first version of this schema guessed wrong.
+    frame = _team_box()
     frame.loc[0, "field_goal_pct"] = bad_pct
     with pytest.raises(schemas.SchemaValidationError, match="field_goal_pct"):
-        schemas.validate(frame, "player_box")
+        schemas.validate(frame, "team_box")
+
+
+@pytest.mark.parametrize("dataset", ["player_box", "team_box"])
+def test_making_more_shots_than_were_taken_fails(dataset: str) -> None:
+    # Arithmetically impossible rather than merely unusual, so it catches a
+    # column misalignment or a bad join rather than an unusual game.
+    frame = _player_box() if dataset == "player_box" else _team_box()
+    frame.loc[0, "field_goals_attempted"] = 10.0
+    frame.loc[0, "field_goals_made"] = 11.0
+    with pytest.raises(schemas.SchemaValidationError, match="cannot exceed"):
+        schemas.validate(frame, dataset)
+
+
+@pytest.mark.parametrize("dataset", ["player_box", "team_box"])
+def test_making_every_shot_taken_is_allowed(dataset: str) -> None:
+    frame = _player_box() if dataset == "player_box" else _team_box()
+    frame.loc[0, "field_goals_attempted"] = 10.0
+    frame.loc[0, "field_goals_made"] = 10.0
+    assert len(schemas.validate(frame, dataset)) == len(frame)
 
 
 @pytest.mark.parametrize("bad_season", [0, 1800, 99_999])
@@ -199,6 +223,13 @@ def test_an_implausible_season_fails(bad_season: int) -> None:
     frame = _player_box()
     frame.loc[0, "season"] = bad_season
     with pytest.raises(schemas.SchemaValidationError, match="season"):
+        schemas.validate(frame, "player_box")
+
+
+def test_negative_shot_counts_fail() -> None:
+    frame = _player_box()
+    frame.loc[0, "field_goals_attempted"] = -1.0
+    with pytest.raises(schemas.SchemaValidationError, match="field_goals_attempted"):
         schemas.validate(frame, "player_box")
 
 
@@ -246,10 +277,10 @@ def test_two_teams_playing_in_different_games_is_allowed() -> None:
 def test_a_team_playing_itself_fails() -> None:
     # A join or scrape bug that copies one side into both, not a real fixture.
     frame = _schedules()
-    frame.loc[0, "away_team_id"] = frame.loc[0, "home_team_id"]
+    frame.loc[0, "away_id"] = frame.loc[0, "home_id"]
     with pytest.raises(schemas.SchemaValidationError) as caught:
         schemas.validate(frame, "schedules")
-    assert "home_team_id must differ from away_team_id" in str(caught.value)
+    assert "home_id must differ from away_id" in str(caught.value)
 
 
 # -------------------------------------------------------------------- coercion
@@ -296,19 +327,19 @@ def test_an_unrecognised_column_passes_through_untouched() -> None:
 
 def test_the_error_names_the_dataset_the_column_and_the_value() -> None:
     frame = _player_box()
-    frame.loc[0, "field_goal_pct"] = 2.0
+    frame.loc[0, "minutes"] = -3.0
     with pytest.raises(schemas.SchemaValidationError) as caught:
         schemas.validate(frame, "player_box")
     message = str(caught.value)
     assert "player_box" in message
-    assert "field_goal_pct" in message
-    assert "2.0" in message
+    assert "minutes" in message
+    assert "-3.0" in message
 
 
 def test_the_error_counts_the_problems() -> None:
     frame = _player_box()
-    frame.loc[0, "field_goal_pct"] = 2.0
-    frame.loc[1, "minutes"] = -5.0
+    frame.loc[0, "minutes"] = -3.0
+    frame.loc[1, "season"] = 1800
     with pytest.raises(schemas.SchemaValidationError) as caught:
         schemas.validate(frame, "player_box")
     assert "2 problem(s)" in str(caught.value)

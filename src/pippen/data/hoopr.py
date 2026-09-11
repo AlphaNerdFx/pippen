@@ -55,7 +55,7 @@ from pyarrow.lib import ArrowInvalid  # type: ignore[import-untyped]
 from rich.console import Console
 from tenacity import Retrying, retry_if_exception_type, stop_after_attempt, wait_exponential
 
-from pippen.paths import season_file
+from pippen.paths import dataset_file, season_file
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -109,6 +109,13 @@ _LAYOUTS: Final = (
 # `DATASETS` has this split. Any dataset not listed here probes under its own
 # name, which is correct for every other known dataset as of that check.
 _REMOTE_DIRECTORY: Final = {"play_by_play": "pbp"}
+
+# Datasets published as one file covering every season rather than one file per
+# season. Confirmed against the live repository: nba/schedules holds a master
+# table spanning 2002 to 2027, alongside 42 numbered files far too small to be
+# seasons. Asking for a per-season schedule returns a 404, which is what the
+# first version of this module did on every call.
+_MASTER_FILES: Final = {"schedules": "nba_schedule_master"}
 
 _DEFAULT_TIMEOUT_SECONDS: Final = 30.0
 _CHUNK_BYTES: Final = 1024 * 1024
@@ -246,6 +253,64 @@ def download_seasons(
     return results
 
 
+def is_master_dataset(dataset: str) -> bool:
+    """Whether a dataset is published as one file rather than one per season.
+
+    Args:
+        dataset: hoopR dataset name.
+
+    Returns:
+        True if the dataset has a single master file covering every season.
+    """
+    return dataset in _MASTER_FILES
+
+
+def download_master(
+    dataset: str,
+    *,
+    force: bool = False,
+    timeout: float = 30.0,
+    session: requests.Session | None = None,
+) -> DownloadResult:
+    """Download a dataset published as one file covering every season.
+
+    Args:
+        dataset: hoopR dataset name, which must be a master dataset. Use
+            :func:`is_master_dataset` to check.
+        force: Re-download even when a valid file is already present.
+        timeout: Per-request timeout in seconds.
+        session: HTTP session to reuse. A new one is created if omitted.
+
+    Returns:
+        A :class:`DownloadResult`. Its ``season`` is 0, since the file covers
+        every season and belongs to none of them.
+
+    Raises:
+        ValueError: If ``dataset`` is not a master dataset.
+    """
+    if dataset not in _MASTER_FILES:
+        known = ", ".join(sorted(_MASTER_FILES))
+        raise ValueError(f"{dataset!r} is not published as a master file. Master datasets: {known}")
+
+    stem = _MASTER_FILES[dataset]
+    target = dataset_file("raw", dataset, stem, create=True)
+    if not force and _is_valid_parquet(target):
+        return DownloadResult(dataset=dataset, season=0, status="skipped", path=target)
+
+    url = f"{_RAW_BASE}/{dataset}/{stem}.parquet"
+    owned = session is None
+    active = session if session is not None else requests.Session()
+    try:
+        failure = _download_atomically(active, url, target, timeout=timeout)
+    finally:
+        if owned:
+            active.close()
+
+    if failure is not None:
+        return DownloadResult(dataset=dataset, season=0, status="failed", reason=failure)
+    return DownloadResult(dataset=dataset, season=0, status="downloaded", path=target)
+
+
 def _validate_dataset(dataset: str) -> None:
     """Raise ``ValueError`` if ``dataset`` is not a recognised hoopR dataset name.
 
@@ -299,8 +364,34 @@ def _fetch_one(
             reason=f"no known hoopR-nba-data layout exists for this file; tried: {candidates}",
         )
 
-    # Download beside the destination (same filesystem) so the final move is
-    # an atomic rename rather than a copy that could itself be interrupted.
+    failure = _download_atomically(session, url, target, timeout=timeout)
+    if failure is not None:
+        return DownloadResult(dataset=dataset, season=season, status="failed", reason=failure)
+    return DownloadResult(dataset=dataset, season=season, status="downloaded", path=target)
+
+
+def _download_atomically(
+    session: requests.Session, url: str, target: Path, *, timeout: float
+) -> str | None:
+    """Download one URL to ``target``, leaving nothing behind on failure.
+
+    The file is written to a temporary sibling and only moved into place once
+    it has been read back as valid Parquet. A crash or a truncated response
+    therefore cannot leave a partial file at the final path, where the next run
+    would skip it as already present and every calculation downstream would
+    inherit it.
+
+    Args:
+        session: HTTP session to issue the request on.
+        url: URL to fetch.
+        target: Final destination path.
+        timeout: Per-request timeout in seconds.
+
+    Returns:
+        None on success, or a human-readable reason the download failed.
+    """
+    # Same filesystem as the destination, so the final move is an atomic rename
+    # rather than a copy that could itself be interrupted.
     file_descriptor, tmp_name = tempfile.mkstemp(
         dir=target.parent, prefix=f".{target.name}.", suffix=".part"
     )
@@ -311,21 +402,14 @@ def _fetch_one(
         _download(session, url, tmp_path, timeout=timeout)
     except (TransientDownloadError, requests.HTTPError) as exc:
         tmp_path.unlink(missing_ok=True)
-        return DownloadResult(
-            dataset=dataset, season=season, status="failed", reason=f"download failed: {exc}"
-        )
+        return f"download failed: {exc}"
 
     if not _is_valid_parquet(tmp_path):
         tmp_path.unlink(missing_ok=True)
-        return DownloadResult(
-            dataset=dataset,
-            season=season,
-            status="failed",
-            reason="downloaded file failed the parquet integrity check (likely truncated)",
-        )
+        return "downloaded file failed the parquet integrity check (likely truncated)"
 
     tmp_path.replace(target)
-    return DownloadResult(dataset=dataset, season=season, status="downloaded", path=target)
+    return None
 
 
 def _candidate_urls(dataset: str, season: int) -> list[str]:

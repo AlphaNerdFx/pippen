@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
+import pandas as pd
+import pytest
+import typer
 from typer.testing import CliRunner
 
-from pippen import __version__
+from pippen import __version__, cli, paths
 from pippen.cli import app
+from pippen.data import hoopr
 
 runner = CliRunner()
 
@@ -32,3 +38,69 @@ def test_unimplemented_commands_exit_nonzero() -> None:
     for argv in (["train"], ["evaluate"], ["rapm", "--seasons", "2015-2024"]):
         result = runner.invoke(app, argv)
         assert result.exit_code == 2, argv
+
+
+def test_parse_seasons_accepts_a_single_season() -> None:
+    assert cli._parse_seasons("2024") == [2024]
+
+
+def test_parse_seasons_expands_an_inclusive_range() -> None:
+    assert cli._parse_seasons("2020-2023") == [2020, 2021, 2022, 2023]
+
+
+@pytest.mark.parametrize("spec", ["", "abc", "2020-", "20-20-20", "2020-abc"])
+def test_parse_seasons_rejects_nonsense(spec: str) -> None:
+    with pytest.raises(typer.BadParameter):
+        cli._parse_seasons(spec)
+
+
+def test_parse_seasons_rejects_a_backwards_range() -> None:
+    with pytest.raises(typer.BadParameter, match="runs backwards"):
+        cli._parse_seasons("2024-2015")
+
+
+@pytest.mark.parametrize("spec", ["1990", "2030", "1990-2030"])
+def test_parse_seasons_rejects_seasons_hoopr_does_not_publish(spec: str) -> None:
+    # Failing here beats 25 downloads that each 404 with no explanation.
+    with pytest.raises(typer.BadParameter, match="falls outside"):
+        cli._parse_seasons(spec)
+
+
+def test_parse_seasons_accepts_the_full_published_range() -> None:
+    first, last = hoopr.PLAY_BY_PLAY_FIRST_SEASON, hoopr.PLAY_BY_PLAY_LAST_SEASON
+    assert cli._parse_seasons(f"{first}-{last}") == list(range(first, last + 1))
+
+
+def test_fetch_rejects_an_unknown_dataset() -> None:
+    result = runner.invoke(app, ["fetch", "--seasons", "2024", "--dataset", "not_a_table"])
+    assert result.exit_code == 2
+    assert "unknown dataset" in result.stdout
+
+
+def test_season_schedule_returns_none_when_the_master_is_absent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv(paths.ENV_VAR, str(tmp_path))
+    assert cli._season_schedule(2024) is None
+
+
+def test_season_schedule_filters_the_master_to_one_season(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv(paths.ENV_VAR, str(tmp_path))
+    target = paths.dataset_file("raw", "schedules", "nba_schedule_master", create=True)
+    pd.DataFrame({"game_id": [1, 2, 3], "season": [2023, 2024, 2024]}).to_parquet(target)
+    rows = cli._season_schedule(2024)
+    assert rows is not None
+    assert len(rows) == 2
+
+
+def test_season_schedule_returns_none_for_a_season_with_no_rows(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # None means absent, which makes the checks report skipped rather than
+    # passing on an empty table.
+    monkeypatch.setenv(paths.ENV_VAR, str(tmp_path))
+    target = paths.dataset_file("raw", "schedules", "nba_schedule_master", create=True)
+    pd.DataFrame({"game_id": [1], "season": [2023]}).to_parquet(target)
+    assert cli._season_schedule(2024) is None

@@ -17,13 +17,16 @@ Known limitation, load-bearing for the rest of the pipeline
     shape of the data; it makes no claim about what can be computed from it.
 
 Schema source and confidence
-    ``play_by_play`` was built from a real hoopR Parquet file's schema, read
-    directly. Its column set is ground truth. ``player_box``, ``team_box`` and
-    ``schedules`` have not been checked against a real file yet: each defines
-    a small core of columns the author is confident must exist, based on
-    documented hoopR/SportsDataverse conventions, and is marked provisional in
-    the comments above it. Expand those three once a real sample has been
-    ingested and read.
+    Every schema below has now been checked against a real hoopR file. Doing so
+    corrected two of them. ``player_box`` has no percentage column at all, only
+    made and attempted, and ``schedules`` names its teams ``home_id`` and
+    ``away_id`` rather than following the play-by-play naming. Both had been
+    guessed from convention and both guesses were wrong, which is the argument
+    for checking a schema against a sample rather than against documentation.
+
+    Each schema declares a core rather than every column. The real files carry
+    57 to 78 columns; what is declared here is what this project depends on.
+    ``strict=False`` lets the rest through untouched.
 
 Strictness
     Every schema below sets ``strict=False``. hoopR adds columns to its
@@ -65,12 +68,15 @@ _MAX_SEASON: Final = 2100
 # absent on a per-event basis rather than per-file, based on what each column
 # means, not on measurement, since no sample has been checked row by row.
 #
-# `clock_minutes` and `clock_seconds` intentionally carry no range check.
-# hoopR/ESPN's exact encoding (seconds-of-the-current-minute vs. some other
-# split) has not been verified, and a wrong guess at a bound would fail valid
-# rows instead of catching corrupt ones. `period` and `period_number` are
-# both checked as >= 1 rather than checked against each other, for the same
-# reason: their exact relationship has not been confirmed.
+# The clock encoding has now been verified against the real 2024 file, so the
+# bounds below are measured rather than guessed. `clock_minutes` is an integer
+# from 0 to 12. `clock_seconds` is a float from 0 to 59.2: it carries tenths,
+# because the game clock shows tenths under the final minute. An earlier
+# version declared it as an integer, which every real season would have failed.
+# The upper bound is 60 rather than 59.2 so a legitimate 59.8 still passes.
+#
+# `period` reaches 6 in this season, which is regulation plus two overtimes, so
+# no upper bound is declared. Overtime has no fixed maximum.
 #
 # No row-uniqueness constraint is declared. The verified column list has no
 # event or sequence identifier, so there is no honest key to enforce one on.
@@ -81,8 +87,10 @@ PLAY_BY_PLAY_SCHEMA: Final[DataFrameSchema] = DataFrameSchema(
         "period_number": Column("Int64", nullable=False, coerce=True, checks=Check.ge(1)),
         "period_display_value": Column("string", nullable=True, coerce=True),
         "clock_display_value": Column("string", nullable=True, coerce=True),
-        "clock_minutes": Column("Int64", nullable=True, coerce=True),
-        "clock_seconds": Column("Int64", nullable=True, coerce=True),
+        "clock_minutes": Column("Int64", nullable=True, coerce=True, checks=Check.in_range(0, 12)),
+        "clock_seconds": Column(
+            "Float64", nullable=True, coerce=True, checks=Check.in_range(0, 60)
+        ),
         "wallclock": Column("string", nullable=True, coerce=True),
         "type_id": Column("Int64", nullable=False, coerce=True),
         # Nullable: not every event (e.g. a period marker) is attributable to
@@ -116,11 +124,11 @@ PLAY_BY_PLAY_SCHEMA: Final[DataFrameSchema] = DataFrameSchema(
 )
 
 # ---------------------------------------------------------------- player_box
-# Provisional. Not checked against a real file (see module docstring). Core
-# limited to what player-level box scores need to be at all: which game,
-# which player, which team, and one representative shooting percentage to
-# carry the 0-1 constraint. Extend this once a real sample is available,
-# rather than guessing at the full stat line now.
+# Verified against the real 2024 file: 57 columns, of which these are the core
+# this project depends on. An earlier provisional version declared a
+# `field_goal_pct` column, which does not exist here. Player box scores carry
+# made and attempted instead, which supports a stronger check than a range on
+# a percentage: a player cannot make more shots than they took.
 PLAYER_BOX_SCHEMA: Final[DataFrameSchema] = DataFrameSchema(
     columns={
         "game_id": Column("Int64", nullable=False, coerce=True),
@@ -130,10 +138,20 @@ PLAYER_BOX_SCHEMA: Final[DataFrameSchema] = DataFrameSchema(
         "athlete_id": Column("Int64", nullable=False, coerce=True),
         "team_id": Column("Int64", nullable=False, coerce=True),
         "minutes": Column("Float64", nullable=True, coerce=True, checks=Check.ge(0)),
-        "field_goal_pct": Column(
-            "Float64", nullable=True, coerce=True, checks=Check.in_range(0, 1)
-        ),
+        "field_goals_made": Column("Float64", nullable=True, coerce=True, checks=Check.ge(0)),
+        "field_goals_attempted": Column("Float64", nullable=True, coerce=True, checks=Check.ge(0)),
     },
+    checks=[
+        # Arithmetically impossible rather than merely unusual, so it catches a
+        # column misalignment or a bad join rather than an unusual game.
+        Check(
+            lambda frame: (
+                frame["field_goals_made"].fillna(0) <= frame["field_goals_attempted"].fillna(0)
+            ),
+            name="made_within_attempted",
+            error="field_goals_made cannot exceed field_goals_attempted",
+        ),
+    ],
     # One row per player per game. A repeat of this pair means a duplicated
     # row from a bad concatenation or a re-download landing on top of itself.
     unique=["game_id", "athlete_id"],
@@ -142,7 +160,9 @@ PLAYER_BOX_SCHEMA: Final[DataFrameSchema] = DataFrameSchema(
 )
 
 # ---------------------------------------------------------------- team_box
-# Provisional, same caveat as player_box.
+# Verified against the real 2024 file. Unlike player_box, team box scores do
+# carry a percentage alongside made and attempted, so the percentage can be
+# checked against its own inputs rather than only against a 0 to 1 range.
 TEAM_BOX_SCHEMA: Final[DataFrameSchema] = DataFrameSchema(
     columns={
         "game_id": Column("Int64", nullable=False, coerce=True),
@@ -150,10 +170,21 @@ TEAM_BOX_SCHEMA: Final[DataFrameSchema] = DataFrameSchema(
             "Int64", nullable=False, coerce=True, checks=Check.in_range(_MIN_SEASON, _MAX_SEASON)
         ),
         "team_id": Column("Int64", nullable=False, coerce=True),
+        "field_goals_made": Column("Float64", nullable=True, coerce=True, checks=Check.ge(0)),
+        "field_goals_attempted": Column("Float64", nullable=True, coerce=True, checks=Check.ge(0)),
         "field_goal_pct": Column(
-            "Float64", nullable=True, coerce=True, checks=Check.in_range(0, 1)
+            "Float64", nullable=True, coerce=True, checks=Check.in_range(0, 100)
         ),
     },
+    checks=[
+        Check(
+            lambda frame: (
+                frame["field_goals_made"].fillna(0) <= frame["field_goals_attempted"].fillna(0)
+            ),
+            name="made_within_attempted",
+            error="field_goals_made cannot exceed field_goals_attempted",
+        ),
+    ],
     # Exactly one row per team per game: two rows per game_id, never the same
     # team_id twice.
     unique=["game_id", "team_id"],
@@ -162,8 +193,10 @@ TEAM_BOX_SCHEMA: Final[DataFrameSchema] = DataFrameSchema(
 )
 
 # ---------------------------------------------------------------- schedules
-# Provisional, same caveat as player_box. One row per game, so game_id itself
-# must be unique here, unlike in the box scores.
+# Verified against the real master file: 78 columns covering 2002 to 2027. The
+# team identifiers are `home_id` and `away_id`, not the `home_team_id` an
+# earlier provisional version guessed at from the play-by-play naming. One row
+# per game, so game_id itself must be unique here, unlike in the box scores.
 SCHEDULES_SCHEMA: Final[DataFrameSchema] = DataFrameSchema(
     columns={
         "game_id": Column("Int64", nullable=False, coerce=True, unique=True),
@@ -171,16 +204,16 @@ SCHEDULES_SCHEMA: Final[DataFrameSchema] = DataFrameSchema(
             "Int64", nullable=False, coerce=True, checks=Check.in_range(_MIN_SEASON, _MAX_SEASON)
         ),
         "game_date": Column("string", nullable=True, coerce=True),
-        "home_team_id": Column("Int64", nullable=False, coerce=True),
-        "away_team_id": Column("Int64", nullable=False, coerce=True),
+        "home_id": Column("Int64", nullable=False, coerce=True),
+        "away_id": Column("Int64", nullable=False, coerce=True),
     },
     checks=[
         # Catches a join or scrape bug that copies one side's team into both,
         # not a real matchup. Not decorative: a team cannot play itself.
         Check(
-            lambda frame: frame["home_team_id"] != frame["away_team_id"],
+            lambda frame: frame["home_id"] != frame["away_id"],
             name="distinct_teams",
-            error="home_team_id must differ from away_team_id",
+            error="home_id must differ from away_id",
         ),
     ],
     strict=False,
@@ -269,9 +302,15 @@ def _describe_failures(dataset: str, exc: pa.errors.SchemaErrors) -> str:
     Returns:
         A multi-line message: one summary line, then one line per failure.
     """
-    cases = exc.failure_cases
-    lines = [f"{dataset!r} failed schema validation ({len(cases)} problem(s)):"]
-    lines.extend(f"  - {_describe_one_failure(row)}" for row in cases.itertuples())
+    # pandera attributes a table-level check failure to every column in the
+    # frame, so one bad row can arrive here as thirty identical entries.
+    # Reporting that as thirty problems buries the two that are real.
+    seen: dict[str, None] = {}
+    for row in exc.failure_cases.itertuples():
+        seen.setdefault(_describe_one_failure(row), None)
+
+    lines = [f"{dataset!r} failed schema validation ({len(seen)} problem(s)):"]
+    lines.extend(f"  - {description}" for description in seen)
     return "\n".join(lines)
 
 
@@ -289,6 +328,12 @@ def _describe_one_failure(row: Any) -> str:
         return f"required column {row.failure_case!r} is missing"
     if check == "column_in_schema":
         return f"unexpected column {row.failure_case!r} is not declared in the schema"
+
+    # A table-level check names no meaningful column, since it failed for the
+    # frame as a whole. Reporting the column it happened to be attributed to
+    # would point a reader at the wrong place.
+    if str(row.schema_context) == "DataFrameSchema":
+        return f"table failed check {check!r} on value {row.failure_case!r}"
 
     where = f"column {row.column!r}" if row.column else "table"
     at_row = f", row {row.index}" if pd.notna(row.index) else ""

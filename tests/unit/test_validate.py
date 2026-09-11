@@ -24,8 +24,8 @@ def _schedule(game_ids: list[int] | None = None) -> pd.DataFrame:
             "game_id": ids,
             "season": [2024] * len(ids),
             "game_date": ["2024-01-15"] * len(ids),
-            "home_team_id": [1_610_612_743] * len(ids),
-            "away_team_id": [1_610_612_747] * len(ids),
+            "home_id": [1_610_612_743] * len(ids),
+            "away_id": [1_610_612_747] * len(ids),
         }
     )
 
@@ -85,6 +85,34 @@ def test_a_failed_or_skipped_check_is_not_ok(status: validate.CheckStatus) -> No
 def test_matching_schedule_and_events_pass() -> None:
     result = validate.check_schedule_and_play_by_play_agree(_schedule(), _play_by_play())
     assert result.status == "passed"
+
+
+def test_a_game_that_was_never_played_is_not_counted_as_missing() -> None:
+    # Verified on the real 2024 season: two postponed games, neither of which
+    # has events and neither of which ever will. Counting them as missing data
+    # would fail this check on every real season.
+    schedule = _schedule([1, 2, 3])
+    schedule["status_type_completed"] = [True, True, False]
+    result = validate.check_schedule_and_play_by_play_agree(schedule, _play_by_play([1, 2]))
+    assert result.status == "passed"
+    assert "1 not played" in result.detail
+
+
+def test_a_completed_game_with_no_events_still_fails() -> None:
+    schedule = _schedule([1, 2, 3])
+    schedule["status_type_completed"] = [True, True, True]
+    result = validate.check_schedule_and_play_by_play_agree(schedule, _play_by_play([1, 2]))
+    assert result.status == "failed"
+    assert "completed games have no events" in result.detail
+
+
+def test_without_a_status_column_every_game_is_treated_as_played() -> None:
+    # Older or trimmed schedules may not carry the column. Assuming a game was
+    # not played would silently hide real gaps.
+    result = validate.check_schedule_and_play_by_play_agree(
+        _schedule([1, 2, 3]), _play_by_play([1, 2])
+    )
+    assert result.status == "failed"
 
 
 def test_a_scheduled_game_with_no_events_fails_and_is_named() -> None:
