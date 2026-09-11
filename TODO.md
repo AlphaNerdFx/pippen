@@ -63,7 +63,7 @@ request per second.
 - [x] pandera schemas for every table
 - [x] Validation: completeness, consistency, accuracy, temporal integrity
 - [x] Nightly refresh workflow
-- [ ] Measure the possession coefficient per season instead of hard-coding 0.44
+- [x] Measure the possession coefficient per season instead of hard-coding 0.44
 - [x] Save the browser-only citations by hand (16 archived)
 - [x] Record every broken citation in `docs/methodology/errata.md`
 

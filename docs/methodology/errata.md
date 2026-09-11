@@ -107,6 +107,57 @@ an assumption nobody checks. This project has the play-by-play data to
 **measure the coefficient per season** instead. That is now the intended
 approach, and the fixed 0.44 becomes the baseline it is compared against.
 
+### The measured coefficient
+
+**Measured for the 2023-24 season:** 0.410, against the conventional 0.44.
+That season's free throws ended a possession about 0.030 less often than the
+fixed constant assumes, roughly 7% lower in relative terms.
+
+Of 57,076 free throw attempts, 57,071 could be classified from the columns
+hoopR provides, giving 23,421 possession-ending trips. And-one, technical,
+flagrant and clear-path free throws are excluded from that count by rule, not
+by matching specific foul-name strings: an and-one's field goal already ended
+the possession, a technical changes nothing, and a flagrant or clear-path foul
+lets the fouled team keep the ball regardless of whether the last shot goes
+in. Ruling them out this way, rather than pattern-matching foul names, is what
+lets the same logic hold across rule eras without being rewritten for each
+one, including the "transition take foul" and "away from play foul" rules the
+NBA added for 2023-24 itself.
+
+The remaining 5 attempts (0.009% of the season) are a missed final free throw
+followed immediately by another shot, with no rebound row logged between them.
+The shooting team plainly kept the ball, but no label says so, and inferring
+it from the shooter's team would be a guess rather than a reading. Those
+attempts are excluded from both the numerator and the denominator.
+
+An earlier version of this estimate excluded 29 attempts rather than 5. Its
+lookahead stepped over substitutions only, and latched shut the moment any
+other event appeared, so a foul call or a replay review sitting one event
+before a perfectly clear rebound label made the whole trip unresolvable. The
+excluded set was not random: six were coach's challenges and seven were runs
+of three substitutions. Code review caught it. The lookahead now steps over
+anything that is not a shot attempt, using hoopR's own `shooting_play` flag,
+and stops at a shot because a rebound after a new shot belongs to that shot.
+Correcting it moved the coefficient from 0.4102 to 0.4104, so the bias was
+real but small. It is recorded here because a number whose error bar comes
+from an undocumented bug is not a measurement.
+
+**Verified** by running `estimate_season_coefficient` (see
+`src/pippen/data/possession_coefficient.py`) against hoopR's real 2023-24
+play-by-play file (`play_by_play_2024.parquet`, 614,447 rows) and checking
+every intermediate count by hand: 32,268 free throw trips, of which 6,622 are
+one-shot and-one or take-foul trips, 1,544 are technical, 169 are flagrant or
+clear-path, 19,393 end on a made last shot, 4,005 end on a missed last shot
+with a defensive rebound, and 506 continue on a missed last shot with an
+offensive rebound.
+
+**What it changes:** one season is a single measurement, not evidence of
+drift across rule eras on its own. That comparison needs several seasons run
+through `estimate_coefficients_by_season`, which this module also provides,
+once more seasons are ingested. What the 2023-24 season already shows is that
+0.44 is now a measured quantity in this project rather than an assumed one,
+and the first measurement does not match it.
+
 ---
 
 ## 4. Citation integrity
