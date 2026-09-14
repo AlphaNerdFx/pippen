@@ -85,11 +85,11 @@ are added.
 Limit: network-bound to fetch possessions, then compute-bound for the solve,
 then judgement at the gate.
 
-- [ ] Possession and stint extraction via pbpstats
-- [ ] Sparse design matrix builder
-- [ ] Ridge solver, cross-validated lambda, multi-season windows
-- [ ] Bootstrap standard errors
-- [ ] Property tests: possessions reconcile, five a side, order invariance
+- [x] Possession and stint extraction via pbpstats
+- [x] Sparse design matrix builder
+- [x] Ridge solver, cross-validated lambda, multi-season windows
+- [x] Bootstrap standard errors
+- [x] Property tests: possessions reconcile, five a side, order invariance
 - [ ] Decision gate: Spearman above 0.85 against published RAPM
 
 ### Decisions settled before Phase 2 starts
@@ -100,9 +100,10 @@ unbounded debug on a gate has no exit condition, which is the same failure as a
 polling loop. The discrepancy analysis is published either way, as a reference
 point for anyone computing RAPM from the same sources.
 
-**Scope of the first run** is 2015 to 2024, ten seasons, pooled into multi-season
-windows. That clears the gate's statistical requirement and costs 3.4 hours of
-rate-limited fetching rather than 8.5. Older seasons stay unfetched until there
+**Scope of the first run** is NBA 2016 through 2024, nine seasons, pooled into
+multi-season windows. Ten was planned; data.nba.com does not serve 2015. See
+`docs/methodology/data-quirks.md`. That still clears the gate's statistical
+requirement and costs about 3.4 hours of rate-limited fetching. Older seasons stay unfetched until there
 is a reason beyond completeness, and if that reason arrives they get pooled into
 multi-year windows rather than published as single seasons. Single-season RAPM
 is what this project's own research calls too noisy to act on, so publishing it

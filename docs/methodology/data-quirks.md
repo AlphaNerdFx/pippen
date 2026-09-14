@@ -72,3 +72,82 @@ claims 25-season coverage.
 
 Anything that assumes a half-season is 41 games is wrong for four of the 25
 seasons. Carry the observed game count rather than assuming one.
+
+## The two sources label seasons differently
+
+hoopR names a season by the year it ends. The NBA names it by the year it
+starts. They are one apart, and both numbers look equally plausible on a file
+name.
+
+| Season | hoopR file | NBA game id prefix | data.nba.com path |
+|---|---|---|---|
+| 2015-16 | `team_box_2016.parquet` | `00215` | `/nba/2015/` |
+| 2016-17 | `team_box_2017.parquet` | `00216` | `/nba/2016/` |
+| 2023-24 | `team_box_2024.parquet` | `00223` | `/nba/2023/` |
+
+Verified by reading the dates: hoopR's 2016 regular season runs 2015-10-27 to
+2016-04-13, and its 2017 runs 2016-10-25 to 2017-04-12.
+
+Every join between a RAPM rating and a box-score metric crosses this boundary.
+Getting it wrong shifts a player's inputs by a full year, the join still
+matches, the row counts still look right, and the model learns from the wrong
+season. `pippen.seasons` exists so the conversion is applied by name rather
+than remembered, and so a reader can tell which convention a number is in.
+
+## Play-by-play with lineups covers fewer seasons than the box scores
+
+The box scores cover 2002 to 2026 in hoopR labelling. Play-by-play carrying
+on-court lineups, which is what RAPM needs, covers far less.
+
+| Route | Seasons served | Notes |
+|---|---|---|
+| `stats.nba.com/stats/playbyplayv2` | none | Answers HTTP 200 with the body `{}` for every game of every season. This is the endpoint `pbpstats` calls. |
+| `data.nba.com` mobile_teams | NBA 2016 to 2024 | What this project uses. 2015 and earlier return HTTP 403; 2025 onward return a stub with an empty period array. |
+| `stats.nba.com/stats/playbyplayv3` | NBA 2015 to 2025 | Alive, but drops the numeric event codes and carries one `personId` per action, so a substitution no longer names both players. Using it means rewriting `pbpstats`' substitution tracking. |
+
+So RAPM covers nine seasons, NBA 2016-17 through 2024-25, which is hoopR 2017
+through 2025.
+
+Two further details on that feed:
+
+- The raw `ord` key, which `pbpstats` reads to order simultaneous events,
+  appears only from 2023-24. Without it every pre-2023 game raises
+  `AttributeError: 'DataRebound' object has no attribute 'order'`. The value is
+  the event's index in feed order, so it is reconstructed from `period` and
+  `evt` rather than worked around.
+- About 2.7 percent of games raise `EventOrderError`, where a rebound does not
+  follow a missed shot. `pbpstats` ships a repair for this on its `stats_nba`
+  path and not on this one. Those games are recorded and skipped.
+
+## data.nba.com rejects a User-Agent containing a URL
+
+No `User-Agent` gives HTTP 403. A `User-Agent` carrying a URL also gives 403,
+which rules out the usual `pippen/0.1 (+https://github.com/...)` convention.
+
+| Sent | Result |
+|---|---|
+| nothing | 403 |
+| `pippen/0.1 (+https://github.com/AlphaNerdFx/pippen)` | 403 |
+| `Mozilla/5.0 (Windows NT 10.0; Win64; x64)` | 200 |
+| `Mozilla/5.0 (Windows NT 10.0; Win64; x64) pippen/0.1` | 200 |
+| `Mozilla/5.0 (Windows NT 10.0; Win64; x64) (+https://github.com/...)` | 403 |
+
+The default keeps the browser-shaped prefix the filter requires and appends the
+package name and version, so the traffic stays identifiable.
+
+## ESPN and NBA team abbreviations differ on six teams
+
+Twenty-four of thirty agree. These do not, and any join on team abbreviation
+across the two sources has to map them.
+
+| NBA | ESPN |
+|---|---|
+| GSW | GS |
+| NOP | NO |
+| NYK | NY |
+| SAS | SA |
+| UTA | UTAH |
+| WAS | WSH |
+
+ESPN additionally emits `EAST` and `WEST` for the All-Star Game, which the
+team-games rule above already excludes.
