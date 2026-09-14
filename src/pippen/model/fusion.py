@@ -183,7 +183,10 @@ class FusionFit:
         anchor: Metric that defines the latent quantity.
         anchor_loading: How the anchor was constrained.
         n_factors: Factors fitted. Only the first is reported as a rating.
-        diagnostics: Sampler diagnostics, worst-case across parameters.
+        diagnostics: Sampler diagnostics. ``max_r_hat`` covers the published
+            quantities only, the first factor's scores and loadings.
+            ``nuisance_r_hat`` covers the rotatable nuisance factors and is
+            expected to be large; see :func:`fit_fusion` for why.
     """
 
     ratings: pd.DataFrame
@@ -196,7 +199,12 @@ class FusionFit:
 
     @property
     def converged(self) -> bool:
-        """True when the worst r-hat is below the usual 1.01 threshold."""
+        """True when the published quantities have an r-hat below 1.01.
+
+        Deliberately ignores the nuisance factors, which are unidentified by
+        construction and whose r-hat carries no information about whether the
+        rating is stable.
+        """
         return self.diagnostics.get("max_r_hat", float("inf")) < 1.01
 
     def describe(self) -> str:
@@ -418,17 +426,42 @@ def fit_fusion(
         }
     ).sort_values("loading", ascending=False)
 
-    summary = numpyro.diagnostics.summary(mcmc.get_samples(group_by_chain=True))
-    r_hats = [
-        float(np.nanmax(stats["r_hat"]))
-        for stats in summary.values()
-        if "r_hat" in stats and np.size(stats["r_hat"])
-    ]
-    effective = [
-        float(np.nanmin(stats["n_eff"]))
-        for stats in summary.values()
-        if "n_eff" in stats and np.size(stats["n_eff"])
-    ]
+    # Convergence is reported for the quantities this function returns, not
+    # for every parameter in the model.
+    #
+    # With more than one factor the nuisance factors are rotatable and their
+    # signs are free: rotating them and rotating their loadings the opposite
+    # way leaves the likelihood unchanged. Different chains therefore settle on
+    # different rotations, and an r-hat taken over those parameters comes back
+    # in the hundreds while saying nothing about whether the answer is stable.
+    # The first factor is not rotatable, because a rotation mixing it with a
+    # nuisance factor would move the anchor's loading off the value it is
+    # pinned at.
+    #
+    # So r-hat is computed on the first factor's player scores and loadings,
+    # which are what get published, and the nuisance r-hat is reported beside
+    # it rather than hidden, so the non-identification stays visible.
+    grouped = mcmc.get_samples(group_by_chain=True)
+    published_r_hat = float("nan")
+    nuisance_r_hat = float("nan")
+    if chains > 1:
+        factor_chains = np.asarray(grouped["factors_by_player"])[..., 0]
+        loading_chains = np.asarray(grouped["loading_matrix"])[..., 0]
+        published_r_hat = float(
+            max(
+                np.nanmax(numpyro.diagnostics.gelman_rubin(factor_chains)),
+                np.nanmax(numpyro.diagnostics.gelman_rubin(loading_chains)),
+            )
+        )
+        if n_factors > 1:
+            nuisance = np.asarray(grouped["factors_by_player"])[..., 1:]
+            nuisance_r_hat = float(np.nanmax(numpyro.diagnostics.gelman_rubin(nuisance)))
+
+    effective = (
+        float(np.nanmin(numpyro.diagnostics.effective_sample_size(factor_chains)))
+        if chains > 1
+        else float("nan")
+    )
 
     return FusionFit(
         ratings=ratings.reset_index(drop=True),
@@ -438,7 +471,8 @@ def fit_fusion(
         anchor_loading=anchor_loading,
         n_factors=n_factors,
         diagnostics={
-            "max_r_hat": max(r_hats) if r_hats else float("nan"),
-            "min_n_eff": min(effective) if effective else float("nan"),
+            "max_r_hat": published_r_hat,
+            "nuisance_r_hat": nuisance_r_hat,
+            "min_n_eff": effective,
         },
     )
