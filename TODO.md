@@ -134,7 +134,7 @@ published either way, and the credible intervals are calibrated so that roughly
 Limit: compute-bound for fitting, judgement for the result.
 
 - [x] Fetch all 25 hoopR seasons and measure the possession coefficient per season
-- [ ] Split-half reliability with Spearman-Brown correction
+- [x] Split-half reliability with Spearman-Brown correction
 - [ ] NumPyro hierarchical fusion model
 - [ ] LightGBM and ridge baselines, tuned with Optuna, tracked in MLflow
 - [ ] SHAP attributions

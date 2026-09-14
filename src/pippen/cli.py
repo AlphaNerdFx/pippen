@@ -18,6 +18,8 @@ from pippen.rapm import pbp_source
 from pippen.rapm import possessions as rapm_possessions
 from pippen.rapm import reference as rapm_reference
 from pippen.rapm import ridge as rapm_ridge
+from pippen.reliability import metrics as reliability_metrics
+from pippen.reliability import testretest
 
 app = typer.Typer(
     name="pippen",
@@ -460,6 +462,78 @@ def gate(
     console.print(f"[{colour}]{result.describe()}[/{colour}]")
     if not result.passed:
         raise typer.Exit(code=1)
+
+
+@app.command()
+def reliability(
+    seasons: Annotated[
+        str,
+        typer.Option(help="A season, 2024, or an inclusive range, 2002-2026. hoopR labels."),
+    ] = "2002-2026",
+    splits: Annotated[int, typer.Option(help="Random splits averaged per season.")] = 100,
+    floor: Annotated[float, typer.Option(help="Minutes a player needs in the season.")] = 500.0,
+    write: Annotated[
+        bool,
+        typer.Option(help="Write the per-season table to the processed stage."),
+    ] = True,
+) -> None:
+    """Measure each box-score metric's split-half reliability.
+
+    Seasons are hoopR labels, which name the year a season ends, so 2024 means
+    2023-24. The output names the length every reliability figure is quoted at,
+    because the same measurement implies very different weights at one season
+    and at three.
+    """
+    wanted = _parse_seasons(seasons)
+    tables = []
+    for season in wanted:
+        path = season_file("raw", "player_box", season)
+        if not path.exists():
+            console.print(f"[yellow]skipping {season}[/yellow]: no player box at {path.name}")
+            continue
+        rows = reliability_metrics.eligible_rows(pd.read_parquet(path))
+        table = testretest.measure_season(rows, season, splits=splits, minutes_floor=floor)
+        table["rule"] = "random"
+        odd = testretest.measure_season(
+            rows, season, rule=testretest.SplitRule.ODD_EVEN, minutes_floor=floor
+        )
+        odd["rule"] = "odd_even"
+        tables.append(pd.concat([table, odd], ignore_index=True))
+        console.print(f"{season}: {len(rows):,} rows, {int(table['players'].iloc[0])} players")
+
+    if not tables:
+        console.print("[red]no seasons measured[/red]")
+        raise typer.Exit(code=2)
+
+    everything = pd.concat(tables, ignore_index=True)
+    if write:
+        target = stage_dir("processed", create=True) / "metric_reliability.parquet"
+        everything.to_parquet(target, index=False)
+        console.print(f"\nwrote {len(everything):,} rows to {target}")
+
+    pooled = (
+        everything[everything["rule"] == "random"]
+        .groupby("metric")
+        .agg(
+            rho_half=("rho_half", "mean"),
+            reliability_at_82_games=("reliability_at_82_games", "mean"),
+        )
+        .sort_values("reliability_at_82_games", ascending=False)
+    )
+
+    rendered = Table(title=f"reliability at 82 games, {_compact(wanted)}, {floor:.0f} minute floor")
+    rendered.add_column("metric")
+    rendered.add_column("rho half", justify="right")
+    rendered.add_column("reliability at 82 games", justify="right")
+    for name, row in pooled.iterrows():
+        rendered.add_row(
+            str(name), f"{row['rho_half']:.3f}", f"{row['reliability_at_82_games']:.3f}"
+        )
+    console.print(rendered)
+    console.print(
+        "Reliability is a ceiling on a metric's contribution, not a weight. "
+        "See docs/methodology/measured-reliability.md."
+    )
 
 
 @app.command()
