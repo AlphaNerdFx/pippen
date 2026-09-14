@@ -99,6 +99,58 @@ For that reason `pippen.reliability.testretest` exposes no function returning
 "weight". The table above is an input to a measurement-error model, not a set
 of weights.
 
+## Reliability runs against validity in this metric set
+
+The argument above says reliability is a ceiling, not a contribution. The data
+says something stronger and less comfortable: across these fifteen metrics,
+reliability is **negatively** related to how much a metric has to do with
+winning.
+
+Taking three-season RAPM as the impact reference and correlating each
+standardised metric against it, over 435 players in NBA 2016-17 to 2018-19:
+
+| Metric | Reliability | Correlation with RAPM | Naive weight |
+|---|---|---|---|
+| Three-point rate | 0.992 | −0.004 | 122.1 |
+| Possessions ended per 36 | 0.984 | 0.245 | 60.4 |
+| Assists per 36 | 0.982 | 0.196 | 56.1 |
+| Rebounds per 36 | 0.982 | 0.145 | 53.9 |
+| Offensive rebounds per 36 | 0.971 | 0.072 | 33.6 |
+| Defensive rebounds per 36 | 0.969 | 0.177 | 31.4 |
+| Points per 36 | 0.967 | 0.347 | 28.9 |
+| Blocks per 36 | 0.961 | 0.157 | 24.9 |
+| Fouls per 36 | 0.935 | −0.105 | 14.3 |
+| Free throw rate | 0.922 | 0.224 | 11.9 |
+| Turnovers per 36 | 0.910 | 0.152 | 10.1 |
+| Free throw percentage | 0.871 | 0.138 | 6.7 |
+| Steals per 36 | 0.852 | 0.228 | 5.8 |
+| True shooting | 0.746 | 0.383 | 2.9 |
+| Effective field goal | 0.728 | 0.293 | 2.7 |
+
+The two ends of the table tell the story on their own. True shooting has the
+strongest relationship with RAPM of any metric here and the lowest reliability.
+Three-point rate has the highest reliability and no relationship with RAPM at
+all.
+
+Across all fifteen, reliability correlates with the absolute correlation
+against RAPM at **r = −0.564, p = 0.029**. The rank version is weaker, rho =
+−0.404 at p = 0.136, so the effect leans on the extremes rather than holding
+evenly down the table. With fifteen points this is suggestive rather than
+settled, and it is reported as such.
+
+The mechanism is not mysterious. The most repeatable box-score quantities
+describe *style*: how often a player shoots, from where, how many rebounds his
+position brings him. Style is stable by construction, because it is mostly role
+and body type, and it changes little season to season. Impact depends on
+efficiency and decision quality, which vary more and matter more.
+
+This is why the project exists in the form it does. A reliability-weighted
+average of these metrics would not merely be suboptimal, it would be
+*actively worse* than an unweighted one, because it would systematically
+upweight the metrics with least to say about winning. The measurement-error
+model has to estimate each metric's loading on the latent quantity from data,
+and reliability enters as a bound on the noise rather than as the weight.
+
 ## Where this disagrees with the source research
 
 The source research assigns TS%, AST% and REB% together to Tier 3, 60 to 75

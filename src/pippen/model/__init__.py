@@ -1,1 +1,1 @@
-"""The model layer of pippen."""
+"""The reliability-weighted measurement model and its baselines."""
