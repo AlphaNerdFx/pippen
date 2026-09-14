@@ -124,7 +124,7 @@ published either way, and the credible intervals are calibrated so that roughly
 90 percent of held-out values land inside the 90 percent interval.
 Limit: compute-bound for fitting, judgement for the result.
 
-- [ ] Fetch all 25 hoopR seasons and measure the possession coefficient per season
+- [x] Fetch all 25 hoopR seasons and measure the possession coefficient per season
 - [ ] Split-half reliability with Spearman-Brown correction
 - [ ] NumPyro hierarchical fusion model
 - [ ] LightGBM and ridge baselines, tuned with Optuna, tracked in MLflow
