@@ -25,6 +25,7 @@ from pippen.reliability.metrics import (
     MissingColumnsError,
     compute,
     eligible_rows,
+    merge_duplicate_athletes,
     summarise_totals,
 )
 
@@ -186,3 +187,67 @@ def test_every_metric_has_a_unique_name_and_a_description() -> None:
     names = [metric.name for metric in METRICS]
     assert len(names) == len(set(names))
     assert all(metric.description for metric in METRICS)
+
+
+# ------------------------------------------------------------------ duplicate ids
+
+
+def test_a_player_under_two_espn_ids_is_merged() -> None:
+    # ESPN reissued Corey Brewer as 4415554 while 3191 still existed, which
+    # splits his season in two and halves his minutes in each part.
+    rows = _box(
+        [
+            {
+                "game_id": f"g{n}",
+                "team_id": 1,
+                "athlete_id": 3191,
+                "athlete_display_name": "Corey Brewer",
+            }
+            for n in range(30)
+        ]
+        + [
+            {
+                "game_id": f"h{n}",
+                "team_id": 1,
+                "athlete_id": 4415554,
+                "athlete_display_name": "Corey Brewer",
+            }
+            for n in range(30)
+        ]
+    )
+    merged, count = merge_duplicate_athletes(rows)
+    assert count == 1
+    assert set(merged["athlete_id"]) == {3191}
+
+
+def test_distinct_players_are_not_merged() -> None:
+    rows = _box(
+        [
+            {"game_id": "g1", "team_id": 1, "athlete_id": 1, "athlete_display_name": "A"},
+            {"game_id": "g2", "team_id": 1, "athlete_id": 2, "athlete_display_name": "B"},
+        ]
+    )
+    merged, count = merge_duplicate_athletes(rows)
+    assert count == 0
+    assert set(merged["athlete_id"]) == {1, 2}
+
+
+def test_merging_restores_the_full_season_totals() -> None:
+    split = _box(
+        [
+            {
+                "game_id": f"g{n}",
+                "team_id": 1,
+                "athlete_id": 10 if n < 30 else 20,
+                "athlete_display_name": "Split Player",
+            }
+            for n in range(60)
+        ]
+        + [
+            {"game_id": f"x{n}", "team_id": 2, "athlete_id": 3, "athlete_display_name": "Other"}
+            for n in range(60)
+        ]
+    )
+    totals = summarise_totals(eligible_rows(split))
+    assert totals.loc[10, "games"] == 60
+    assert totals.loc[10, "minutes"] == 60 * 30.0

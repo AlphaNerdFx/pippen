@@ -271,3 +271,78 @@ def build_crosswalk(
         unmatched=pd.DataFrame(unmatched, columns=["espn_id", "name"]),
         ambiguous=pd.DataFrame(ambiguous, columns=["espn_id", "name"]),
     )
+
+
+#: ESPN and the NBA agree on twenty-four of thirty team abbreviations. These
+#: six differ. Derived by comparing the two sets on 2016-17 rather than
+#: recalled, and valid across the seasons on disk, which contain no relocation
+#: or rebrand.
+NBA_TO_ESPN_ABBREVIATION: Final = {
+    "GSW": "GS",
+    "NOP": "NO",
+    "NYK": "NY",
+    "SAS": "SA",
+    "UTA": "UTAH",
+    "WAS": "WSH",
+}
+
+
+def espn_abbreviation(nba_tricode: str) -> str:
+    """Return the ESPN abbreviation for an NBA tricode.
+
+    Args:
+        nba_tricode: Three-letter NBA code, such as ``GSW``.
+
+    Returns:
+        The ESPN spelling, which is the same string for twenty-four of thirty
+        teams.
+    """
+    return NBA_TO_ESPN_ABBREVIATION.get(nba_tricode, nba_tricode)
+
+
+def team_crosswalk(espn_teams: pd.DataFrame) -> dict[int, int]:
+    """Map NBA team ids to ESPN team ids.
+
+    The two sources disagree on both the identifier and the abbreviation, so
+    this goes through the abbreviation with the six known differences applied.
+    Team ids are stable across seasons, unlike player ids, so one mapping
+    serves every season on disk.
+
+    Args:
+        espn_teams: Frame carrying ``team_id`` and ``team_abbreviation`` as
+            hoopR writes them, typically from a box score.
+
+    Returns:
+        NBA team id to ESPN team id, covering only the teams present in
+        ``espn_teams``. A pseudo-team such as the All-Star ``EAST`` has no NBA
+        counterpart and is simply absent.
+
+    Raises:
+        MissingDependencyError: If ``nba_api`` is not installed.
+        KeyError: If a required column is absent.
+    """
+    required = {"team_id", "team_abbreviation"}
+    missing = sorted(required - set(espn_teams.columns))
+    if missing:
+        raise KeyError(f"espn_teams is missing columns: {missing}")
+
+    try:
+        from nba_api.stats.static import teams as nba_teams
+    except ImportError as exc:
+        raise MissingDependencyError(
+            "nba_api is required for the team crosswalk; install the 'sources' extra"
+        ) from exc
+
+    espn_by_abbreviation = {
+        str(abbreviation): int(team_id)
+        for team_id, abbreviation in zip(
+            espn_teams["team_id"], espn_teams["team_abbreviation"], strict=True
+        )
+    }
+
+    mapping: dict[int, int] = {}
+    for entry in nba_teams.get_teams():
+        espn_code = espn_abbreviation(str(entry["abbreviation"]))
+        if espn_code in espn_by_abbreviation:
+            mapping[int(entry["id"])] = espn_by_abbreviation[espn_code]
+    return mapping

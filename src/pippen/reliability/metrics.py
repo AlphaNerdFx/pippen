@@ -253,6 +253,48 @@ METRICS: Final[tuple[Metric, ...]] = (
 BY_NAME: Final[Mapping[str, Metric]] = {metric.name: metric for metric in METRICS}
 
 
+def merge_duplicate_athletes(rows: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """Collapse ESPN athlete ids that are the same player under another number.
+
+    ESPN sometimes issues a second ``athlete_id`` for a player already in its
+    database, typically after a spell out of the league. Corey Brewer appears
+    as both 3191 and 4415554 in 2018-19, Isaiah Canaan as 2490589 and 4412182,
+    Daryl Macon as 4610145 and 4066243 in 2019-20.
+
+    Left alone this is worse than a nuisance. The player's season is split in
+    two, so his minutes are halved in each part, every per-36 rate is computed
+    on a fraction of his games, and a minutes floor may drop both halves of a
+    player who comfortably cleared it. The split-half machinery would then
+    treat him as two players.
+
+    Ids are merged when they share a display name within the same season. Two
+    genuinely different players active in one season under identical names
+    would be merged wrongly, which has not happened in the 25 seasons on disk
+    and would be visible as a player with impossible minutes.
+
+    Args:
+        rows: Eligible box score rows for one season.
+
+    Returns:
+        The rows with duplicate ids rewritten to the lowest id sharing that
+        name, and how many ids were merged away.
+    """
+    if "athlete_display_name" not in rows.columns:
+        return rows, 0
+
+    pairs = rows[["athlete_id", "athlete_display_name"]].drop_duplicates()
+    canonical = pairs.groupby("athlete_display_name")["athlete_id"].min()
+    mapped = pairs["athlete_display_name"].map(canonical)
+    merged = int((mapped.to_numpy() != pairs["athlete_id"].to_numpy()).sum())
+    if not merged:
+        return rows, 0
+
+    lookup = dict(zip(pairs["athlete_id"], mapped, strict=True))
+    rewritten = rows.copy()
+    rewritten["athlete_id"] = rewritten["athlete_id"].map(lookup).astype(rows["athlete_id"].dtype)
+    return rewritten, merged
+
+
 def eligible_rows(player_box: pd.DataFrame) -> pd.DataFrame:
     """Return the regular-season rows a player actually played in.
 
@@ -266,6 +308,9 @@ def eligible_rows(player_box: pd.DataFrame) -> pd.DataFrame:
        real one.
     3. Rows where the player did not appear, since a did-not-play contributes
        nothing and a zero-minute row would divide by zero.
+
+    It then merges ESPN athlete ids that are the same player under two
+    numbers. See :func:`merge_duplicate_athletes` for why that matters.
 
     Args:
         player_box: A hoopR player box score for one season.
@@ -289,7 +334,9 @@ def eligible_rows(player_box: pd.DataFrame) -> pd.DataFrame:
     regular = regular[regular["team_id"].isin(real_teams)]
 
     played = regular[~regular["did_not_play"].astype(bool)]
-    return played[played["minutes"].fillna(0) > 0]
+    appeared = played[played["minutes"].fillna(0) > 0]
+    merged, _ = merge_duplicate_athletes(appeared)
+    return merged
 
 
 def summarise_totals(rows: pd.DataFrame) -> pd.DataFrame:

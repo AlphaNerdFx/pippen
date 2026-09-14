@@ -20,31 +20,15 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
+from pippen.crosswalk import espn_abbreviation
 from pippen.paths import season_file
 from pippen.rapm.pbp_source import cache_root
 from pippen.rapm.possessions import game_stints, points_by_team
 from pippen.seasons import hoopr_from_nba
 
-#: ESPN uses its own team abbreviations and the NBA uses tricodes. Twenty-four
-#: of the thirty agree; these six do not. Derived by comparing the two sets on
-#: 2016-17 rather than recalled, and valid across 2016 to 2024, a window with
-#: no relocations or rebrands.
-NBA_TO_ESPN_ABBREVIATION = {
-    "GSW": "GS",
-    "NOP": "NO",
-    "NYK": "NY",
-    "SAS": "SA",
-    "UTA": "UTAH",
-    "WAS": "WSH",
-}
-
 #: How many games to check. The point is to catch a systematic error, which
 #: shows up in the first handful, not to re-verify every game on every run.
 GAMES_CHECKED = 40
-
-
-def _espn_abbreviation(tricode: str) -> str:
-    return NBA_TO_ESPN_ABBREVIATION.get(tricode, tricode)
 
 
 def _downloaded_games(season: int) -> list[Path]:
@@ -91,7 +75,7 @@ def test_possession_points_match_an_independent_source(
             continue
         stamp, teams = gcode.split("/")
         played_on = pd.Timestamp(f"{stamp[:4]}-{stamp[4:6]}-{stamp[6:]}").date()
-        sides = [_espn_abbreviation(teams[:3]), _espn_abbreviation(teams[3:])]
+        sides = [espn_abbreviation(teams[:3]), espn_abbreviation(teams[3:])]
 
         rows = reference_scores[
             (reference_scores["game_date"] == played_on)

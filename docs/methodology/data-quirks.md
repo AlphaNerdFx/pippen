@@ -158,6 +158,29 @@ which rules out the usual `pippen/0.1 (+https://github.com/...)` convention.
 The default keeps the browser-shaped prefix the filter requires and appends the
 package name and version, so the traffic stays identifiable.
 
+## ESPN issues a second athlete id for the same player
+
+A player who leaves the league and returns can come back under a new ESPN
+`athlete_id` while the old one still exists.
+
+| Player | Season | ESPN ids |
+|---|---|---|
+| Corey Brewer | 2018-19 | 3191 and 4415554 |
+| Isaiah Canaan | 2018-19 | 2490589 and 4412182 |
+| Daryl Macon | 2019-20 | 4610145 and 4066243 |
+
+Left alone this is worse than a nuisance. The player's season is split in two,
+so his minutes are halved in each part, every per-36 rate is computed on a
+fraction of his games, and a minutes floor can drop both halves of a player who
+comfortably cleared it in total. Split-half reliability would treat him as two
+players.
+
+`pippen.reliability.metrics.merge_duplicate_athletes` collapses ids sharing a
+display name within a season, and `eligible_rows` applies it. It surfaced when
+the crosswalk mapped two ESPN ids onto one NBA id and a downstream join that
+assumed one-to-one failed loudly, which is the good case: the same defect in
+the reliability path had been failing silently.
+
 ## ESPN and NBA team abbreviations differ on six teams
 
 Twenty-four of thirty agree. These do not, and any join on team abbreviation

@@ -14,8 +14,10 @@ import pytest
 from pippen.crosswalk import (
     Crosswalk,
     build_crosswalk,
+    espn_abbreviation,
     initial_key,
     normalise,
+    team_crosswalk,
 )
 
 # Real ids, because the collisions they encode are the point.
@@ -191,3 +193,38 @@ def test_a_missing_column_is_named() -> None:
             played_nba_ids={1},
             nba_players=_nba([(1, "A")]),
         )
+
+
+# ------------------------------------------------------------------ teams
+
+
+@pytest.mark.parametrize(
+    ("nba", "espn"),
+    [("GSW", "GS"), ("NOP", "NO"), ("NYK", "NY"), ("SAS", "SA"), ("UTA", "UTAH"), ("WAS", "WSH")],
+)
+def test_the_six_differing_abbreviations_are_translated(nba: str, espn: str) -> None:
+    assert espn_abbreviation(nba) == espn
+
+
+@pytest.mark.parametrize("code", ["BOS", "LAL", "MIA", "DEN", "PHX"])
+def test_the_other_twenty_four_pass_through(code: str) -> None:
+    assert espn_abbreviation(code) == code
+
+
+def test_all_thirty_teams_map() -> None:
+    # Pseudo-teams such as the All-Star EAST have no NBA counterpart and are
+    # simply absent rather than mapped to something wrong.
+    espn = pd.DataFrame(
+        {
+            "team_id": [1, 2, 3, 99],
+            "team_abbreviation": ["ATL", "BOS", "GS", "EAST"],
+        }
+    )
+    mapping = team_crosswalk(espn)
+    assert set(mapping.values()) == {1, 2, 3}
+    assert 99 not in mapping.values()
+
+
+def test_a_missing_team_column_is_named() -> None:
+    with pytest.raises(KeyError, match="team_abbreviation"):
+        team_crosswalk(pd.DataFrame({"team_id": [1]}))
