@@ -179,9 +179,13 @@ If a bound genuinely cannot be expressed, say so rather than looping.
 
 This project develops a machine learning model to quantify NBA player impact using simultaneous metrics and adjusting for metric reliability. The model will later expand to analyze player swaps and team impact.
 
-**Current Status:** Week 0 of a 12-week implementation plan is complete. The repository
-builds, lints, type-checks and tests green. No data ingested, no model trained yet.
-See `TODO.md` for the roadmap and `.context/HANDOVER.md` for current state.
+**Current Status:** Phases 0 and 1 are complete. The data layer works end to end: a
+clean checkout can fetch a season, validate it across tables, and get a green report.
+265 tests, mypy strict clean, documentation building strictly. No model trained yet.
+
+Phases are now gated by outcomes rather than dates. See
+[ADR 0002](docs/architecture/decisions/0002-outcome-gated-phases.md) for why, `TODO.md`
+for the roadmap, and `.context/HANDOVER.md` for current state.
 
 **Key Deliverables:**
 - 8 markdown documentation files (metrics analysis, development pipeline, deployment, data sources)

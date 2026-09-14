@@ -11,7 +11,12 @@ Week 0 is complete and verified on real infrastructure, not just locally.
 - CI, Rigour and Publish docs all green on GitHub runners
 - No data ingested, no model trained
 
-Next: week 1-2, the data layer.
+Next: Phase 2, RAPM. The decision gate there is the first thing that can stop
+the project, and it needs a human decision if it fails.
+
+Phase 1 is complete. `pippen fetch` and `pippen validate` work end to end, and
+the possession coefficient is measured at 0.4104 for 2023-24 rather than assumed
+at 0.44. What that taught is written up in `docs/learning/0001-data-layer.md`.
 
 ## The plan
 
