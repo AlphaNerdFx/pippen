@@ -43,16 +43,16 @@ it across a season.
 
 from __future__ import annotations
 
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import TYPE_CHECKING, Any, Final
+from pathlib import Path
+from typing import Any, Final
 
 import pandas as pd
 
-from pippen.rapm.pbp_source import game_path
-
-if TYPE_CHECKING:  # pragma: no cover - import used for typing only
-    from pathlib import Path
+from pippen.paths import stage_dir
+from pippen.rapm.pbp_source import game_path, season_game_ids
 
 #: Separator ``pbpstats`` uses between player ids inside a lineup id.
 LINEUP_SEPARATOR: Final = "-"
@@ -132,6 +132,63 @@ def _client(cache_dir: str) -> Any:
     )
 
 
+def _assign_event_order(possessions: list[Any]) -> int:
+    """Give every event an ``order`` when the upstream feed omitted it.
+
+    ``pbpstats`` sorts simultaneous events by an ``order`` attribute, which its
+    data.nba.com event class populates from the raw ``ord`` key. That key
+    appears from the 2023-24 season onward and is absent before it: the 2016-17
+    feed carries none at all. Without it, any rebound reaching
+    ``is_turnover_placeholder`` raises ``AttributeError: 'DataRebound' object
+    has no attribute 'order'``, which takes down every game of every affected
+    season.
+
+    The attribute is reconstructible exactly. In ``pbpstats``' other provider
+    ``order`` is the index at which the event occurs in the feed, so numbering
+    the events in feed order reproduces the same quantity. Feed order is
+    ``(period, event_num)``, and ``event_num`` comes from the ``evt`` key,
+    which every season supplies.
+
+    Collecting the events takes a little care: ``previous_event`` and
+    ``next_event`` link events only within a period, so walking one chain from
+    the first possession reaches period one and stops. On the game checked that
+    is 134 events out of 485. This walks the chain attached to every possession
+    and unions the results, which also picks up events belonging to no
+    possession, such as period boundaries, since those still appear in the
+    chain and can still be compared against.
+
+    Args:
+        possessions: Parsed possessions for one game.
+
+    Returns:
+        How many events were given an order. Zero means the feed supplied
+        ``ord`` and nothing was changed.
+    """
+    if not possessions:
+        return 0
+
+    events: dict[int, Any] = {}
+    for possession in possessions:
+        for event in possession.events:
+            if id(event) in events:
+                continue
+            head = event
+            while head.previous_event is not None:
+                head = head.previous_event
+            walker = head
+            while walker is not None:
+                events[id(walker)] = walker
+                walker = walker.next_event
+
+    if any(hasattr(event, "order") for event in events.values()):
+        return 0
+
+    ordered = sorted(events.values(), key=lambda event: (event.period, event.event_num))
+    for index, event in enumerate(ordered):
+        event.order = index
+    return len(ordered)
+
+
 def load_possessions(game_id: str) -> list[Any]:
     """Return the parsed possessions for one game.
 
@@ -154,7 +211,9 @@ def load_possessions(game_id: str) -> list[Any]:
         )
     client = _client(str(path.parent.parent))
     game = client.Game(game_id)
-    return list(game.possessions.items)
+    possessions = list(game.possessions.items)
+    _assign_event_order(possessions)
+    return possessions
 
 
 def _possession_row(possession: Any) -> dict[str, Any] | None:
@@ -253,3 +312,133 @@ def has_valid_lineups(frame: pd.DataFrame) -> pd.Series:
         return counts.eq(PLAYERS_PER_LINEUP)
 
     return five("offense_lineup") & five("defense_lineup")
+
+
+@dataclass(frozen=True)
+class SeasonStints:
+    """Stints for a whole season, with the games that could not be parsed.
+
+    Attributes:
+        season: Season start year.
+        stints: Concatenated stint rows across every game that parsed.
+        games_parsed: How many games contributed rows.
+        failures: ``(game_id, reason)`` for each game that raised. Kept rather
+            than dropped because a parse failure removes real possessions from
+            the fit, and a rate that climbs between seasons is a signal about
+            the upstream feed rather than noise to be ignored.
+    """
+
+    season: int
+    stints: pd.DataFrame
+    games_parsed: int
+    failures: tuple[tuple[str, str], ...]
+
+    @property
+    def possessions(self) -> int:
+        """Total possessions across every parsed game."""
+        if self.stints.empty:
+            return 0
+        return int(self.stints["possessions"].sum())
+
+    def summary(self) -> str:
+        """Return a one-line description suitable for a log or a CLI."""
+        line = (
+            f"season {self.season}: {self.games_parsed:,} games, "
+            f"{len(self.stints):,} stints, {self.possessions:,} possessions"
+        )
+        if self.failures:
+            line += f", {len(self.failures)} games failed to parse"
+        return line
+
+
+def stints_path(season: int) -> Path:
+    """Return the cache path for one season's extracted stints."""
+    return stage_dir("interim", create=True) / f"stints_{season}.parquet"
+
+
+def season_stints(
+    season: int,
+    *,
+    game_ids: Sequence[str] | None = None,
+    on_progress: Callable[[str, str | None], None] | None = None,
+) -> SeasonStints:
+    """Extract stints for every downloaded game of a season.
+
+    A game that raises is recorded and skipped rather than aborting the run.
+    Parsing a season takes minutes and a single malformed game should not cost
+    the other twelve hundred.
+
+    Args:
+        season: Season start year.
+        game_ids: Games to parse. Defaults to the season's full regular-season
+            schedule, skipping any not yet downloaded.
+        on_progress: Called with ``(game_id, error)`` after each game, where
+            ``error`` is ``None`` on success.
+
+    Returns:
+        A :class:`SeasonStints` holding the rows and the failures.
+    """
+    if game_ids is None:
+        game_ids = [gid for gid in season_game_ids(season) if game_path(gid).exists()]
+
+    frames: list[pd.DataFrame] = []
+    failures: list[tuple[str, str]] = []
+    for game_id in game_ids:
+        try:
+            frame = game_stints(game_id)
+        except Exception as exc:  # any parse failure is recorded, not raised
+            reason = f"{type(exc).__name__}: {exc}"
+            failures.append((game_id, reason))
+            if on_progress is not None:
+                on_progress(game_id, reason)
+            continue
+        if not frame.empty:
+            frames.append(frame)
+        if on_progress is not None:
+            on_progress(game_id, None)
+
+    stints = (
+        pd.concat(frames, ignore_index=True)
+        if frames
+        else pd.DataFrame(columns=list(STINT_COLUMNS))
+    )
+    return SeasonStints(
+        season=season,
+        stints=stints,
+        games_parsed=len(frames),
+        failures=tuple(failures),
+    )
+
+
+def write_season_stints(result: SeasonStints) -> Path:
+    """Write a season's stints to the interim stage as Parquet.
+
+    Args:
+        result: The extraction to persist.
+
+    Returns:
+        Path written.
+    """
+    target = stints_path(result.season)
+    result.stints.to_parquet(target, index=False)
+    return target
+
+
+def read_season_stints(season: int) -> pd.DataFrame:
+    """Read a season's cached stints.
+
+    Args:
+        season: Season start year.
+
+    Returns:
+        The stint frame.
+
+    Raises:
+        FileNotFoundError: If the season has not been extracted yet.
+    """
+    target = stints_path(season)
+    if not target.exists():
+        raise FileNotFoundError(
+            f"no extracted stints for {season}; expected {target}. Run the extraction first."
+        )
+    return pd.read_parquet(target)
