@@ -97,6 +97,71 @@ Claxton, Paolo Banchero and Davion Mitchell. Against a median bootstrap standard
 error near 1.1 per 100, gaps of that size are roughly two standard errors: large
 enough to notice, small enough to be sampling rather than a defect.
 
+## Does pooling seasons help, and the criterion that had to be replaced
+
+Phase 2 asked for bootstrap standard errors that shrink as seasons are added.
+Measured, they do not. On a fixed cohort of 228 players present with at least
+2,000 possessions in every one of 2016-17 to 2018-19:
+
+| Window | Possessions | Median bootstrap SE |
+|---|---|---|
+| 1 season | 232,897 | 1.217 |
+| 2 seasons | 440,492 | 1.303 |
+| 3 seasons | 683,356 | 1.253 |
+
+Flat. Two explanations were tested and rejected before the real one. It is not
+players leaving the league: the cohort above is present throughout. It is not a
+coding error either.
+
+A bootstrap standard error on a ridge coefficient does not measure information.
+Within a single window it **rises** with a player's possessions, correlating
++0.79 with their logarithm:
+
+| Median possessions | Players | Median SE |
+|---|---|---|
+| 388 | 98 | 0.56 |
+| 2,174 | 97 | 1.10 |
+| 4,764 | 97 | 1.24 |
+| 6,919 | 97 | 1.23 |
+| 9,393 | 97 | 1.19 |
+
+A player with two hundred possessions is shrunk almost entirely to zero, so his
+coefficient barely moves between resamples and his standard error is small.
+That is the prior, not precision. The statistic conflates "estimated precisely"
+with "shrunk to nothing".
+
+The same mechanism explains the flat cross-window result. Holding the penalty
+fixed while tripling the data weakens the shrinkage in relative terms, and the
+variance that releases roughly cancels the information gained. Scaling the
+penalty with the data does make the number fall, 1.210 to 0.901 to 0.727, but
+that buys variance reduction with bias rather than with information, so it
+would be a misleading thing to report as evidence that pooling helps.
+
+The criterion came from the same source research this project has already
+found unreliable elsewhere, and it is the wrong instrument.
+
+### What replaced it
+
+Split-half reliability, the instrument this project applies to every other
+metric, now applied to its own ground truth. Split the window's games in two,
+fit RAPM on each half, correlate the ratings across the fixed cohort, and apply
+Spearman-Brown to get the reliability of a rating fitted on the whole window.
+
+| Window | rho across halves | Reliability of the window |
+|---|---|---|
+| 1 season | 0.429 | 0.601 |
+| 2 seasons | 0.578 | 0.732 |
+| 3 seasons | 0.661 | 0.796 |
+
+Monotone, and it answers the question the original criterion was reaching for.
+
+Two things follow. Three-season RAPM at 0.796 lands inside the 80 to 85 percent
+band the source research assigns to RAPM, so that figure is roughly right for
+multi-year RAPM. Single-season RAPM at 0.601 does not, which is the concrete
+reason this project publishes multi-season windows rather than single seasons.
+
+Run it with `pippen.rapm.stability.split_half_stability`.
+
 ## Other checks
 
 | Check | Threshold | Result |
@@ -107,6 +172,7 @@ enough to notice, small enough to be sampling rather than a defect.
 | Ratings invariant to player numbering | exact | Pass, property test |
 | Possessions neither created nor lost by aggregation | exact | Pass, property test |
 | Spearman against an independent build | above 0.85 | Pass, 0.914 to 0.920 |
+| RAPM split-half reliability rises with window length | monotone | Pass, 0.601 to 0.796 |
 
 ## What this does not establish
 

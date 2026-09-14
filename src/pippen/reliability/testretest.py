@@ -262,6 +262,106 @@ def _half_values(
     )
 
 
+def _measure(
+    rows: pd.DataFrame,
+    season: int,
+    metrics: tuple[Metric, ...],
+    *,
+    rule: SplitRule,
+    splits: int,
+    minutes_floor: float,
+    seed: int,
+) -> dict[str, SplitHalfEstimate]:
+    """Measure several metrics over one set of splits.
+
+    The split loop is outside the metric loop on purpose. Forming a split and
+    summing each half is the expensive part, and it does not depend on which
+    metric is being measured, so doing it once per split rather than once per
+    metric per split is fifteen times less work for the current metric set.
+    It also means every metric in one call sees exactly the same splits, so
+    their correlations are comparable rather than each resting on its own
+    random draw.
+
+    Args:
+        rows: Eligible box score rows for the season.
+        season: hoopR season label.
+        metrics: Metrics to measure.
+        rule: How to form the halves.
+        splits: Random splits to average.
+        minutes_floor: Minutes a player needs across the whole season.
+        seed: Seed for the shuffles.
+
+    Returns:
+        One estimate per metric, keyed by name. A metric that never had three
+        players with a defined value is absent rather than present with a
+        meaningless number.
+
+    Raises:
+        NotEnoughPlayersError: If fewer than three players clear the floor.
+    """
+    season_totals = summarise_totals(rows)
+    qualified = season_totals[season_totals["minutes"] >= minutes_floor]
+    if len(qualified) < 3:
+        raise NotEnoughPlayersError(
+            f"only {len(qualified)} players reached {minutes_floor:.0f} minutes in "
+            f"{season}; a split-half correlation needs at least three"
+        )
+
+    eligible = rows[rows["athlete_id"].isin(qualified.index)]
+    traded_share = float((qualified["teams"] > 1).mean())
+
+    generator = np.random.default_rng(seed)
+    draws = 1 if rule is SplitRule.ODD_EVEN else splits
+
+    gathered: dict[str, dict[str, list[float]]] = {
+        metric.name: {"pearson": [], "spearman": [], "games": [], "players": []}
+        for metric in metrics
+    }
+
+    for _ in range(draws):
+        halves = _assign_halves(eligible, rule, generator)
+        first = summarise_totals(eligible[halves == 0])
+        second = summarise_totals(eligible[halves == 1])
+        shared = first.index.intersection(second.index)
+        if len(shared) < 3:
+            continue
+        first, second = first.loc[shared], second.loc[shared]
+        per_half = (first["games"] + second["games"]) / 2.0
+
+        for metric in metrics:
+            left = compute(metric, first, season)
+            right = compute(metric, second, season)
+            usable = left.notna() & right.notna()
+            if usable.sum() < 3:
+                continue
+            bucket = gathered[metric.name]
+            bucket["pearson"].append(float(left[usable].corr(right[usable], method="pearson")))
+            bucket["spearman"].append(float(left[usable].corr(right[usable], method="spearman")))
+            bucket["games"].append(float(per_half[usable].mean()))
+            bucket["players"].append(float(usable.sum()))
+
+    estimates: dict[str, SplitHalfEstimate] = {}
+    for metric in metrics:
+        bucket = gathered[metric.name]
+        if not bucket["pearson"]:
+            continue
+        pearson = bucket["pearson"]
+        estimates[metric.name] = SplitHalfEstimate(
+            metric=metric.name,
+            season=season,
+            rule=rule,
+            rho_half=float(np.mean(pearson)),
+            rho_half_sd=float(np.std(pearson, ddof=1)) if len(pearson) > 1 else 0.0,
+            rho_half_spearman=float(np.mean(bucket["spearman"])),
+            games_per_half=float(np.mean(bucket["games"])),
+            players=int(np.mean(bucket["players"])),
+            minutes_floor=minutes_floor,
+            splits=len(pearson),
+            traded_share=traded_share,
+        )
+    return estimates
+
+
 def split_half(
     rows: pd.DataFrame,
     metric: Metric,
@@ -289,57 +389,23 @@ def split_half(
         A :class:`SplitHalfEstimate`.
 
     Raises:
-        NotEnoughPlayersError: If fewer than three players clear the floor.
+        NotEnoughPlayersError: If fewer than three players clear the floor, or
+            if no split left three players with a defined value.
     """
-    season_totals = summarise_totals(rows)
-    qualified = season_totals[season_totals["minutes"] >= minutes_floor]
-    if len(qualified) < 3:
-        raise NotEnoughPlayersError(
-            f"only {len(qualified)} players reached {minutes_floor:.0f} minutes in "
-            f"{season}; a split-half correlation needs at least three"
-        )
-
-    eligible = rows[rows["athlete_id"].isin(qualified.index)]
-    traded_share = float((qualified["teams"] > 1).mean())
-
-    generator = np.random.default_rng(seed)
-    draws = 1 if rule is SplitRule.ODD_EVEN else splits
-
-    pearson: list[float] = []
-    spearman: list[float] = []
-    games: list[float] = []
-    players: list[int] = []
-
-    for _ in range(draws):
-        halves = _assign_halves(eligible, rule, generator)
-        first, second, per_half = _half_values(eligible, halves, metric, season)
-        usable = first.notna() & second.notna()
-        if usable.sum() < 3:
-            continue
-        left, right = first[usable], second[usable]
-        pearson.append(float(left.corr(right, method="pearson")))
-        spearman.append(float(left.corr(right, method="spearman")))
-        games.append(float(per_half[usable].mean()))
-        players.append(int(usable.sum()))
-
-    if not pearson:
+    estimates = _measure(
+        rows,
+        season,
+        (metric,),
+        rule=rule,
+        splits=splits,
+        minutes_floor=minutes_floor,
+        seed=seed,
+    )
+    if metric.name not in estimates:
         raise NotEnoughPlayersError(
             f"no split of {season} left three players with a defined {metric.name}"
         )
-
-    return SplitHalfEstimate(
-        metric=metric.name,
-        season=season,
-        rule=rule,
-        rho_half=float(np.mean(pearson)),
-        rho_half_sd=float(np.std(pearson, ddof=1)) if len(pearson) > 1 else 0.0,
-        rho_half_spearman=float(np.mean(spearman)),
-        games_per_half=float(np.mean(games)),
-        players=int(np.mean(players)),
-        minutes_floor=minutes_floor,
-        splits=len(pearson),
-        traded_share=traded_share,
-    )
+    return estimates[metric.name]
 
 
 def measure_season(
@@ -352,7 +418,7 @@ def measure_season(
     minutes_floor: float = DEFAULT_MINUTES_FLOOR,
     seed: int = DEFAULT_SEED,
 ) -> pd.DataFrame:
-    """Measure every metric for one season.
+    """Measure every metric for one season, over one shared set of splits.
 
     Args:
         rows: Eligible box score rows for the season.
@@ -370,31 +436,24 @@ def measure_season(
         because the same metric implies very different weights at one season
         and at three.
     """
-    records = []
-    for metric in metrics:
-        estimate = split_half(
-            rows,
-            metric,
-            season,
-            rule=rule,
-            splits=splits,
-            minutes_floor=minutes_floor,
-            seed=seed,
-        )
-        records.append(
-            {
-                "metric": estimate.metric,
-                "season": estimate.season,
-                "rho_half": estimate.rho_half,
-                "rho_half_sd": estimate.rho_half_sd,
-                "rho_half_spearman": estimate.rho_half_spearman,
-                "games_per_half": estimate.games_per_half,
-                "players": estimate.players,
-                "traded_share": estimate.traded_share,
-                "reliability_at_observed_length": estimate.reliability_at_observed_length,
-                "reliability_at_82_games": estimate.reliability_at(82.0),
-            }
-        )
+    estimates = _measure(
+        rows, season, metrics, rule=rule, splits=splits, minutes_floor=minutes_floor, seed=seed
+    )
+    records = [
+        {
+            "metric": estimate.metric,
+            "season": estimate.season,
+            "rho_half": estimate.rho_half,
+            "rho_half_sd": estimate.rho_half_sd,
+            "rho_half_spearman": estimate.rho_half_spearman,
+            "games_per_half": estimate.games_per_half,
+            "players": estimate.players,
+            "traded_share": estimate.traded_share,
+            "reliability_at_observed_length": estimate.reliability_at_observed_length,
+            "reliability_at_82_games": estimate.reliability_at(82.0),
+        }
+        for estimate in estimates.values()
+    ]
     return pd.DataFrame(records).sort_values("rho_half", ascending=False).reset_index(drop=True)
 
 

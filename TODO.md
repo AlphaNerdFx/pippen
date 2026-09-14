@@ -79,9 +79,17 @@ Ships: a validation report.
 
 Entry: Phase 1 done, with possession-level data on disk.
 Done when: computed multi-season RAPM reaches Spearman correlation above 0.85
-against a published multi-season RAPM, possession counts reconcile to official
-box scores within one percent, and bootstrap standard errors shrink as seasons
-are added.
+against an independent build, possession totals reconcile exactly against an
+independent box score, and RAPM split-half reliability rises with window length.
+
+Two criteria changed during Phase 2 and both changes are recorded in
+`docs/methodology/rapm-validation.md`. The comparison target moved from a
+published RAPM, which exists only as unlicensed web tables, to an independently
+built stint dataset run through this project's own solver, which isolates the
+lineup reconstruction instead of confounding it with someone else's modelling
+choices. And bootstrap standard errors were replaced, because measured, they
+track ridge shrinkage rather than information: within a window they rise with a
+player's possessions.
 Limit: network-bound to fetch possessions, then compute-bound for the solve,
 then judgement at the gate.
 
