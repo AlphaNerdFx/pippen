@@ -1,1 +1,1 @@
-"""The reliability layer of pippen."""
+"""Measured reliability of the metrics this project consumes."""
