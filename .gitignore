@@ -44,6 +44,9 @@ data/raw/**
 data/interim/**
 data/processed/**
 data/sources/**
+# Third-party data kept for local validation only. Nothing here states a
+# licence permitting redistribution, so it never enters git or a release.
+data/external/**
 !data/**/.gitkeep
 !data/sources/MANIFEST.md
 !data/sources/manifest.json

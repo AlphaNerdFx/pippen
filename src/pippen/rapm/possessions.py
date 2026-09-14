@@ -515,3 +515,33 @@ def read_season_stints(season: int) -> pd.DataFrame:
             f"no extracted stints for {season}; expected {target}. Run the extraction first."
         )
     return pd.read_parquet(target)
+
+
+def possessions_by_player(stints: pd.DataFrame) -> pd.Series:
+    """Return how many possessions each player was on the floor for.
+
+    Counts a possession once for every player in either lineup, so the total
+    across players is ten times the possession count. Used to restrict
+    comparisons and reports to players with enough evidence behind their
+    rating, since a ridge estimate for a player with two hundred possessions is
+    mostly the prior.
+
+    Args:
+        stints: A stint frame.
+
+    Returns:
+        A Series indexed by player id, sorted descending, named
+        ``possessions``.
+    """
+    if stints.empty:
+        return pd.Series(dtype="float64", name="possessions")
+
+    counts: dict[int, float] = {}
+    for column in ("offense_lineup", "defense_lineup"):
+        for lineup, possessions in zip(stints[column], stints["possessions"], strict=True):
+            for part in str(lineup).split(LINEUP_SEPARATOR):
+                counts[int(part)] = counts.get(int(part), 0.0) + float(possessions)
+
+    series = pd.Series(counts, name="possessions").sort_values(ascending=False)
+    series.index.name = "player_id"
+    return series
