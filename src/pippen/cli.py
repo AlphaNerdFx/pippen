@@ -13,6 +13,10 @@ from pippen import __version__
 from pippen.data import hoopr, possession_coefficient
 from pippen.data import validate as data_validate
 from pippen.paths import ENV_VAR, data_root, dataset_file, season_file, stage_dir
+from pippen.rapm import design as rapm_design
+from pippen.rapm import pbp_source
+from pippen.rapm import possessions as rapm_possessions
+from pippen.rapm import ridge as rapm_ridge
 
 app = typer.Typer(
     name="pippen",
@@ -283,13 +287,121 @@ def _compact(seasons: list[int]) -> str:
 
 
 @app.command()
-def rapm(
-    seasons: Annotated[str, typer.Option(help="Season range, for example 2015-2024.")],
-    window: Annotated[int, typer.Option(help="Number of seasons per RAPM window.")] = 3,
+def possessions(
+    seasons: Annotated[
+        str,
+        typer.Option(help="A season, 2024, or an inclusive range, 2016-2024."),
+    ],
+    force: Annotated[
+        bool,
+        typer.Option(help="Re-download even when a valid file is already present."),
+    ] = False,
+    limit: Annotated[
+        int,
+        typer.Option(help="Stop after this many games per season. 0 means no limit."),
+    ] = 0,
 ) -> None:
-    """Compute regularized adjusted plus-minus over a rolling multi-season window."""
-    del seasons, window
-    raise typer.Exit(_not_yet("rapm", "week 3-4 of the implementation plan"))
+    """Download play-by-play with on-court lineups, the input to RAPM.
+
+    This is the slow path. Unlike the hoopR bulk tables, which arrive as whole
+    seasons in one file, possessions come one game at a time at one request per
+    second, so a full season costs about twenty minutes and the nine covered
+    seasons about three hours. Games already downloaded are skipped, so an
+    interrupted run resumes where it stopped.
+    """
+    wanted = _parse_seasons(seasons)
+    outside = [s for s in wanted if not pbp_source.FIRST_SEASON <= s <= pbp_source.LAST_SEASON]
+    if outside:
+        console.print(
+            f"[red]not covered[/red]: {_compact(outside)}. data.nba.com serves "
+            f"{pbp_source.FIRST_SEASON} to {pbp_source.LAST_SEASON}; see "
+            f"docs/methodology/data-quirks.md"
+        )
+        raise typer.Exit(code=2)
+
+    failures = 0
+    for season in wanted:
+        result = pbp_source.download_season(season, force=force, limit=limit if limit > 0 else None)
+        console.print(result.summary())
+        failures += len(result.failures)
+        for failed in result.failures[:5]:
+            console.print(f"  [yellow]{failed.game_id}[/yellow] {failed.error}")
+
+    if failures:
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def stints(
+    seasons: Annotated[str, typer.Option(help="Season range, for example 2016-2024.")],
+) -> None:
+    """Extract stints from downloaded play-by-play and cache them.
+
+    Parsing is the expensive part of every later step, so the result is written
+    to the interim stage once and read back by `rapm`.
+    """
+    for season in _parse_seasons(seasons):
+        result = rapm_possessions.season_stints(season)
+        path = rapm_possessions.write_season_stints(result)
+        console.print(f"{result.summary()} -> {path.name}")
+        if result.failures:
+            console.print(f"  [yellow]{len(result.failures)} games failed to parse[/yellow]")
+
+
+@app.command()
+def rapm(
+    seasons: Annotated[str, typer.Option(help="Season range, for example 2016-2024.")],
+    window: Annotated[int, typer.Option(help="Number of seasons per RAPM window.")] = 3,
+    top: Annotated[int, typer.Option(help="How many players to print.")] = 20,
+) -> None:
+    """Compute regularized adjusted plus-minus over a rolling multi-season window.
+
+    Windows are pooled rather than fitted per season because a single season is
+    too few possessions to separate teammates who rarely sit apart. A window of
+    1 is allowed and is what the sensitivity check uses, not what gets
+    published.
+    """
+    wanted = _parse_seasons(seasons)
+    if window < 1:
+        console.print("[red]window must be at least 1[/red]")
+        raise typer.Exit(code=2)
+    if window > len(wanted):
+        console.print(f"[red]window {window} is longer than the {len(wanted)} seasons given[/red]")
+        raise typer.Exit(code=2)
+
+    frames = []
+    for season in wanted:
+        try:
+            frames.append(rapm_possessions.read_season_stints(season))
+        except FileNotFoundError as exc:
+            console.print(f"[red]{exc}[/red]")
+            raise typer.Exit(code=2) from exc
+
+    for start in range(0, len(wanted) - window + 1):
+        span = wanted[start : start + window]
+        pooled = pd.concat(frames[start : start + window], ignore_index=True)
+        design = rapm_design.build_design(pooled)
+        console.print(f"\n[bold]{_compact(span)}[/bold]  {design.describe()}")
+        if design.dropped_rows:
+            console.print(f"  dropped {design.dropped_rows:,} stints with malformed lineups")
+
+        fit, table = rapm_ridge.solve(design)
+        best = table["weighted_mse"].min()
+        console.print(f"  alpha {fit.alpha:,.0f}  intercept {fit.intercept:.2f}  cv mse {best:.1f}")
+
+        ratings = fit.ratings().head(top)
+        rendered = Table(title=f"top {top} by impact per 100 possessions, {_compact(span)}")
+        rendered.add_column("player_id", justify="right")
+        for name in ("offensive", "defensive", "total"):
+            rendered.add_column(name, justify="right")
+        for row in ratings.itertuples(index=False):
+            rendered.add_row(
+                str(row.player_id),
+                f"{row.offensive:+.2f}",
+                f"{row.defensive:+.2f}",
+                f"{row.total:+.2f}",
+            )
+        console.print(rendered)
 
 
 @app.command()

@@ -425,6 +425,7 @@ def download_game(
     Returns:
         A :class:`GameDownloadResult` describing what happened.
     """
+    cache_root(create=True)
     target = game_path(game_id)
     if target.exists() and not force:
         return GameDownloadResult(game_id=game_id, path=target, downloaded=False)
