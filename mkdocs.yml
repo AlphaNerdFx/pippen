@@ -76,6 +76,7 @@ nav:
       - RAPM validation: methodology/rapm-validation.md
       - Measuring reliability: methodology/reliability.md
       - Measured reliability: methodology/measured-reliability.md
+      - The claim under test: methodology/claim-under-test.md
       - Limitations: methodology/limitations.md
       - Upstream data quirks: methodology/data-quirks.md
       - Errata in the research: methodology/errata.md
