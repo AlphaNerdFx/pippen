@@ -78,6 +78,57 @@ if TYPE_CHECKING:
 # The conventional constant this module measures against. See
 # docs/methodology/errata.md, section 3.
 CONVENTIONAL_COEFFICIENT: Final[float] = 0.44
+"""The value basketball analytics conventionally assumes.
+
+Kept as a comparison baseline rather than as a default. Every season this
+project has measured sits below it, so it is the number to beat rather than the
+number to use.
+"""
+
+# Measured by `estimate_coefficients_by_season` against every season hoopR
+# publishes, 2002 through 2026, totalling 1,467,112 free throw attempts. This
+# table is a published finding rather than a tuning parameter: regenerate it
+# with `pippen coefficient --seasons 2002-2026` and the numbers should come
+# back identical, because the estimator is deterministic.
+#
+# 2002 carries 23,747 attempts against 50,000 to 69,000 in every later season,
+# so hoopR's coverage of it is partial. It is listed for completeness and is
+# excluded from the pooled fallback below.
+MEASURED_COEFFICIENTS: Final[dict[int, float]] = {
+    2002: 0.4244,
+    2003: 0.4212,
+    2004: 0.4252,
+    2005: 0.4219,
+    2006: 0.4189,
+    2007: 0.4174,
+    2008: 0.4227,
+    2009: 0.4215,
+    2010: 0.4194,
+    2011: 0.4178,
+    2012: 0.4212,
+    2013: 0.4207,
+    2014: 0.4211,
+    2015: 0.4234,
+    2016: 0.4213,
+    2017: 0.4157,
+    2018: 0.4139,
+    2019: 0.4137,
+    2020: 0.4119,
+    2021: 0.4136,
+    2022: 0.4112,
+    2023: 0.4096,
+    2024: 0.4104,
+    2025: 0.4142,
+    2026: 0.4135,
+}
+
+# Pooled across all 1,467,112 measured attempts, weighting each season by its
+# sample size rather than averaging the per-season figures equally. Used for a
+# season with no measurement of its own. The spread across a quarter century is
+# 0.0156 while the average distance from 0.44 is 0.0222, so even this single
+# value is closer to every measured season than the convention is to any of
+# them.
+DEFAULT_COEFFICIENT: Final[float] = 0.4178
 
 # Every free throw's type_text ends in "<k> of <n>" except technical free
 # throws, which have no trip position at all (a technical is never part of a
@@ -307,6 +358,25 @@ def _classify_free_throws(play_by_play: pd.DataFrame) -> pd.DataFrame:
     result["is_last_of_trip"] = is_last_of_trip
     result["ends_possession"] = ends_possession
     return result
+
+
+def coefficient_for_season(season: int) -> float:
+    """Return the possession coefficient to use for one season.
+
+    This is the value the rest of the pipeline should use wherever the
+    conventional 0.44 would otherwise appear. Prefer it to the constant: every
+    season measured here sits below 0.44, so the convention is wrong in the
+    same direction every time rather than being noisy around the truth.
+
+    Args:
+        season: Season end year, so 2024 means the 2023-24 season.
+
+    Returns:
+        The measured coefficient for that season, or
+        :data:`DEFAULT_COEFFICIENT` for a season with no measurement, which
+        is the value pooled across every season that does have one.
+    """
+    return MEASURED_COEFFICIENTS.get(season, DEFAULT_COEFFICIENT)
 
 
 def estimate_season_coefficient(

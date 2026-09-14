@@ -153,6 +153,31 @@ Reproduce any of this with:
 pippen coefficient --seasons 2002-2026
 ```
 
+### The measured value is now the project default
+
+`possession_coefficient.coefficient_for_season(season)` returns the measured
+figure for that season, or the pooled 0.4178 for a season with no measurement of
+its own. Anything in this project that would otherwise reach for 0.44 uses that
+instead.
+
+`CONVENTIONAL_COEFFICIENT` is kept at 0.44, as the number to compare against
+rather than the number to use. Removing it would make the comparison impossible
+to state.
+
+Two tests defend the finding rather than only recording it. One asserts that no
+measured season sits at or above 0.44, so a future measurement that contradicts
+the headline claim fails the build rather than quietly joining the table. The
+other reloads all 25 seasons, recomputes every coefficient, and compares against
+the published table, because a hardcoded finding that has silently drifted from
+its source is worse than no finding: it carries the authority of a measurement
+while no longer being one.
+
+This is a finding specific to this project, not an established result. It
+depends on the exclusion rule stated above, on hoopR's event labelling, and on
+ESPN as the upstream source. Anyone reproducing it with different play-by-play
+should expect a different number, and the honest comparison is against their own
+measurement rather than against 0.44.
+
 **What it changes for this project.** There is a legitimate version of the
 complaint, and it applies to every metric rather than to PER. The true fraction
 drifts with rule changes, and hard-coding 0.44 across a 25-season span bakes in

@@ -19,11 +19,13 @@ import math
 import pandas as pd
 import pytest
 
+from pippen.data import possession_coefficient
 from pippen.data.possession_coefficient import (
     CONVENTIONAL_COEFFICIENT,
     estimate_coefficients_by_season,
     estimate_season_coefficient,
 )
+from pippen.paths import season_file
 
 
 def _game(events: list[tuple[str, bool]], game_id: int = 1, start: int = 1) -> pd.DataFrame:
@@ -484,3 +486,83 @@ def test_three_consecutive_substitutions_are_still_stepped_over() -> None:
     result = estimate_season_coefficient(events, 2024)
     assert result.excluded_unresolved == 0
     assert result.possession_ending_trips == 1
+
+
+# ------------------------------------------------------- the published finding
+
+
+def test_every_measured_season_sits_below_the_convention() -> None:
+    """The headline claim, asserted rather than only written down.
+
+    If a future measurement ever lands above 0.44 this fails, which is the
+    point. The claim is that the convention is wrong in one direction every
+    time, not that it is noisy around the truth.
+    """
+    above = {
+        season: value
+        for season, value in possession_coefficient.MEASURED_COEFFICIENTS.items()
+        if value >= possession_coefficient.CONVENTIONAL_COEFFICIENT
+    }
+    assert not above, f"seasons at or above 0.44: {above}"
+
+
+def test_the_measured_table_covers_every_season_without_a_gap() -> None:
+    seasons = sorted(possession_coefficient.MEASURED_COEFFICIENTS)
+    assert seasons == list(range(seasons[0], seasons[-1] + 1))
+
+
+def test_the_fallback_sits_inside_the_measured_range() -> None:
+    # A pooled value outside the range of what it pools would mean the pooling
+    # is wrong, not that the seasons disagree.
+    values = possession_coefficient.MEASURED_COEFFICIENTS.values()
+    assert min(values) <= possession_coefficient.DEFAULT_COEFFICIENT <= max(values)
+
+
+def test_a_measured_season_returns_its_own_value() -> None:
+    assert possession_coefficient.coefficient_for_season(2024) == pytest.approx(0.4104)
+
+
+@pytest.mark.parametrize("season", [1999, 2001, 2030])
+def test_an_unmeasured_season_falls_back_to_the_pooled_value(season: int) -> None:
+    # Falling back to 0.44 here would reintroduce the constant this table
+    # exists to replace.
+    assert possession_coefficient.coefficient_for_season(season) == pytest.approx(
+        possession_coefficient.DEFAULT_COEFFICIENT
+    )
+
+
+def test_the_fallback_is_never_the_convention() -> None:
+    assert (
+        possession_coefficient.DEFAULT_COEFFICIENT
+        != possession_coefficient.CONVENTIONAL_COEFFICIENT
+    )
+
+
+@pytest.mark.network
+def test_the_published_table_still_matches_the_data_it_came_from() -> None:
+    """Regenerate the table from real files and compare, season by season.
+
+    A hardcoded finding that has silently drifted from its source is worse than
+    no finding, because it carries the authority of a measurement while no
+    longer being one. Marked network because it needs downloaded seasons; run
+    it after any change to the estimator.
+    """
+    frames = {}
+    for season in possession_coefficient.MEASURED_COEFFICIENTS:
+        path = season_file("raw", "play_by_play", season)
+        if path.exists():
+            frames[season] = pd.read_parquet(
+                path, columns=list(possession_coefficient._REQUIRED_COLUMNS)
+            )
+    if not frames:
+        pytest.skip("no seasons downloaded; run `pippen fetch --seasons 2002-2026`")
+
+    measured = possession_coefficient.estimate_coefficients_by_season(frames)
+    recomputed = measured.set_index("season")["coefficient"].to_dict()
+
+    for season, published in possession_coefficient.MEASURED_COEFFICIENTS.items():
+        if season not in recomputed:
+            continue
+        assert recomputed[season] == pytest.approx(published, abs=5e-5), (
+            f"season {season}: published {published}, recomputed {recomputed[season]:.4f}"
+        )
