@@ -455,6 +455,18 @@ src/pippen/
 - See `global_session.md` for tool-agnostic context
 - Use `03_ai_tools_assistance.md` for AI tool-specific recommendations
 
+
+## Teaching Packet
+1. What was built?
+2. Why this architecture?
+3. Alternatives rejected?
+4. What concepts did I just use?
+5. What would break at 10× scale?
+6. What security issues exist?
+7. What production problems could occur?
+8. What should I now be able to explain?
+9. 5 questions for me
+10. One modification I must implement myself
 ---
 
 ## Contact & Support

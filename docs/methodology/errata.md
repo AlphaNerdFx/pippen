@@ -100,6 +100,14 @@ objections, which are enough on their own:
 - The league is renormalised to exactly 15 every season, forcing a fixed
   distribution regardless of how good the league actually was.
 
+The measured value does not replace 0.44 in the pipeline yet. One season is not
+evidence of a constant. The coefficient is measured for every season ingested
+first, and only then does the question of replacing the conventional value get
+answered. If it sits near 0.41 across twenty years, the constant is simply wrong
+and should be replaced. If it drifts with rule changes, the drift is the more
+interesting finding and argues for a per-season value rather than a new constant.
+Switching on one season's evidence would repeat the error this page documents.
+
 **What it changes for this project.** There is a legitimate version of the
 complaint, and it applies to every metric rather than to PER. The true fraction
 drifts with rule changes, and hard-coding 0.44 across a 25-season span bakes in

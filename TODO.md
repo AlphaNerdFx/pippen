@@ -92,9 +92,27 @@ then judgement at the gate.
 - [ ] Property tests: possessions reconcile, five a side, order invariance
 - [ ] Decision gate: Spearman above 0.85 against published RAPM
 
-If the gate fails and cannot be fixed within a reasonable effort, the target
-switches to next-season team net rating, which needs no external reference. That
-is the maintainer's decision, not an automatic fallback.
+### Decisions settled before Phase 2 starts
+
+**If the gate fails**, debugging gets a fixed budget of one week, then the target
+switches to next-season team net rating, which needs no external reference. An
+unbounded debug on a gate has no exit condition, which is the same failure as a
+polling loop. The discrepancy analysis is published either way, as a reference
+point for anyone computing RAPM from the same sources.
+
+**Scope of the first run** is 2015 to 2024, ten seasons, pooled into multi-season
+windows. That clears the gate's statistical requirement and costs 3.4 hours of
+rate-limited fetching rather than 8.5. Older seasons stay unfetched until there
+is a reason beyond completeness, and if that reason arrives they get pooled into
+multi-year windows rather than published as single seasons. Single-season RAPM
+is what this project's own research calls too noisy to act on, so publishing it
+would invite the criticism the project exists to avoid.
+
+**The two data paths are not the same cost.** hoopR bulk Parquet is a direct file
+download and covers 25 seasons in minutes. Possession data with on-court lineups
+comes from the NBA API at one request per second and costs hours. Only RAPM needs
+the slow path. The possession coefficient, the Four Factors and everything
+box-score-derived come from the fast one.
 
 ---
 
@@ -106,6 +124,7 @@ published either way, and the credible intervals are calibrated so that roughly
 90 percent of held-out values land inside the 90 percent interval.
 Limit: compute-bound for fitting, judgement for the result.
 
+- [ ] Fetch all 25 hoopR seasons and measure the possession coefficient per season
 - [ ] Split-half reliability with Spearman-Brown correction
 - [ ] NumPyro hierarchical fusion model
 - [ ] LightGBM and ridge baselines, tuned with Optuna, tracked in MLflow
