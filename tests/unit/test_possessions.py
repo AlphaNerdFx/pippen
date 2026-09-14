@@ -61,21 +61,61 @@ class _FakePossession:
         self.events = events
 
 
-def _stat(key: str, value: int, offense: int = 1, defense: int = 2) -> dict[str, Any]:
+OFFENSE, DEFENSE = 1, 2
+OFFENSE_LINEUP, DEFENSE_LINEUP = "1-2-3-4-5", "6-7-8-9-10"
+
+
+def _off_poss() -> dict[str, Any]:
+    """An OffPoss row, which pbpstats attaches to the offensive players."""
+    return {
+        "stat_key": "OffPoss",
+        "stat_value": 1,
+        "team_id": OFFENSE,
+        "opponent_team_id": DEFENSE,
+        "lineup_id": OFFENSE_LINEUP,
+        "opponent_lineup_id": DEFENSE_LINEUP,
+    }
+
+
+def _opponent_points(
+    value: int,
+    *,
+    credited_to: int = OFFENSE,
+    holder_lineup: str = DEFENSE_LINEUP,
+    scorer_lineup: str = OFFENSE_LINEUP,
+) -> dict[str, Any]:
+    """An OpponentPoints row.
+
+    pbpstats attaches it to the players who conceded, so ``team_id`` is the
+    side that did not score and ``opponent_team_id`` names the side that did.
+    That indirection is why the scoring team has to be read from
+    ``opponent_team_id`` rather than assumed to be the offence.
+    """
+    return {
+        "stat_key": "OpponentPoints",
+        "stat_value": value,
+        "team_id": DEFENSE if credited_to == OFFENSE else OFFENSE,
+        "opponent_team_id": credited_to,
+        "lineup_id": holder_lineup,
+        "opponent_lineup_id": scorer_lineup,
+    }
+
+
+def _stat(key: str, value: int, offense: int = OFFENSE, defense: int = DEFENSE) -> dict[str, Any]:
     return {
         "stat_key": key,
         "stat_value": value,
         "team_id": offense,
         "opponent_team_id": defense,
-        "lineup_id": "1-2-3-4-5",
-        "opponent_lineup_id": "6-7-8-9-10",
+        "lineup_id": OFFENSE_LINEUP,
+        "opponent_lineup_id": DEFENSE_LINEUP,
     }
 
 
-def _scoring_possession(points: int, offense: int = 1, defense: int = 2) -> _FakePossession:
-    stats = [_stat("OffPoss", 1, offense, defense)]
+def _scoring_possession(points: int) -> _FakePossession:
+    stats: list[dict[str, Any]] = [_off_poss()]
     if points:
-        stats.append(_stat("OpponentPoints", points, offense, defense))
+        stats.append(_opponent_points(points))
     return _FakePossession(stats, _chain(1, 3))
 
 
@@ -89,17 +129,53 @@ def test_a_possession_without_offposs_does_not_count() -> None:
 
 
 def test_a_possession_with_no_points_still_counts() -> None:
-    row = _possession_row(_FakePossession([_stat("OffPoss", 1)], []))
+    row = _possession_row(_FakePossession([_off_poss()], []))
     assert row is not None
     assert row["points"] == 0
+    assert row["opponent_points"] == 0
+
+
+def test_points_from_a_mid_possession_substitution_are_summed() -> None:
+    # A free throw, then both teams substitute, then a basket, all inside one
+    # possession. pbpstats reports the scoring in two lineup groups, and
+    # reading only the first silently loses the smaller one.
+    possession = _FakePossession(
+        [
+            _off_poss(),
+            _opponent_points(2, holder_lineup=DEFENSE_LINEUP),
+            _opponent_points(1, holder_lineup="6-7-8-9-11"),
+        ],
+        [],
+    )
+    row = _possession_row(possession)
+    assert row is not None
+    assert row["points"] == 3
+
+
+def test_points_scored_by_the_defence_are_not_credited_to_the_offence() -> None:
+    # A technical free throw is shot by whichever side was fouled, which can be
+    # the defence, and the possession does not change hands. Crediting it to
+    # the offence leaves the game total right and the split wrong.
+    possession = _FakePossession(
+        [
+            _off_poss(),
+            _opponent_points(2),
+            _opponent_points(1, credited_to=DEFENSE, holder_lineup=OFFENSE_LINEUP),
+        ],
+        [],
+    )
+    row = _possession_row(possession)
+    assert row is not None
+    assert row["points"] == 2
+    assert row["opponent_points"] == 1
 
 
 def test_points_come_from_the_defenders_opponent_points() -> None:
     row = _possession_row(_scoring_possession(3))
     assert row is not None
     assert row["points"] == 3
-    assert row["offense_lineup"] == "1-2-3-4-5"
-    assert row["defense_lineup"] == "6-7-8-9-10"
+    assert row["offense_lineup"] == OFFENSE_LINEUP
+    assert row["defense_lineup"] == DEFENSE_LINEUP
 
 
 # ------------------------------------------------------------------ aggregation
@@ -124,10 +200,10 @@ def test_different_matchups_stay_separate(monkeypatch: pytest.MonkeyPatch) -> No
             {
                 "stat_key": "OffPoss",
                 "stat_value": 1,
-                "team_id": 2,
-                "opponent_team_id": 1,
-                "lineup_id": "6-7-8-9-10",
-                "opponent_lineup_id": "1-2-3-4-5",
+                "team_id": DEFENSE,
+                "opponent_team_id": OFFENSE,
+                "lineup_id": DEFENSE_LINEUP,
+                "opponent_lineup_id": OFFENSE_LINEUP,
             }
         ],
         [],

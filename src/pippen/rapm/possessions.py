@@ -71,6 +71,7 @@ STINT_COLUMNS: Final = (
     "defense_lineup",
     "possessions",
     "points",
+    "opponent_points",
 )
 
 
@@ -219,26 +220,73 @@ def load_possessions(game_id: str) -> list[Any]:
 def _possession_row(possession: Any) -> dict[str, Any] | None:
     """Reduce one possession to the fields a stint needs, or None if it does not count.
 
+    Points need care for two separate reasons.
+
+    Substitutions inside a possession
+        ``pbpstats`` groups its per-possession statistics by lineup, so a
+        substitution during a possession splits the scoring into two groups. It
+        happens on the dead ball after a foul: a free throw is taken, both
+        teams substitute, and play resumes on the same possession. In game
+        ``0021600001`` possession 31 is exactly that, with ``OpponentPoints``
+        of 2 and 1 in separate groups, and reading only the first loses a
+        point. Summing one value per group recovers the total.
+
+    The defence can score during the offence's possession
+        A technical or away-from-play free throw is shot by whichever team was
+        fouled, which may be the team on defence, and the possession does not
+        change hands. Crediting every point in the possession to the offence
+        therefore moves a point onto the wrong team. Across the first forty
+        games of 2016-17 that showed up as scores whose total was right and
+        whose split was off by one.
+
+    So points are attributed by which team actually scored, read from each
+    row's ``opponent_team_id``, and returned as two figures. ``points`` is what
+    the offence scored, which is the RAPM target. ``opponent_points`` is what
+    the defence scored during the same possession, which is almost always zero
+    and exists so the totals can be checked against an official score.
+
+    The possession itself is not split. ``pbpstats`` credits a single
+    ``OffPoss`` however many substitutions happen inside it, so a possession is
+    attributed whole to the lineups that started it. Splitting it would mean
+    fractional possessions, and the regression weight would stop being a count.
+
     Args:
         possession: A ``pbpstats`` possession.
 
     Returns:
-        A mapping with the offensive and defensive team ids, both lineup ids
-        and the points scored, or ``None`` when the possession carries no
-        ``OffPoss`` statistic and therefore is not a counted possession.
+        A mapping with both team ids, both lineup ids and both point totals, or
+        ``None`` when the possession carries no ``OffPoss`` statistic and
+        therefore is not a counted possession.
     """
     stats = possession.possession_stats
     offensive = next((row for row in stats if row["stat_key"] == _OFF_POSS_KEY), None)
     if offensive is None:
         return None
 
-    scored = next((row for row in stats if row["stat_key"] == _OPPONENT_POINTS_KEY), None)
+    offense_team = int(offensive["team_id"])
+
+    # Key on the scoring team and the lineup grouping. Every player in a group
+    # carries the same figure, so the dict collapses those duplicates, while
+    # distinct groups from a mid-possession substitution are kept apart.
+    scored: dict[tuple[int, str, str], int] = {}
+    for row in stats:
+        if row["stat_key"] == _OPPONENT_POINTS_KEY:
+            key = (
+                int(row["opponent_team_id"]),
+                str(row["lineup_id"]),
+                str(row["opponent_lineup_id"]),
+            )
+            scored[key] = int(row["stat_value"])
+
     return {
-        "offense_team_id": int(offensive["team_id"]),
+        "offense_team_id": offense_team,
         "defense_team_id": int(offensive["opponent_team_id"]),
         "offense_lineup": str(offensive["lineup_id"]),
         "defense_lineup": str(offensive["opponent_lineup_id"]),
-        "points": int(scored["stat_value"]) if scored is not None else 0,
+        "points": sum(value for (team, _, _), value in scored.items() if team == offense_team),
+        "opponent_points": sum(
+            value for (team, _, _), value in scored.items() if team != offense_team
+        ),
     }
 
 
@@ -266,7 +314,7 @@ def game_stints(game_id: str) -> pd.DataFrame:
         frame.groupby(
             ["offense_team_id", "defense_team_id", "offense_lineup", "defense_lineup"],
             as_index=False,
-        )[["possessions", "points"]]
+        )[["possessions", "points", "opponent_points"]]
         .sum()
         .assign(game_id=game_id)
     )
@@ -275,6 +323,11 @@ def game_stints(game_id: str) -> pd.DataFrame:
 
 def reconcile_points(game_id: str, reference: dict[int, int]) -> PointsReconciliation:
     """Compare points summed from possessions against a reference score.
+
+    A team's total is what it scored on its own possessions plus what it scored
+    during the opponent's, the second being technical and away-from-play free
+    throws. Leaving the second term out produces totals that are right in
+    aggregate and wrong per team.
 
     Args:
         game_id: NBA game id.
@@ -288,9 +341,29 @@ def reconcile_points(game_id: str, reference: dict[int, int]) -> PointsReconcili
         MissingPlayByPlayError: If the game has not been downloaded.
     """
     stints = game_stints(game_id)
-    totals = stints.groupby("offense_team_id")["points"].sum()
-    derived = {int(team): int(total) for team, total in zip(totals.index, totals, strict=True)}
-    return PointsReconciliation(game_id=game_id, derived=derived, reference=dict(reference))
+    return PointsReconciliation(
+        game_id=game_id,
+        derived=points_by_team(stints),
+        reference=dict(reference),
+    )
+
+
+def points_by_team(stints: pd.DataFrame) -> dict[int, int]:
+    """Return each team's total points from a stint frame.
+
+    Args:
+        stints: A stint frame carrying both point columns.
+
+    Returns:
+        Points per team id, counting both what a team scored on offence and
+        what it scored while defending.
+    """
+    if stints.empty:
+        return {}
+    on_offense = stints.groupby("offense_team_id")["points"].sum()
+    while_defending = stints.groupby("defense_team_id")["opponent_points"].sum()
+    totals = on_offense.add(while_defending, fill_value=0)
+    return {int(team): int(total) for team, total in zip(totals.index, totals, strict=True)}
 
 
 def has_valid_lineups(frame: pd.DataFrame) -> pd.Series:
