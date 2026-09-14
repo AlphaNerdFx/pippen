@@ -100,13 +100,58 @@ objections, which are enough on their own:
 - The league is renormalised to exactly 15 every season, forcing a fixed
   distribution regardless of how good the league actually was.
 
-The measured value does not replace 0.44 in the pipeline yet. One season is not
-evidence of a constant. The coefficient is measured for every season ingested
-first, and only then does the question of replacing the conventional value get
-answered. If it sits near 0.41 across twenty years, the constant is simply wrong
-and should be replaced. If it drifts with rule changes, the drift is the more
-interesting finding and argues for a per-season value rather than a new constant.
-Switching on one season's evidence would repeat the error this page documents.
+### Measured across every available season
+
+All 25 seasons hoopR publishes, 2002 through 2026, have now been measured.
+
+| | Value |
+|---|---|
+| Lowest season (2023) | 0.4096 |
+| Highest season (2004) | 0.4252 |
+| Mean across 25 seasons | 0.4178 |
+| Spread | 0.0156 |
+| Mean gap from 0.44 | -0.0222 |
+
+Two things follow, and the second is the more useful one.
+
+**Every season sits below 0.44, without exception.** Not once in 25 years does
+the measured value approach the conventional one. The nearest is 2004 at 0.4252,
+still 0.0148 short.
+
+**The constant's error is larger than its drift.** The spread across a quarter
+century is 0.0156, while the average distance from 0.44 is 0.0222. A fixed value
+of 0.4178 would therefore be closer to every season than 0.44 is to any of them.
+There is a slow downward trend, from roughly 0.42 in the 2000s to roughly 0.41
+in the 2020s, which is worth a per-season value rather than a new constant, but
+even the crudest replacement beats the convention.
+
+Coverage for 2002 is partial: 23,747 attempts against 50,000 to 69,000 in every
+later season. Its figure is reported for completeness and carries less weight.
+
+### The exclusion rule, and why it decides the answer
+
+This measurement depends entirely on one choice, so it is stated plainly rather
+than buried. And-one, technical, flagrant and clear-path free throws are counted
+in the denominator as attempts, and never in the numerator as possession-enders,
+because none of them ends a possession. Together they are 14.9% of all attempts
+in 2023-24.
+
+Dropping them from the denominator as well moves the 2023-24 figure from 0.4104
+to 0.4823. The conventional 0.44 sits between those two numbers, which is worth
+noticing before assuming the convention is simply wrong.
+
+The implemented choice is the one the formula needs.
+`Possessions = FGA + 0.44 x FTA + TOV` consumes total free throw attempts,
+including and-ones and technicals, so the coefficient must be the fraction of
+*all* attempts that end a possession. The 0.4823 variant answers a different
+question, namely what fraction of free throws that *could* end a possession
+actually do, and substituting it into that formula would double-count.
+
+Reproduce any of this with:
+
+```bash
+pippen coefficient --seasons 2002-2026
+```
 
 **What it changes for this project.** There is a legitimate version of the
 complaint, and it applies to every metric rather than to PER. The true fraction

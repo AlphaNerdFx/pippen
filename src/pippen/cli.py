@@ -10,7 +10,7 @@ from rich.console import Console
 from rich.table import Table
 
 from pippen import __version__
-from pippen.data import hoopr
+from pippen.data import hoopr, possession_coefficient
 from pippen.data import validate as data_validate
 from pippen.paths import ENV_VAR, data_root, dataset_file, season_file, stage_dir
 
@@ -188,6 +188,98 @@ def validate(
 
     if any_failed:
         raise typer.Exit(code=1)
+
+
+@app.command()
+def coefficient(
+    seasons: Annotated[
+        str,
+        typer.Option(help="A season, 2024, or an inclusive range, 2002-2026."),
+    ],
+) -> None:
+    """Measure the possession coefficient per season from downloaded play-by-play.
+
+    Possessions are conventionally estimated as FGA + 0.44 * FTA + TOV. The
+    0.44 estimates what fraction of free throw attempts consume a possession.
+    This measures that fraction instead of assuming it, one season at a time,
+    so drift across rule eras is visible rather than averaged away.
+
+    Seasons with no downloaded file are skipped with a note rather than
+    treated as zero.
+    """
+    wanted = _parse_seasons(seasons)
+    frames: dict[int, pd.DataFrame] = {}
+    missing: list[int] = []
+    for season in wanted:
+        path = season_file("raw", "play_by_play", season)
+        if path.exists():
+            # Five columns of sixty-seven. Reading the whole file for every
+            # season at once is several gigabytes of mostly unused data, and
+            # Parquet is columnar so the rest is never touched on disk either.
+            frames[season] = pd.read_parquet(
+                path, columns=list(possession_coefficient._REQUIRED_COLUMNS)
+            )
+        else:
+            missing.append(season)
+
+    if missing:
+        console.print(f"[yellow]no play-by-play on disk for:[/yellow] {_compact(missing)}")
+    if not frames:
+        console.print("Nothing to measure. Run [bold]pippen fetch[/bold] first.")
+        raise typer.Exit(code=1)
+
+    measured = possession_coefficient.estimate_coefficients_by_season(frames)
+
+    table = Table(title="Possession coefficient by season")
+    table.add_column("Season", justify="right")
+    table.add_column("Measured", justify="right")
+    table.add_column("vs 0.44", justify="right")
+    table.add_column("Trips", justify="right")
+    table.add_column("Attempts", justify="right")
+    table.add_column("Unresolved", justify="right")
+    for row in measured.itertuples():
+        table.add_row(
+            str(row.season),
+            f"{row.coefficient:.4f}",
+            f"{row.diff_from_conventional:+.4f}",
+            f"{row.possession_ending_trips:,}",
+            f"{row.free_throw_attempts:,}",
+            str(row.excluded_unresolved),
+        )
+    console.print(table)
+
+    values = measured["coefficient"]
+    console.print(
+        f"\nAcross {len(measured)} season(s): "
+        f"min {values.min():.4f}, max {values.max():.4f}, "
+        f"spread {values.max() - values.min():.4f}, mean {values.mean():.4f}"
+    )
+    console.print(
+        "A spread near zero means 0.44 is simply the wrong constant. A spread "
+        "that tracks rule changes means no single constant is right."
+    )
+
+
+def _compact(seasons: list[int]) -> str:
+    """Render a list of seasons as contiguous ranges, so a gap is visible.
+
+    Args:
+        seasons: Season end years, ascending.
+
+    Returns:
+        A comma-separated list where runs are collapsed, for example
+        ``2002-2005, 2009``.
+    """
+    if not seasons:
+        return ""
+    runs: list[tuple[int, int]] = [(seasons[0], seasons[0])]
+    for season in seasons[1:]:
+        first, last = runs[-1]
+        if season == last + 1:
+            runs[-1] = (first, season)
+        else:
+            runs.append((season, season))
+    return ", ".join(str(a) if a == b else f"{a}-{b}" for a, b in runs)
 
 
 @app.command()

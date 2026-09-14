@@ -95,5 +95,6 @@ nav:
       - data.nba_api: reference/data-nba-api.md
       - data.schemas: reference/data-schemas.md
       - data.validate: reference/data-validate.md
+      - data.possession_coefficient: reference/data-possession-coefficient.md
   - Research notes:
       - Overview: research/index.md

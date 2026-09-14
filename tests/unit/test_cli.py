@@ -104,3 +104,59 @@ def test_season_schedule_returns_none_for_a_season_with_no_rows(
     target = paths.dataset_file("raw", "schedules", "nba_schedule_master", create=True)
     pd.DataFrame({"game_id": [1], "season": [2023]}).to_parquet(target)
     assert cli._season_schedule(2024) is None
+
+
+@pytest.mark.parametrize(
+    ("seasons", "expected"),
+    [
+        ([], ""),
+        ([2024], "2024"),
+        ([2002, 2003, 2004], "2002-2004"),
+        ([2002, 2003, 2009], "2002-2003, 2009"),
+        ([2002, 2005, 2006, 2010], "2002, 2005-2006, 2010"),
+    ],
+)
+def test_compact_collapses_runs_so_a_gap_is_visible(seasons: list[int], expected: str) -> None:
+    # A flat list of twenty-five numbers hides which ones are missing. Runs
+    # collapse so the gap is the thing a reader sees.
+    assert cli._compact(seasons) == expected
+
+
+def test_coefficient_exits_nonzero_when_nothing_is_downloaded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv(paths.ENV_VAR, str(tmp_path))
+    result = runner.invoke(app, ["coefficient", "--seasons", "2024"])
+    assert result.exit_code == 1
+    assert "pippen fetch" in result.stdout
+
+
+def test_coefficient_names_the_seasons_it_could_not_find(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Silently measuring four seasons when five were asked for would understate
+    # the sample without saying so.
+    monkeypatch.setenv(paths.ENV_VAR, str(tmp_path))
+    result = runner.invoke(app, ["coefficient", "--seasons", "2020-2022"])
+    assert "2020-2022" in result.stdout
+
+
+def test_coefficient_measures_what_is_on_disk(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv(paths.ENV_VAR, str(tmp_path))
+    target = paths.season_file("raw", "play_by_play", 2024, create=True)
+    pd.DataFrame(
+        {
+            "game_id": [1, 1, 1],
+            "game_play_number": [1, 2, 3],
+            "type_text": ["Free Throw - 1 of 2", "Free Throw - 2 of 2", "Defensive Rebound"],
+            "scoring_play": [False, True, False],
+            "shooting_play": [True, True, False],
+        }
+    ).to_parquet(target)
+
+    result = runner.invoke(app, ["coefficient", "--seasons", "2024"])
+    assert result.exit_code == 0
+    assert "2024" in result.stdout
+    assert "0.44" in result.stdout
