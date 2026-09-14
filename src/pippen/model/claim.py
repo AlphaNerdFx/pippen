@@ -168,11 +168,17 @@ class ClaimResult:
     Attributes:
         table: One row per candidate with its root mean squared error and how
             it compares to the best single input.
+        squared_errors: Per-observation squared error for each candidate, so a
+            difference in RMSE can be tested rather than eyeballed. Two
+            candidates scored on the same team-seasons are paired, and a
+            paired test is far more sensitive than comparing two RMSEs and
+            guessing.
         observations: Team-seasons used.
         folds: How many leave-one-season-out folds were run.
     """
 
     table: pd.DataFrame
+    squared_errors: pd.DataFrame
     observations: int
     folds: int
 
@@ -229,10 +235,11 @@ def compare_candidates(
         )
 
     records = []
+    per_observation: dict[str, pd.Series] = {}
     for candidate in features.columns:
         column = features[candidate]
         usable = column.notna() & target.notna()
-        errors: list[float] = []
+        errors = pd.Series(np.nan, index=features.index, dtype="float64")
         for held_out in distinct:
             test = usable & (seasons == held_out)
             train = usable & (seasons != held_out)
@@ -240,15 +247,107 @@ def compare_candidates(
                 continue
             slope, intercept = np.polyfit(column[train], target[train], 1)
             predicted = slope * column[test] + intercept
-            errors.extend(((predicted - target[test]) ** 2).tolist())
-        if errors:
-            records.append({"candidate": candidate, "rmse": float(np.sqrt(np.mean(errors)))})
+            errors.loc[test] = ((predicted - target[test]) ** 2).to_numpy()
+        if errors.notna().any():
+            per_observation[candidate] = errors
+            records.append({"candidate": candidate, "rmse": float(np.sqrt(errors.mean()))})
 
     table = pd.DataFrame(records).sort_values("rmse").reset_index(drop=True)
     if not table.empty:
         table["vs_best"] = (table["rmse"] - table["rmse"].iloc[0]).round(4)
     return ClaimResult(
         table=table,
+        squared_errors=pd.DataFrame(per_observation),
         observations=int((features.notna().any(axis=1) & target.notna()).sum()),
         folds=len(distinct),
+    )
+
+
+@dataclass(frozen=True)
+class PairedComparison:
+    """Whether one candidate really beats another, or only appears to.
+
+    Attributes:
+        better: Candidate with the lower error.
+        worse: The other one.
+        rmse_gap: Difference in root mean squared error.
+        mean_difference: Mean difference in squared error per observation.
+        t_statistic: Paired t statistic on that difference.
+        p_value: Two-sided p value.
+        observations: Observations both candidates scored.
+    """
+
+    better: str
+    worse: str
+    rmse_gap: float
+    mean_difference: float
+    t_statistic: float
+    p_value: float
+    observations: int
+
+    @property
+    def distinguishable(self) -> bool:
+        """True when the difference clears the conventional five percent."""
+        return self.p_value < 0.05
+
+    def describe(self) -> str:
+        """Return a one-line verdict that does not overstate the evidence."""
+        verdict = (
+            f"{self.better} beats {self.worse}"
+            if self.distinguishable
+            else f"{self.better} and {self.worse} are not distinguishable"
+        )
+        return (
+            f"{verdict}: RMSE gap {self.rmse_gap:+.3f}, paired t = {self.t_statistic:.2f}, "
+            f"p = {self.p_value:.3f}, n = {self.observations}"
+        )
+
+
+def paired_comparison(result: ClaimResult, first: str, second: str) -> PairedComparison:
+    """Test whether two candidates' errors really differ.
+
+    Both are scored on the same team-seasons, so their squared errors are
+    paired and a paired test uses that. Comparing two RMSEs and taking the
+    smaller one as the winner ignores how much of the gap is sampling noise,
+    which on a few hundred observations is usually most of it.
+
+    Args:
+        result: Output of :func:`compare_candidates`.
+        first: A candidate name.
+        second: Another candidate name.
+
+    Returns:
+        A :class:`PairedComparison`, with ``better`` set to whichever had the
+        lower error.
+
+    Raises:
+        KeyError: If either candidate was not scored.
+        ValueError: If fewer than three observations are shared.
+    """
+    from scipy import stats
+
+    missing = [name for name in (first, second) if name not in result.squared_errors.columns]
+    if missing:
+        raise KeyError(f"not scored: {missing}")
+
+    paired = result.squared_errors[[first, second]].dropna()
+    if len(paired) < 3:
+        raise ValueError(f"only {len(paired)} shared observations; a paired test needs three")
+
+    left, right = paired[first], paired[second]
+    if left.mean() <= right.mean():
+        better, worse = first, second
+    else:
+        better, worse = second, first
+
+    difference = paired[worse] - paired[better]
+    statistic, p_value = stats.ttest_rel(paired[worse], paired[better])
+    return PairedComparison(
+        better=better,
+        worse=worse,
+        rmse_gap=float(np.sqrt(paired[worse].mean()) - np.sqrt(paired[better].mean())),
+        mean_difference=float(difference.mean()),
+        t_statistic=float(statistic),
+        p_value=float(p_value),
+        observations=len(paired),
     )

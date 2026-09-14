@@ -18,6 +18,7 @@ from pippen.model.claim import (
     TeamSeasonRatings,
     aggregate_to_team,
     compare_candidates,
+    paired_comparison,
 )
 
 # ------------------------------------------------------------------ aggregation
@@ -138,6 +139,7 @@ def test_a_candidate_that_is_entirely_missing_is_skipped_not_crashed() -> None:
 def test_the_verdict_is_phrased_the_same_way_whichever_way_it_goes() -> None:
     won = ClaimResult(
         table=pd.DataFrame([{"candidate": "fusion", "rmse": 1.0, "vs_best": 0.0}]),
+        squared_errors=pd.DataFrame({"fusion": [1.0]}),
         observations=180,
         folds=6,
     )
@@ -152,6 +154,7 @@ def test_the_verdict_is_phrased_the_same_way_whichever_way_it_goes() -> None:
                 {"candidate": "fusion", "rmse": 1.0, "vs_best": 0.1},
             ]
         ),
+        squared_errors=pd.DataFrame({"rapm": [0.81], "fusion": [1.0]}),
         observations=180,
         folds=6,
     )
@@ -167,3 +170,64 @@ def test_team_ratings_describe_their_spread() -> None:
     described = TeamSeasonRatings(season=2018, table=table).describe()
     assert "3 teams" in described
     assert "+5.0" in described
+
+
+# ------------------------------------------------------------------ significance
+
+
+def test_a_real_difference_is_detected() -> None:
+    features, target, seasons = _panel(seasons=5)
+    result = compare_candidates(features, target, seasons)
+    comparison = paired_comparison(result, "good", "noise")
+    assert comparison.better == "good"
+    assert comparison.distinguishable
+    assert "beats" in comparison.describe()
+
+
+def test_a_difference_that_is_only_noise_is_not_claimed() -> None:
+    # Two copies of the same signal differ only by sampling, and the verdict
+    # has to say so rather than crowning whichever came out lower.
+    rng = np.random.default_rng(3)
+    rows = []
+    for season in range(2016, 2021):
+        for team in range(30):
+            truth = rng.normal(0.0, 4.0)
+            shared = truth + rng.normal(0.0, 1.0)
+            rows.append(
+                {
+                    "season": season,
+                    "team": team,
+                    "a": shared,
+                    "b": shared + rng.normal(0.0, 1e-6),
+                    "target": truth + rng.normal(0.0, 2.0),
+                }
+            )
+    frame = pd.DataFrame(rows).set_index(["season", "team"])
+    seasons = pd.Series([i[0] for i in frame.index], index=frame.index)
+    result = compare_candidates(frame[["a", "b"]], frame["target"], seasons)
+    comparison = paired_comparison(result, "a", "b")
+    assert not comparison.distinguishable
+    assert "not distinguishable" in comparison.describe()
+
+
+def test_the_better_candidate_is_identified_whichever_order_is_given() -> None:
+    features, target, seasons = _panel(seasons=4)
+    result = compare_candidates(features, target, seasons)
+    forwards = paired_comparison(result, "good", "noise")
+    backwards = paired_comparison(result, "noise", "good")
+    assert forwards.better == backwards.better == "good"
+    assert forwards.p_value == pytest.approx(backwards.p_value)
+
+
+def test_an_unscored_candidate_is_named() -> None:
+    features, target, seasons = _panel()
+    result = compare_candidates(features, target, seasons)
+    with pytest.raises(KeyError, match="absent"):
+        paired_comparison(result, "good", "absent")
+
+
+def test_squared_errors_are_kept_per_observation() -> None:
+    features, target, seasons = _panel(seasons=3, teams=10)
+    result = compare_candidates(features, target, seasons)
+    assert set(result.squared_errors.columns) == {"good", "noise"}
+    assert len(result.squared_errors) == 30
