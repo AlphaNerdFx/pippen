@@ -73,6 +73,7 @@ nav:
   - Method:
       - Overview: methodology/index.md
       - RAPM: methodology/rapm.md
+      - RAPM validation: methodology/rapm-validation.md
       - Measuring reliability: methodology/reliability.md
       - Limitations: methodology/limitations.md
       - Upstream data quirks: methodology/data-quirks.md

@@ -108,6 +108,29 @@ on-court lineups, which is what RAPM needs, covers far less.
 So RAPM covers nine seasons, NBA 2016-17 through 2024-25, which is hoopR 2017
 through 2025.
 
+### The 2021-22 archive has a seven-week hole
+
+Of 1,230 games in NBA 2021, 307 return a payload with an empty period array.
+The gap is contiguous rather than scattered:
+
+| Month | Missing | Present |
+|---|---|---|
+| Oct 2021 | 0 | 93 |
+| Nov 2021 | 0 | 225 |
+| Dec 2021 | 0 | 209 |
+| Jan 2022 | 0 | 231 |
+| Feb 2022 | 156 | 7 |
+| Mar 2022 | 151 | 78 |
+| Apr 2022 | 0 | 80 |
+
+Everything from 2022-02-02 to 2022-03-21 is absent. That window contains the
+trade deadline and the All-Star break, so the missing games are not a random
+sample of the season: they are the stretch where rosters change most. A
+single-season 2021-22 rating built on the remaining 75 percent would understate
+the impact of every player who changed teams in February.
+
+2021-22 is therefore reported with the gap stated, and is not used on its own.
+
 Two further details on that feed:
 
 - The raw `ord` key, which `pbpstats` reads to order simultaneous events,

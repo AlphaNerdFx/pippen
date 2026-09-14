@@ -16,6 +16,7 @@ from pippen.paths import ENV_VAR, data_root, dataset_file, season_file, stage_di
 from pippen.rapm import design as rapm_design
 from pippen.rapm import pbp_source
 from pippen.rapm import possessions as rapm_possessions
+from pippen.rapm import reference as rapm_reference
 from pippen.rapm import ridge as rapm_ridge
 
 app = typer.Typer(
@@ -402,6 +403,63 @@ def rapm(
                 f"{row.total:+.2f}",
             )
         console.print(rendered)
+
+
+@app.command()
+def gate(
+    season: Annotated[
+        int,
+        typer.Option(help="NBA season start year the reference covers, for example 2022."),
+    ] = 2022,
+    floor: Annotated[
+        float,
+        typer.Option(help="Possessions a player needs in both builds to be compared."),
+    ] = 1000.0,
+    threshold: Annotated[
+        float,
+        typer.Option(help="Spearman correlation the gate requires."),
+    ] = 0.85,
+) -> None:
+    """Check this project's RAPM against an independently built stint dataset.
+
+    Both sides are fitted with the same solver at the same penalty, so the
+    comparison varies only the part that is actually risky: reconstructing who
+    was on the floor. The reference is validation-only and never redistributed,
+    so it has to be downloaded by hand; the error says where from.
+    """
+    try:
+        ours_stints = rapm_possessions.read_season_stints(season)
+        theirs_stints = rapm_reference.load_reference_stints()
+    except FileNotFoundError as exc:
+        console.print(f"[red]{exc}[/red]")
+        raise typer.Exit(code=2) from exc
+
+    ours = rapm_design.build_design(ours_stints)
+    theirs = rapm_design.build_design(theirs_stints)
+    console.print(f"ours   {ours.describe()}")
+    console.print(f"theirs {theirs.describe()}")
+
+    fit, _ = rapm_ridge.solve(ours)
+    reference_fit = rapm_ridge.fit_ridge(theirs, fit.alpha)
+    console.print(f"penalty {fit.alpha:,.0f} applied to both")
+
+    try:
+        result = rapm_reference.compare_ratings(
+            fit.ratings(),
+            reference_fit.ratings(),
+            project_possessions=rapm_possessions.possessions_by_player(ours_stints),
+            reference_possessions=rapm_possessions.possessions_by_player(theirs_stints),
+            possession_floor=floor,
+            threshold=threshold,
+        )
+    except ValueError as exc:
+        console.print(f"[red]{exc}[/red]")
+        raise typer.Exit(code=2) from exc
+
+    colour = "green" if result.passed else "red"
+    console.print(f"[{colour}]{result.describe()}[/{colour}]")
+    if not result.passed:
+        raise typer.Exit(code=1)
 
 
 @app.command()

@@ -90,7 +90,7 @@ then judgement at the gate.
 - [x] Ridge solver, cross-validated lambda, multi-season windows
 - [x] Bootstrap standard errors
 - [x] Property tests: possessions reconcile, five a side, order invariance
-- [ ] Decision gate: Spearman above 0.85 against published RAPM
+- [x] Decision gate: Spearman 0.914 against an independent stint build
 
 ### Decisions settled before Phase 2 starts
 
