@@ -22,9 +22,9 @@ about it. Items marked open are real work.
 
 | # | Standard | Where | Status |
 |---|---|---|---|
-| S1 | `CLAUDE.md` > Writing Style > no contrast-reveal construction | Six places, listed below | Open |
-| S2 | `CLAUDE.md` > Writing Style > bold sparingly | `docs/guides/licensing.md`, 11 bold spans in 58 lines | Open |
-| S3 | `CLAUDE.md` > Writing Style > no filler openers | `claim-under-test.md`: "and it is worth being precise about what could move it" | Open |
+| S1 | `CLAUDE.md` > Writing Style > no contrast-reveal construction | Six places, listed below | Closed, plus five more found outside the diff |
+| S2 | `CLAUDE.md` > Writing Style > bold sparingly | `docs/guides/licensing.md`, 11 bold spans in 58 lines | Closed, reduced to 1 |
+| S3 | `CLAUDE.md` > Writing Style > no filler openers | `claim-under-test.md`: "and it is worth being precise about what could move it" | Closed |
 | S4 | `CLAUDE.md` > Development Workflow > record significant decisions as ADRs | Only 0001 and 0002 exist | Closed, ADRs 0003-0005 |
 
 S1 in full, all of it written by the model that also wrote the rule:
@@ -115,10 +115,9 @@ training split of each fold rather than over the whole panel.
 **P3.** Closed. `TeamPanel.build` drops rows with no target once, so both
 modules score identical rows by construction rather than by comment.
 
-**P4.** `_season_folds` cannot leak a season, confirmed by test. But training
-folds contain features measured during the held-out row's target season. Shared
-by both modules so the comparison stays fair, yet "out of sample" is optimistic.
-Open, documentation only.
+**P4.** Closed, documentation only. `claim-under-test.md` now states that
+"out of sample" here means held-out rather than strictly forward-looking, since
+a model predicting 2019 may have trained on 2022.
 
 ### Verified correct, do not revisit without new evidence
 
@@ -142,19 +141,19 @@ runs it, so every table on the page comes from one command. `BaselineResult`
 carries the fitted estimator, and attribution falls back to the best baseline
 SHAP can explain rather than producing nothing when a linear model wins.
 
-**P6.** `calibration.md`'s 50/80/90 table names no seed, `hold_out`,
-`n_factors` or sampler settings. Open.
+**P6.** Closed. The table now names the hold-out fraction, factor count,
+sampler settings and seed.
 
-**P7.** Phase 3's Done-when says the intervals are calibrated. The same commit's
-documentation says RAPM covers 0.703, the intervals are "a floor rather than a
-faithful estimate", and the fix is "not yet applied". The box was ticked over
-the documentation's own caveat. Open, and it is a process finding rather than a
-code one.
+**P7.** Closed by recording rather than by unticking. Read literally the
+criterion asks for aggregate coverage, which passes at 90.9 percent, so the box
+is correctly ticked. The criterion was weaker than it should have been: it says
+nothing per metric, and per metric the anchor covers at 0.703. `TODO.md` now
+records that a future version of this gate should require per-metric coverage.
 
-**P8.** Open. `claim-under-test.md` counts 17 candidates, which is 15 box-score
-metrics plus RAPM plus the fused rating. `calibration.md` counts 15, being 16
-model columns minus the one metric that had no held-out value. Both are correct
-for what they count and neither says so.
+**P8.** Closed. `calibration.md` now explains both counts: 15 box-score metrics
+plus RAPM plus the fused rating makes 17 candidates in the claim, while the
+calibration table covers the 16 model columns minus one that had no value hidden
+in that draw.
 
 ### Scope creep
 
@@ -165,10 +164,19 @@ Minor and defensible. No action.
 
 ## Summary
 
-Standards: four documented-standard breaches, eight judgement calls. Worst is a
-contrast-reveal construction used as a section heading, in a rule the same
-author wrote.
+Standards: four documented-standard breaches, eight judgement calls. All closed.
+Worst was a contrast-reveal construction used as a section heading, in a rule
+the same author wrote. Fixing it surfaced five more instances in files outside
+the diff, also fixed. ADR 0001 was left alone; the index says records are never
+edited once accepted.
 
-Spec: nine findings. Worst is P5, a published table no committed code path can
-regenerate, which is the failure mode this project has been most careful about
-everywhere else.
+Spec: nine findings, all closed or recorded. Worst was P5, a published table no
+committed code path could regenerate. Closing P1 then changed a published
+result: with nested selection the claim that combining box-score metrics beats
+the best single one does not hold, and it is withdrawn in
+`docs/methodology/claim-under-test.md` with the old figures kept beside the new
+ones.
+
+The review paid for itself on P1 alone. The finding was raised, measured,
+partly withdrawn by its own author, and then found to be larger than either the
+original claim or the withdrawal. No single pass got it right.

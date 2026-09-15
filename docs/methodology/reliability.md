@@ -9,7 +9,7 @@ on transparency, context adjustment, defensive capture and so on, then average.
 The survey this project grew from does exactly that, across six criteria on a 0
 to 100 scale.
 
-The problem is not that the judgments are bad. It is that they are judgments.
+The problem is that they are judgments, however good.
 Two analysts scoring the same metric will disagree, there is no way to adjudicate,
 and the resulting number cannot be checked by anyone. For a project whose entire
 premise is *accounting for reliability*, an unfalsifiable reliability score is

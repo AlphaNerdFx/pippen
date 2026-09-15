@@ -1,7 +1,6 @@
 """Reproducibility helpers.
 
-A published metric that cannot be recomputed is not a measurement, it is an
-anecdote. Everything here exists so that a result can be pinned to an exact
+A published metric that cannot be recomputed is an anecdote. Everything here exists so that a result can be pinned to an exact
 value and checked again later, on another machine, by someone else.
 
 Two tools:

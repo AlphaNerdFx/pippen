@@ -139,6 +139,14 @@ Limit: compute-bound for fitting, judgement for the result.
 - [x] LightGBM and ridge baselines, tuned with Optuna, tracked in MLflow
 - [x] SHAP attributions
 - [x] Interval calibration check (90.9% at nominal 90%)
+
+The calibration criterion is met as written and the criterion was weaker than it
+should have been. It asks for aggregate coverage, which passes at 90.9 percent,
+and says nothing per metric. Per metric, RAPM covers at 0.703 while everything
+else sits between 0.87 and 1.00, and since the latent quantity is defined by
+RAPM that understates uncertainty in every published rating. A future version of
+this gate should require per-metric coverage, in particular for the anchor. See
+ADR 0005 and `docs/methodology/calibration.md`.
 - [x] Run the claim under test and publish the answer either way (answer: no)
 
 The claim: does PIPPEN predict next-season team net rating better than any single

@@ -10,7 +10,7 @@ Phase 3 required roughly 90 percent coverage before the model counted as done.
 
 The obvious test cannot be run. The latent quantity has no observed value to
 compare against, ever, which is what makes it latent. Checking the rating's
-interval against the truth is not hard here, it is undefined.
+interval against the truth is undefined here rather than merely difficult.
 
 What is observable is the metrics. So 15 percent of the observed metric values
 are hidden, the model is fitted to the rest, and each hidden value is checked
@@ -24,7 +24,9 @@ than it is.
 
 ## Result
 
-NBA 2016-17 to 2018-19, 1,067 held-out values, two factors.
+NBA 2016-17 to 2018-19, 435 players over 16 columns, 15 percent of the observed
+values hidden, giving 1,067 held-out values. Two factors, the anchor pinned,
+800 warmup iterations and 800 draws across 2 chains, seed 20260910.
 
 | Nominal | Observed | Median width |
 |---|---|---|
@@ -32,11 +34,17 @@ NBA 2016-17 to 2018-19, 1,067 held-out values, two factors.
 | 80% | 82.3% | 2.05 sd |
 | 90% | **90.9%** | 2.65 sd |
 
+The per-metric table below sums to 15 rather than 16 because one column had no
+value hidden in this draw. The claim report counts 17 candidates, which is the
+same 15 box-score metrics plus RAPM plus the fused rating; the fused rating is
+an output of this model rather than an input to it, so it does not appear
+here.
+
 Calibrated at all three widths, and the widths are reported alongside because
 coverage can always be bought with vagueness. An interval from minus infinity
 to infinity covers everything.
 
-## The anchor is the exception, and it is not an accident
+## The anchor is badly calibrated, and the pin is why
 
 Coverage per metric at the 90 percent level:
 
@@ -77,4 +85,6 @@ RAPM's bound comes from its measured split-half reliability at three seasons,
 itself optimistic, the bound is too high and the under-coverage above is partly
 explained by it. The two are worth revisiting together.
 
-Reproduce with `pippen.model.calibration.check_calibration`.
+Reproduce with `pippen.model.calibration.check_calibration`, passing the
+settings named above. They are listed because a coverage figure without its
+hold-out fraction and sampler settings cannot be checked against a rerun.

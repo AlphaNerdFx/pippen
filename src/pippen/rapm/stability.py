@@ -23,7 +23,7 @@ Possessions (median)  Players    Median SE
 
 A player with two hundred possessions is shrunk almost entirely to zero, so his
 coefficient barely moves between resamples and his standard error is tiny. That
-is not precision, it is the prior. The statistic conflates "estimated
+is the prior rather than precision. The statistic conflates "estimated
 precisely" with "shrunk to nothing", which makes it useless for comparing
 players or window lengths.
 

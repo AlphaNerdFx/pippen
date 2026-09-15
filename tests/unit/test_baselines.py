@@ -1,8 +1,8 @@
 """Tests for the supervised baselines and SHAP attribution.
 
-The risk is not a model failing to fit. It is a comparison that is unfair in a
-way that flatters one side, which produces a number looking like out-of-sample
-error that is not one. The first version of this module tuned against the folds
+The risk worth testing for is a comparison that is unfair in a way that
+flatters one side, since that produces a number looking like out-of-sample error
+while being nothing of the kind. A model failing to fit announces itself. The first version of this module tuned against the folds
 it reported while its docstring claimed otherwise, so the nested-selection tests
 below are the ones that matter.
 """

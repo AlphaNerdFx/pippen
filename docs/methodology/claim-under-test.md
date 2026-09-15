@@ -124,8 +124,8 @@ detectable.
 
 ## What would change the answer
 
-This is a result about these inputs, this target and this window, and it is
-worth being precise about what could move it.
+This result covers these inputs, this target and this window. Four things could
+move it.
 
 - **Better inputs.** The box score contains no tracking data, no shot quality,
   no defensive matchups. Metrics built from those might carry impact signal the
@@ -144,6 +144,14 @@ worth being precise about what could move it.
   weakest, which is players with few possessions. Aggregating to team level by
   minutes is precisely the operation that hides that, because those players
   carry little weight. A test aimed at them specifically has not been run.
+
+One limit of the folds is worth stating plainly. Splitting by season stops a
+model seeing the rest of a season it is predicting, and it does not stop the
+training folds containing seasons *later* than a held-out row's target. A model
+predicting 2019 from 2018 may have trained on 2022. Every candidate faces the
+same arrangement so the comparison stays fair, but "out of sample" here means
+held-out rather than strictly forward-looking, and a genuine forecasting test
+would be stricter.
 
 ## What this does not say
 

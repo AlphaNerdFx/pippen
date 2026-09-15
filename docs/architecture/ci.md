@@ -84,7 +84,7 @@ slower gets a comment on the pull request.
 
 **Where it comes from.** Statistical process control, brought into software as
 performance regression testing. The principle is that performance is a
-*specification*, not a side effect. If a number is not asserted, it is free to
+*specification* rather than a side effect. A number nobody asserts is free to
 drift, and drift is only ever noticed once it becomes a crisis.
 
 **Who uses it and why.** Compiler and runtime teams live on it: LLVM, V8, CPython

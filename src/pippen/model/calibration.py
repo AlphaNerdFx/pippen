@@ -15,8 +15,8 @@ What is held out, and why it is not the rating
 ----------------------------------------------
 The obvious test cannot be run. The latent quantity has no observed value to
 compare an interval against, ever, which is what makes it latent. Checking
-coverage of the rating's interval against the truth is not merely hard here, it
-is undefined.
+coverage of the rating's interval against the truth is undefined here rather
+than merely difficult.
 
 What is observable is the metrics. So a fraction of the *observed metric
 values* is hidden, the model is fitted to the rest, and each hidden value is

@@ -190,16 +190,15 @@ The fusion model is fitted and calibrated at 90.9 percent against a nominal 90.
 **The claim under test has been answered, and the answer is no.** Fusing public
 metrics does not predict next-season team net rating better than RAPM alone, and
 is not distinguishable from it (p = 0.171). Ridge and tuned LightGBM over every
-metric land in the same place (p = 0.742), so the ceiling belongs to the inputs
-rather than to the method. See `docs/methodology/claim-under-test.md`.
+metric land in the same place, so the ceiling belongs to these inputs. See
+`docs/methodology/claim-under-test.md`.
 
 Three findings shape what comes next. Box-score metrics are dominated by
-position, not impact, so a one-factor model of them recovers size. Reliability
-runs *against* validity across the metric set at r = -0.564, which is why
-nothing in this codebase turns reliability into a weight. And the fusion's
-intervals are a floor rather than a faithful estimate, because pinning the
-anchor also pins its residual scale; `docs/methodology/calibration.md` names the
-fix.
+position, so a one-factor model of them recovers player size. Reliability runs
+against validity across the metric set at r = -0.564, which is why nothing in
+this codebase turns reliability into a weight. And the fusion's intervals are a
+floor on the true uncertainty, because pinning the anchor also pins its residual
+scale; `docs/methodology/calibration.md` names the fix.
 
 Phases are now gated by outcomes rather than dates. See
 [ADR 0002](docs/architecture/decisions/0002-outcome-gated-phases.md) for why, `TODO.md`

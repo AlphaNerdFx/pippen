@@ -370,7 +370,7 @@ def compute(metric: Metric, totals: pd.DataFrame, season: int) -> pd.Series:
     Returns:
         One value per player, with ``NaN`` where the denominator falls below
         the metric's minimum or the value is not finite. A percentage computed
-        from two attempts is not a weak measurement, it is a different quantity,
+        from two attempts is a different quantity rather than a weak measurement,
         so it is removed rather than down-weighted.
     """
     coefficient = coefficient_for_season(season)
