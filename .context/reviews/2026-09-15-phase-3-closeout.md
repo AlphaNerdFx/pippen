@@ -61,11 +61,26 @@ tracker exists in this repo.
 
 ### Implemented but wrong
 
-**P1. Optuna tunes on the folds it reports.** `objective` calls
-`_cross_validated_error(..., folds)` over the same folds that produce the
-returned `rmse`. The module docstring asserts the opposite: "Hyperparameters are
-selected inside the training folds, never against the held-out season."
-`claim-under-test.md` repeats the claim. Open.
+**P1. Optuna tunes on the folds it reports.** Closed by making the code true
+rather than the docstring. Selection is now nested: an inner leave-one-season
+search over the training seasons only, with the outer season scored once.
+
+**The reviewer's correction was itself too optimistic, and the rerun shows why.**
+The pure-noise control measured 0.00 to 0.03 RMSE of selection bias and
+concluded the published numbers would stand. They moved by up to 0.215, because
+nesting removes the bias and also leaves each fold less data to tune on. The
+control isolated the first effect and not the second.
+
+| Figure | Reported | Nested |
+|---|---|---|
+| Ridge, all candidates | 4.436 | 4.521 |
+| LightGBM, all candidates | 4.418 | 4.633 |
+| LightGBM, box score only | 4.492 | 4.633 |
+| Ridge, box score only | 4.670 | 4.685 |
+
+Consequence: the claim "combining does work, within the box score" is
+**withdrawn**. Tested with a paired test it does not hold, 4.633 against
+4.683 at p = 0.746. The headline conclusion is unaffected and strengthened.
 
 **Corrected by the reviewer, and this is the important part.** The bias was
 measured rather than assumed: 180 rows, 17 informationless features, 6 folds,
@@ -122,11 +137,10 @@ standardisation saw held-out values.
 
 ### Spec gaps
 
-**P5.** Nothing outside tests calls `run_baselines`, `tune_*` or `explain`, and
-there is no CLI command. `BaselineResult` carries no fitted estimator, so the
-documented SHAP table cannot be produced from `tune_lightgbm` at all.
-`claim-under-test.md`'s "Reproduce with `pippen.model.claim`" is false for the
-baseline and SHAP sections. **Worst finding on this axis.** Open.
+**P5.** Closed. `pippen.model.study` owns the pipeline and `pippen evaluate`
+runs it, so every table on the page comes from one command. `BaselineResult`
+carries the fitted estimator, and attribution falls back to the best baseline
+SHAP can explain rather than producing nothing when a linear model wins.
 
 **P6.** `calibration.md`'s 50/80/90 table names no seed, `hold_out`,
 `n_factors` or sampler settings. Open.
@@ -137,8 +151,10 @@ faithful estimate", and the fix is "not yet applied". The box was ticked over
 the documentation's own caveat. Open, and it is a process finding rather than a
 code one.
 
-**P8.** Metric count drift: `claim-under-test.md` says 17, `calibration.md`'s
-table totals 15. Open.
+**P8.** Open. `claim-under-test.md` counts 17 candidates, which is 15 box-score
+metrics plus RAPM plus the fused rating. `calibration.md` counts 15, being 16
+model columns minus the one metric that had no held-out value. Both are correct
+for what they count and neither says so.
 
 ### Scope creep
 

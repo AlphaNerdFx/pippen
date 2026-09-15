@@ -660,7 +660,7 @@ def evaluate(
         console.print(rendered)
 
     if report.attribution is not None:
-        attribution = Table(title="SHAP importance, best baseline")
+        attribution = Table(title=f"SHAP importance, {report.attributed_to}")
         attribution.add_column("metric")
         attribution.add_column("mean |shap|", justify="right")
         for row in report.attribution.importance.head(10).itertuples(index=False):
@@ -670,6 +670,8 @@ def evaluate(
     console.print(f"\n[bold]{report.single.describe()}[/bold]")
     for comparison in report.comparisons:
         console.print(f"  {comparison.describe()}")
+    if report.box_only_comparison is not None:
+        console.print(f"  box score combined: {report.box_only_comparison.describe()}")
 
 
 def _not_yet(command: str, when: str) -> int:

@@ -269,7 +269,11 @@ class ClaimReport:
         baselines: Supervised models over every candidate at once.
         box_only_baselines: The same, with RAPM and the fused rating removed,
             which asks what the box score can do alone.
-        attribution: SHAP importances from the best baseline's fitted model.
+        attribution: SHAP importances from the best baseline SHAP can explain,
+            which is not always the best baseline overall.
+        attributed_to: Which baseline the attributions came from.
+        box_only_comparison: Whether combining box-score metrics beats the best
+            single one, tested rather than eyeballed.
         comparisons: Paired tests of the leading single candidate against
             others, so a gap in the table is tested rather than eyeballed.
     """
@@ -278,7 +282,9 @@ class ClaimReport:
     baselines: list[BaselineResult]
     box_only_baselines: list[BaselineResult] = field(default_factory=list)
     attribution: AttributionResult | None = None
+    attributed_to: str | None = None
     comparisons: list[PairedComparison] = field(default_factory=list)
+    box_only_comparison: PairedComparison | None = None
 
     @property
     def winner(self) -> str:
@@ -325,12 +331,21 @@ def evaluate_claim(
         experiment=None if experiment is None else f"{experiment}-box-only",
     )
 
+    # SHAP's tree explainer needs a tree model, and the best baseline is not
+    # always one. Explaining the best tree model rather than none at all keeps
+    # the attribution table available whichever baseline wins, and the table is
+    # labelled with the model it came from so the two are not confused.
     attribution = None
-    if baselines and baselines[0].fitted is not None:
+    attributed_to = None
+    for candidate in baselines:
+        if candidate.fitted is None:
+            continue
         try:
-            attribution = explain(baselines[0].fitted, panel.features, seed=seed)
-        except (ValueError, TypeError):  # pragma: no cover - a linear best baseline
-            attribution = None
+            attribution = explain(candidate.fitted, panel.features, seed=seed)
+        except Exception:
+            continue
+        attributed_to = candidate.name
+        break
 
     comparisons = []
     if not single.table.empty:
@@ -345,5 +360,47 @@ def evaluate_claim(
         baselines=baselines,
         box_only_baselines=box_only,
         attribution=attribution,
+        attributed_to=attributed_to,
         comparisons=comparisons,
+        box_only_comparison=_compare_box_only(single, box_only, panel),
     )
+
+
+def _compare_box_only(
+    single: ClaimResult, box_only: list[BaselineResult], panel: TeamPanel
+) -> PairedComparison | None:
+    """Test whether combining box-score metrics beats the best single one.
+
+    Asked separately because it is the one positive claim in the report, and a
+    positive claim needs a test rather than two numbers side by side. The
+    comparison is between the best box-only baseline and the best single
+    box-score candidate, paired on the team-seasons both scored.
+
+    Args:
+        single: Every candidate scored on its own.
+        box_only: Baselines fitted without RAPM or the fused rating.
+        panel: The full panel, used to identify the box-score candidates.
+
+    Returns:
+        A :class:`PairedComparison`, or ``None`` when either side is missing.
+    """
+    if not box_only or single.table.empty:
+        return None
+    box_candidates = set(panel.without(RAPM_COLUMN, FUSION_COLUMN).candidates)
+    eligible = single.table[single.table["candidate"].isin(box_candidates)]
+    if eligible.empty:
+        return None
+
+    best_single = str(eligible.iloc[0]["candidate"])
+    combined = ClaimResult(
+        table=single.table,
+        squared_errors=pd.DataFrame(
+            {
+                best_single: single.squared_errors[best_single],
+                box_only[0].name: box_only[0].squared_errors,
+            }
+        ),
+        observations=single.observations,
+        folds=single.folds,
+    )
+    return paired_comparison(combined, box_only[0].name, best_single)
