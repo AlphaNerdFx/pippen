@@ -57,6 +57,69 @@ converge, and it is also the window containing the season whose archive has a
 strengthens the same conclusion rather than changing it: RMSE 4.262 for RAPM
 against 4.286 for the fusion, a gap of 0.023 at p = 0.722.
 
+## It is not the fusion that failed, it is the inputs
+
+A negative result for one way of combining metrics is not a negative result for
+every way of combining them, so two supervised baselines were fitted over every
+metric at once: ridge, and gradient-boosted trees. Both tuned with Optuna over
+forty trials each, on the same folds, with hyperparameters selected inside the
+training folds and never against the held-out season.
+
+| Model | Inputs | RMSE |
+|---|---|---|
+| **RAPM alone** | 1 | **4.381** |
+| LightGBM | all 17 | 4.418 |
+| Ridge | all 17 | 4.436 |
+| Fusion, two factors | 17 | 4.482 |
+| LightGBM | 15 box-score only | 4.492 |
+| Ridge | 15 box-score only | 4.670 |
+| Best single box-score metric | 1 | 4.684 |
+
+LightGBM over everything against RAPM alone: paired t = −0.33, p = 0.742. Not
+distinguishable, same as the fusion.
+
+Two things follow, and the second is the more useful.
+
+**Combining does work, within the box score.** LightGBM over the fifteen
+box-score metrics scores 4.492 against 4.684 for the best single one. The
+metrics genuinely carry complementary information about each other.
+
+**It just does not get past RAPM.** A latent-variable model, a penalised linear
+model and a tuned gradient booster all land within a tenth of a point of RAPM
+alone, from three quite different directions. That is much stronger evidence
+than the fusion result on its own: the ceiling is a property of these inputs,
+not of the method used to combine them.
+
+## Which metrics the models actually use
+
+SHAP attributions on the tuned LightGBM, over the same team-seasons. A Shapley
+value divides a prediction among its inputs by averaging each input's marginal
+contribution over every order the inputs could have been added in.
+
+| Metric | Mean absolute SHAP |
+|---|---|
+| RAPM | 0.965 |
+| Effective field goal | 0.867 |
+| Turnovers per 36 | 0.384 |
+| Fouls per 36 | 0.267 |
+| Offensive rebounds per 36 | 0.248 |
+| Points per 36 | 0.193 |
+| ...the remaining ten | 0.025 to 0.177 |
+
+RAPM dominates, which is expected. The second row is the interesting one:
+effective field goal percentage is the single box-score metric that carries
+material information *beyond* RAPM. That agrees with everything else here,
+since shooting efficiency is the box-score quantity most related to impact.
+
+The attributions agree with the fusion's loadings only weakly, Spearman 0.259,
+and the disagreement is not a contradiction. The two are answering different
+questions. A loading says how much of a metric is the latent quantity, fitted
+without ever seeing the target. A SHAP value says how much a metric moved a
+prediction *given the other metrics were also available*, so a metric whose
+information RAPM already carries gets little credit no matter how strongly it
+correlates with impact. Points per 36 has a loading of 0.739 and a SHAP of
+0.193 for exactly that reason.
+
 ## Why this is the expected answer in hindsight
 
 Nothing about this contradicts the rest of the project. It is what the earlier
@@ -85,7 +148,9 @@ worth being precise about what could move it.
 
 - **Better inputs.** The box score contains no tracking data, no shot quality,
   no defensive matchups. Metrics built from those might carry impact signal the
-  box score cannot.
+  box score cannot. A location-only shot-quality model was built and rejected;
+  [licensing](../guides/licensing.md) records why, and names defender-distance
+  tracking as the version worth doing.
 - **More seasons.** Six folds and 180 team-seasons is a small sample for
   detecting a difference of a tenth of a point. A gap this size would need
   roughly four times the data to resolve. The nine seasons of possession data

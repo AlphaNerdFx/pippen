@@ -136,9 +136,9 @@ Limit: compute-bound for fitting, judgement for the result.
 - [x] Fetch all 25 hoopR seasons and measure the possession coefficient per season
 - [x] Split-half reliability with Spearman-Brown correction
 - [x] NumPyro hierarchical fusion model
-- [ ] LightGBM and ridge baselines, tuned with Optuna, tracked in MLflow
-- [ ] SHAP attributions
-- [ ] Interval calibration check
+- [x] LightGBM and ridge baselines, tuned with Optuna, tracked in MLflow
+- [x] SHAP attributions
+- [x] Interval calibration check (90.9% at nominal 90%)
 - [x] Run the claim under test and publish the answer either way (answer: no)
 
 The claim: does PIPPEN predict next-season team net rating better than any single

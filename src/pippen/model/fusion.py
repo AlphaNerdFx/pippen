@@ -183,6 +183,10 @@ class FusionFit:
         anchor: Metric that defines the latent quantity.
         anchor_loading: How the anchor was constrained.
         n_factors: Factors fitted. Only the first is reported as a rating.
+        draws: Posterior draws for ``intercept``, ``loading_matrix``,
+            ``factors_by_player`` and ``scale``, kept only when the caller asks
+            for them. They are what a posterior predictive check needs, and
+            they are large, so they are not carried by default.
         diagnostics: Sampler diagnostics. ``max_r_hat`` covers the published
             quantities only, the first factor's scores and loadings.
             ``nuisance_r_hat`` covers the rotatable nuisance factors and is
@@ -196,6 +200,7 @@ class FusionFit:
     anchor_loading: str
     n_factors: int
     diagnostics: dict[str, float]
+    draws: dict[str, Any] | None = None
 
     @property
     def converged(self) -> bool:
@@ -306,6 +311,7 @@ def fit_fusion(
     interval: float = 0.90,
     anchor_loading: str = "fixed",
     n_factors: int = DEFAULT_FACTORS,
+    keep_draws: bool = False,
 ) -> FusionFit:
     """Fit the measurement-error model to one window.
 
@@ -327,6 +333,8 @@ def fit_fusion(
             fixes the sign, which is useful for showing what the box score
             contains on its own and produces a position axis rather than an
             impact one.
+        keep_draws: Carry the posterior draws on the result. Needed for a
+            posterior predictive check and otherwise a waste of memory.
 
     Returns:
         A :class:`FusionFit`.
@@ -470,6 +478,16 @@ def fit_fusion(
         anchor=dataset.anchor,
         anchor_loading=anchor_loading,
         n_factors=n_factors,
+        draws=(
+            {
+                "intercept": np.asarray(draws["intercept"]),
+                "loading_matrix": loading_matrix,
+                "factors_by_player": np.asarray(draws["factors_by_player"]),
+                "scale": np.asarray(draws["scale"]),
+            }
+            if keep_draws
+            else None
+        ),
         diagnostics={
             "max_r_hat": published_r_hat,
             "nuisance_r_hat": nuisance_r_hat,
