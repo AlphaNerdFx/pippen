@@ -46,16 +46,12 @@ from typing import Any, Final
 import numpy as np
 import pandas as pd
 
+from pippen.errors import MissingDependencyError
+from pippen.repro import DEFAULT_SEED
+
 #: Rows sampled when explaining a large table. SHAP cost grows with rows, and
 #: an importance ranking stabilises long before every row is used.
 DEFAULT_SAMPLE: Final = 500
-
-#: Seed, matching the project-wide default.
-DEFAULT_SEED: Final = 20260910
-
-
-class MissingDependencyError(ImportError):
-    """SHAP is not installed."""
 
 
 @dataclass(frozen=True)

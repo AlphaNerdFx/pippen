@@ -34,10 +34,19 @@ def test_paths_lists_every_stage() -> None:
         assert stage in result.stdout
 
 
-def test_unimplemented_commands_exit_nonzero() -> None:
-    for argv in (["train"], ["evaluate"], ["rapm", "--seasons", "2015-2024"]):
+def test_commands_needing_a_season_range_refuse_to_guess() -> None:
+    # `evaluate` previously defaulted its season range, so a bare invocation
+    # started a multi-minute fit. A command that expensive should say what it
+    # needs rather than assume.
+    for argv in (["train"], ["evaluate"]):
         result = runner.invoke(app, argv)
         assert result.exit_code == 2, argv
+
+
+def test_a_command_exits_nonzero_when_its_inputs_are_missing() -> None:
+    # 2015 has no stints on disk; data.nba.com does not serve it.
+    result = runner.invoke(app, ["rapm", "--seasons", "2015-2024"])
+    assert result.exit_code == 2
 
 
 def test_parse_seasons_accepts_a_single_season() -> None:

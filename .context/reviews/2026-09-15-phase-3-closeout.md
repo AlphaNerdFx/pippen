@@ -43,14 +43,14 @@ No em dashes anywhere in the diff.
 
 | # | Smell | Where | Status |
 |---|---|---|---|
-| S5 | Duplicated Code | `tune_ridge` and `tune_lightgbm` repeat seven identical steps | Open |
-| S6 | Duplicated Code | `MissingDependencyError` declared five times as five distinct types | Open |
-| S7 | Shotgun Surgery | `DEFAULT_SEED = 20260910` in three new modules while `repro.py` already owns it, six files total | Open |
-| S8 | Feature Envy | `check_calibration` rebuilds `FusionDataset` field by field | Open |
-| S9 | Data Clumps | `(features, target, seasons)` plus `trials, seed` travel together through four functions | Open |
-| S10 | Primitive Obsession | `CalibrationResult.direction` returns a bare `str` | Open |
-| S11 | Loose signature | `**fit_kwargs: object` forces a `type: ignore[arg-type]` | Open |
-| S12 | Test reaches into private | `tests/unit/test_baselines.py` imports `_season_folds` | Open |
+| S5 | Duplicated Code | `tune_ridge` and `tune_lightgbm` repeat seven identical steps | Closed, one `tune` helper |
+| S6 | Duplicated Code | `MissingDependencyError` declared five times as five distinct types | Closed, `pippen/errors.py` |
+| S7 | Shotgun Surgery | `DEFAULT_SEED = 20260910` in three new modules while `repro.py` already owns it, six files total | Closed, imported from `repro` |
+| S8 | Feature Envy | `check_calibration` rebuilds `FusionDataset` field by field | Closed, `FusionDataset.with_values` |
+| S9 | Data Clumps | `(features, target, seasons)` plus `trials, seed` travel together through four functions | Closed, `TeamPanel` |
+| S10 | Primitive Obsession | `CalibrationResult.direction` returns a bare `str` | Closed, `Verdict` literal |
+| S11 | Loose signature | `**fit_kwargs: object` forces a `type: ignore[arg-type]` | Closed, explicit parameters |
+| S12 | Test reaches into private | `tests/unit/test_baselines.py` imports `_season_folds` | Closed, `TeamPanel.folds` is public |
 
 ---
 
@@ -94,12 +94,11 @@ because widening the search space or trial budget would grow the bias. Reviewer'
 own caveat: pure noise maximises the variance of the selection statistic, so it
 is the right stress case, but it is one configuration at n=180.
 
-**P2.** `filled = features.fillna(features.mean())` computes column means over
-held-out rows. A leak, small, ridge only. Open.
+**P2.** Closed. Imputation moved inside the ridge pipeline, so it is fitted on the
+training split of each fold rather than over the whole panel.
 
-**P3.** `_cross_validated_error` has no `target.notna()` guard, unlike
-`claim.py`. The docstring's "The same folds as the claim" is false for rows with
-an undefined next season. Open.
+**P3.** Closed. `TeamPanel.build` drops rows with no target once, so both
+modules score identical rows by construction rather than by comment.
 
 **P4.** `_season_folds` cannot leak a season, confirmed by test. But training
 folds contain features measured during the held-out row's target season. Shared

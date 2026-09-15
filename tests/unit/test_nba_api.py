@@ -21,6 +21,7 @@ import pytest
 import requests
 
 from pippen.data import nba_api
+from pippen.errors import MissingDependencyError
 
 
 class _FakeClock:
@@ -332,7 +333,7 @@ def test_a_missing_dependency_names_the_extra_to_install(monkeypatch: pytest.Mon
     original = builtins.__import__
     monkeypatch.setattr(builtins, "__import__", _no_nba_api)
 
-    with pytest.raises(nba_api.MissingDependencyError) as caught:
+    with pytest.raises(MissingDependencyError) as caught:
         nba_api.fetch_all_players("2024-25")
     message = str(caught.value)
     assert "sources" in message

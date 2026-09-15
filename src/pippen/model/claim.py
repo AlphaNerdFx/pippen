@@ -55,6 +55,7 @@ from typing import Final
 import numpy as np
 import pandas as pd
 
+from pippen.model.panel import TeamPanel
 from pippen.rapm.possessions import read_season_stints
 
 #: Points are quoted per this many possessions.
@@ -62,10 +63,6 @@ POSSESSIONS_PER_RATING: Final = 100
 
 #: Minutes a player needs in a team-season to contribute to its aggregate.
 DEFAULT_MINUTES_FLOOR: Final = 200.0
-
-
-class NotEnoughSeasonsError(ValueError):
-    """Fewer than two seasons, so no season can predict the next."""
 
 
 @dataclass(frozen=True)
@@ -204,50 +201,43 @@ class ClaimResult:
         )
 
 
-def compare_candidates(
-    features: pd.DataFrame,
-    target: pd.Series,
-    seasons: pd.Series,
-) -> ClaimResult:
+def compare_candidates(panel: TeamPanel) -> ClaimResult:
     """Score every candidate at predicting the target, out of sample.
 
-    Each candidate is a single column of ``features``. Every one is fitted with
+    Each candidate is a single column of the panel. Every one is fitted with
     the same one-variable linear model over the same leave-one-season-out
     folds, so the comparison isolates the rating rather than the modelling.
 
+    A single variable has nothing to tune, so there is no nested search here.
+    That makes these numbers directly comparable with the baselines only
+    because the baselines do tune nested; a tuned model scored on the folds
+    that chose its parameters would have an advantage this has no way to match.
+
     Args:
-        features: One column per candidate, indexed by team-season.
-        target: Next season's net rating for the same index.
-        seasons: Season each row belongs to, used to form the folds.
+        panel: The table to score. Its construction has already dropped rows
+            with no target, so every candidate sees the same team-seasons.
 
     Returns:
         A :class:`ClaimResult`, ordered best first.
 
     Raises:
-        NotEnoughSeasonsError: If fewer than two seasons are present, leaving
-            no fold that holds one out.
+        NotEnoughSeasonsError: If fewer than two seasons are present.
     """
-    distinct = sorted(seasons.unique())
-    if len(distinct) < 2:
-        raise NotEnoughSeasonsError(
-            f"only {len(distinct)} season(s) available; a leave-one-season-out "
-            f"comparison needs at least two"
-        )
+    folds = panel.folds()
 
     records = []
     per_observation: dict[str, pd.Series] = {}
-    for candidate in features.columns:
-        column = features[candidate]
-        usable = column.notna() & target.notna()
-        errors = pd.Series(np.nan, index=features.index, dtype="float64")
-        for held_out in distinct:
-            test = usable & (seasons == held_out)
-            train = usable & (seasons != held_out)
-            if train.sum() < 3 or test.sum() == 0:
+    for candidate in panel.candidates:
+        column = panel.features[candidate]
+        errors = pd.Series(np.nan, index=panel.features.index, dtype="float64")
+        for fold in folds:
+            usable_train = fold.train & column.notna()
+            usable_test = fold.test & column.notna()
+            if usable_train.sum() < 3 or usable_test.sum() == 0:
                 continue
-            slope, intercept = np.polyfit(column[train], target[train], 1)
-            predicted = slope * column[test] + intercept
-            errors.loc[test] = ((predicted - target[test]) ** 2).to_numpy()
+            slope, intercept = np.polyfit(column[usable_train], panel.target[usable_train], 1)
+            predicted = slope * column[usable_test] + intercept
+            errors.loc[usable_test] = ((predicted - panel.target[usable_test]) ** 2).to_numpy()
         if errors.notna().any():
             per_observation[candidate] = errors
             records.append({"candidate": candidate, "rmse": float(np.sqrt(errors.mean()))})
@@ -258,8 +248,8 @@ def compare_candidates(
     return ClaimResult(
         table=table,
         squared_errors=pd.DataFrame(per_observation),
-        observations=int((features.notna().any(axis=1) & target.notna()).sum()),
-        folds=len(distinct),
+        observations=panel.n_observations,
+        folds=len(folds),
     )
 
 

@@ -44,13 +44,14 @@ average while being badly wrong on one column, and an average would hide it.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Final
+from typing import Final, Literal
 
 import numpy as np
 import pandas as pd
 
+from pippen.model import fusion
 from pippen.model.dataset import FusionDataset
-from pippen.model.fusion import fit_fusion
+from pippen.repro import DEFAULT_SEED
 
 #: Share of observed values hidden from the fit.
 DEFAULT_HOLD_OUT: Final = 0.15
@@ -61,8 +62,10 @@ DEFAULT_NOMINAL: Final = 0.90
 #: How far from nominal coverage may drift and still count as calibrated.
 DEFAULT_TOLERANCE: Final = 0.05
 
-#: Seed, matching the project-wide default.
-DEFAULT_SEED: Final = 20260910
+
+#: The three states coverage can be in. A closed set, so a typo in a comparison
+#: is caught by mypy rather than quietly evaluating false.
+Verdict = Literal["calibrated", "over-confident", "under-confident"]
 
 
 class NotEnoughDataError(ValueError):
@@ -97,8 +100,13 @@ class CalibrationResult:
         return abs(self.observed - self.nominal) <= self.tolerance
 
     @property
-    def direction(self) -> str:
-        """Whether the intervals are too narrow, too wide, or about right."""
+    def direction(self) -> Verdict:
+        """Whether the intervals are too narrow, too wide, or about right.
+
+        Returns one of three fixed strings rather than free text, so a caller
+        comparing against a misspelling gets a type error instead of a silent
+        ``False``.
+        """
         if self.calibrated:
             return "calibrated"
         return "over-confident" if self.observed < self.nominal else "under-confident"
@@ -120,7 +128,11 @@ def check_calibration(
     nominal: float = DEFAULT_NOMINAL,
     tolerance: float = DEFAULT_TOLERANCE,
     seed: int = DEFAULT_SEED,
-    **fit_kwargs: object,
+    warmup: int = fusion.DEFAULT_WARMUP,
+    samples: int = fusion.DEFAULT_SAMPLES,
+    chains: int = fusion.DEFAULT_CHAINS,
+    n_factors: int = fusion.DEFAULT_FACTORS,
+    anchor_loading: str = "fixed",
 ) -> CalibrationResult:
     """Hide some observed values, refit, and see how often the intervals contain them.
 
@@ -130,8 +142,17 @@ def check_calibration(
         hold_out: Share of observed values to hide.
         nominal: Interval width to check, such as 0.90.
         tolerance: How far observed coverage may drift and still pass.
-        seed: Seed for choosing which values to hide.
-        **fit_kwargs: Passed through to :func:`~pippen.model.fusion.fit_fusion`.
+        seed: Seed for choosing which values to hide, and for the sampler.
+        warmup: Sampler warmup iterations.
+        samples: Posterior draws per chain.
+        chains: Chains to run.
+        n_factors: Factors to fit.
+        anchor_loading: How the anchor is constrained.
+
+    These repeat :func:`~pippen.model.fusion.fit_fusion`'s settings by name
+    rather than forwarding an untyped ``**kwargs``. Forwarding cost a
+    ``type: ignore`` at the call site and let a misspelled setting reach the
+    sampler as a silent no-op.
 
     Returns:
         A :class:`CalibrationResult`.
@@ -152,18 +173,19 @@ def check_calibration(
         )
 
     masked = values.mask(pd.DataFrame(hidden, index=values.index, columns=values.columns))
-    reduced = FusionDataset(
-        values=masked,
-        raw=dataset.raw,
-        centres=dataset.centres,
-        scales=dataset.scales,
-        minutes=dataset.minutes,
-        possessions=dataset.possessions,
-        nba_seasons=dataset.nba_seasons,
-        anchor=dataset.anchor,
-    )
+    reduced = dataset.with_values(masked)
 
-    fit = fit_fusion(reduced, reliability, seed=seed, keep_draws=True, **fit_kwargs)  # type: ignore[arg-type]
+    fit = fusion.fit_fusion(
+        reduced,
+        reliability,
+        warmup=warmup,
+        samples=samples,
+        chains=chains,
+        n_factors=n_factors,
+        anchor_loading=anchor_loading,
+        seed=seed,
+        keep_draws=True,
+    )
     if fit.draws is None:  # pragma: no cover - keep_draws is passed above
         raise RuntimeError("the fit returned no draws")
 

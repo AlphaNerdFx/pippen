@@ -67,6 +67,7 @@ import pandas as pd
 from pippen.rapm.design import build_design
 from pippen.rapm.ridge import fit_ridge
 from pippen.reliability.testretest import spearman_brown
+from pippen.repro import DEFAULT_SEED
 
 #: Halves drawn by default. Fewer than the metric side uses, because each draw
 #: here costs two ridge fits rather than two groupby sums.
@@ -76,9 +77,6 @@ DEFAULT_DRAWS: Final = 8
 #: this a rating is mostly the ridge prior, and two priors correlate with each
 #: other for reasons that have nothing to do with the data.
 DEFAULT_POSSESSION_FLOOR: Final = 2000.0
-
-#: Seed, matching the project-wide default.
-DEFAULT_SEED: Final = 20260910
 
 
 class NotEnoughGamesError(ValueError):

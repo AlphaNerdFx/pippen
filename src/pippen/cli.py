@@ -12,6 +12,8 @@ from rich.table import Table
 from pippen import __version__
 from pippen.data import hoopr, possession_coefficient
 from pippen.data import validate as data_validate
+from pippen.model import dataset as rapm_dataset
+from pippen.model import fusion, study
 from pippen.paths import ENV_VAR, data_root, dataset_file, season_file, stage_dir
 from pippen.rapm import design as rapm_design
 from pippen.rapm import pbp_source
@@ -537,15 +539,137 @@ def reliability(
 
 
 @app.command()
-def train() -> None:
-    """Fit the reliability-weighted measurement model."""
-    raise typer.Exit(_not_yet("train", "week 5-7 of the implementation plan"))
+def train(
+    seasons: Annotated[
+        str,
+        typer.Option(help="Season range to pool, NBA labels, for example 2016-2018."),
+    ],
+    factors: Annotated[int, typer.Option(help="Factors in the fusion model.")] = 2,
+    top: Annotated[int, typer.Option(help="How many players to print.")] = 20,
+    write: Annotated[bool, typer.Option(help="Write ratings to the processed stage.")] = True,
+) -> None:
+    """Fit the reliability-weighted measurement model for one window.
+
+    Seasons are NBA labels, so 2016 means the 2016-17 season. The reliability
+    bounds come from `pippen reliability`, which must have run first.
+    """
+    wanted = _parse_seasons(seasons)
+    try:
+        bounds = study.load_measured_reliability()
+        dataset, crosswalks = rapm_dataset.build_fusion_dataset(tuple(wanted))
+    except FileNotFoundError as exc:
+        console.print(f"[red]{exc}[/red]")
+        raise typer.Exit(code=2) from exc
+
+    console.print(dataset.describe())
+    for crosswalk in crosswalks:
+        if len(crosswalk.unmatched) or len(crosswalk.ambiguous):
+            console.print(f"  [yellow]{crosswalk.describe()}[/yellow]")
+
+    fit = fusion.fit_fusion(dataset, bounds, n_factors=factors)
+    console.print(fit.describe())
+    if not fit.converged:
+        console.print("[yellow]the published quantities did not converge[/yellow]")
+
+    loadings = Table(title="loadings, how much of each metric is the latent quantity")
+    for column in ("metric", "loading", "bound", "share of bound"):
+        loadings.add_column(column, justify="right" if column != "metric" else "left")
+    for row in fit.loadings.itertuples(index=False):
+        loadings.add_row(
+            str(row.metric), f"{row.loading:+.3f}", f"{row.bound:.3f}", f"{row.share_of_bound:.2f}"
+        )
+    console.print(loadings)
+
+    ratings = Table(title=f"top {top} by fused impact")
+    for column in ("nba_id", "impact", "sd", "lower", "upper"):
+        ratings.add_column(column, justify="right")
+    for row in fit.ratings.head(top).itertuples(index=False):
+        ratings.add_row(
+            str(row.nba_id),
+            f"{row.impact:+.2f}",
+            f"{row.sd:.2f}",
+            f"{row.lower:+.2f}",
+            f"{row.upper:+.2f}",
+        )
+    console.print(ratings)
+    console.print(
+        "Intervals are a floor on the true uncertainty, not a faithful estimate. "
+        "See docs/methodology/calibration.md."
+    )
+
+    if write:
+        target = stage_dir("processed", create=True) / f"ratings_{_compact(wanted)}.parquet"
+        fit.ratings.to_parquet(target, index=False)
+        console.print(f"wrote {target}")
 
 
 @app.command()
-def evaluate() -> None:
-    """Compare PIPPEN against every input metric on next-season team net rating."""
-    raise typer.Exit(_not_yet("evaluate", "week 5-7 of the implementation plan"))
+def evaluate(
+    seasons: Annotated[
+        str,
+        typer.Option(help="Seasons available, NBA labels, for example 2016-2024."),
+    ],
+    window: Annotated[int, typer.Option(help="Seasons pooled into one rating.")] = 3,
+    trials: Annotated[int, typer.Option(help="Optuna trials per search, per baseline.")] = 40,
+    factors: Annotated[int, typer.Option(help="Factors in the fusion model.")] = 2,
+) -> None:
+    """Compare PIPPEN against every input metric on next-season team net rating.
+
+    This is the claim the project committed to answering before the model was
+    built. It runs every candidate on its own, then two supervised baselines
+    over all of them at once, then the same baselines with RAPM and the fused
+    rating removed, then SHAP attributions, then paired tests. The answer is
+    printed whichever way it comes out.
+
+    Slow: one fusion fit per window plus nested hyperparameter selection.
+    """
+    wanted = _parse_seasons(seasons)
+    try:
+        panel, _fits = study.build_team_panel(
+            wanted,
+            window=window,
+            n_factors=factors,
+            on_progress=lambda record: console.print(
+                f"  {_compact(list(record.nba_seasons))} -> {record.target_season}: "
+                f"r-hat {record.fit.diagnostics['max_r_hat']:.4f}"
+            ),
+        )
+    except (FileNotFoundError, ValueError) as exc:
+        console.print(f"[red]{exc}[/red]")
+        raise typer.Exit(code=2) from exc
+
+    console.print(f"\n{panel.describe()}")
+    report = study.evaluate_claim(panel, trials=trials)
+
+    single = Table(title="every candidate on its own, leave-one-season-out")
+    for column in ("candidate", "rmse", "vs best"):
+        single.add_column(column, justify="right" if column != "candidate" else "left")
+    for row in report.single.table.itertuples(index=False):
+        single.add_row(str(row.candidate), f"{row.rmse:.3f}", f"{row.vs_best:+.3f}")
+    console.print(single)
+
+    for title, results in (
+        ("baselines over every candidate", report.baselines),
+        ("baselines over the box score alone", report.box_only_baselines),
+    ):
+        rendered = Table(title=title)
+        rendered.add_column("model")
+        rendered.add_column("rmse", justify="right")
+        for result in results:
+            rendered.add_row(result.name, f"{result.rmse:.3f}")
+        console.print(rendered)
+
+    if report.attribution is not None:
+        attribution = Table(title="SHAP importance, best baseline")
+        attribution.add_column("metric")
+        attribution.add_column("mean |shap|", justify="right")
+        for row in report.attribution.importance.head(10).itertuples(index=False):
+            attribution.add_row(str(row.metric), f"{row.mean_abs_shap:.3f}")
+        console.print(attribution)
+
+    console.print(f"\n[bold]{report.single.describe()}[/bold]")
+    for comparison in report.comparisons:
+        console.print(f"  {comparison.describe()}")
 
 
 def _not_yet(command: str, when: str) -> int:

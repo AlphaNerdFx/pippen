@@ -145,7 +145,9 @@ from typing import Any, Final
 import numpy as np
 import pandas as pd
 
+from pippen.errors import MissingDependencyError
 from pippen.model.dataset import FusionDataset
+from pippen.repro import DEFAULT_SEED
 
 #: Smallest residual scale allowed, so a loading at the bound cannot drive the
 #: likelihood to a spike of zero width.
@@ -160,11 +162,6 @@ DEFAULT_CHAINS: Final = 2
 #: Factors fitted by default. One is not enough: box-score rates share a large
 #: position axis, and a single factor becomes that axis rather than impact.
 DEFAULT_FACTORS: Final = 2
-DEFAULT_SEED: Final = 20260910
-
-
-class MissingDependencyError(ImportError):
-    """NumPyro is needed to fit the fusion model."""
 
 
 _MISSING = "numpyro and jax are required to fit the fusion model; install the 'fit' extra"

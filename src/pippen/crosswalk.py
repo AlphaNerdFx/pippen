@@ -55,6 +55,8 @@ from typing import Final
 
 import pandas as pd
 
+from pippen.errors import MissingDependencyError
+
 #: Name suffixes stripped by the second pass.
 SUFFIXES: Final = ("jr", "sr", "ii", "iii", "iv", "v")
 
@@ -63,10 +65,6 @@ PASSES: Final = ("exact", "suffix", "initial")
 
 _SUFFIX_PATTERN: Final = re.compile(r"\b(" + "|".join(SUFFIXES) + r")\b")
 _SPACES: Final = re.compile(r"\s+")
-
-
-class MissingDependencyError(ImportError):
-    """``nba_api`` is needed for the NBA side of the crosswalk."""
 
 
 def normalise(name: str, *, strip_suffix: bool = False) -> str:

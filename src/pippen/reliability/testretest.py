@@ -97,6 +97,7 @@ import numpy as np
 import pandas as pd
 
 from pippen.reliability.metrics import METRICS, Metric, compute, summarise_totals
+from pippen.repro import DEFAULT_SEED
 
 #: Random splits averaged over, unless a caller says otherwise.
 DEFAULT_SPLITS: Final = 100
@@ -109,9 +110,6 @@ DEFAULT_MINUTES_FLOOR: Final = 500.0
 #: high-minute players are more alike than the league at large and a
 #: correlation shrinks when the spread of true values shrinks.
 DEFAULT_FLOORS: Final = (200.0, 500.0, 1000.0, 1500.0)
-
-#: Seed, matching the project-wide default.
-DEFAULT_SEED: Final = 20260910
 
 
 class SplitRule(str, Enum):

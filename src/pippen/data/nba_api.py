@@ -52,6 +52,7 @@ import requests
 from tenacity import Retrying, retry_if_exception_type, stop_after_attempt, wait_exponential
 
 from pippen import __version__
+from pippen.errors import MissingDependencyError
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping
@@ -78,14 +79,6 @@ _MISSING_DEPENDENCY_MESSAGE: Final = (
     "run `uv sync --extra sources` in a checkout, or `pip install 'pippen[sources]'` "
     "for an installed copy."
 )
-
-
-class MissingDependencyError(ImportError):
-    """``nba_api`` is required for this call but is not installed.
-
-    Raised instead of letting a bare ``ModuleNotFoundError`` surface, so the
-    message names the extra to install rather than only the missing name.
-    """
 
 
 class RateLimitedError(Exception):

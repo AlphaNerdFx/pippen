@@ -48,7 +48,7 @@ back on its original scale.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Final
 
 import numpy as np
@@ -102,6 +102,24 @@ class FusionDataset:
     possessions: pd.Series
     nba_seasons: tuple[int, ...]
     anchor: str
+
+    def with_values(self, values: pd.DataFrame) -> FusionDataset:
+        """Return a copy carrying different standardised values.
+
+        Every other field describes the same players over the same window, so
+        replacing the values alone is the only change a caller should be
+        making. Exposing it here keeps the eight-field copy in one place;
+        callers previously rebuilt the dataclass by hand, which meant a field
+        added later would be silently dropped by whichever caller nobody
+        remembered to update.
+
+        Args:
+            values: Replacement table, same index and columns.
+
+        Returns:
+            A new dataset. The original is unchanged.
+        """
+        return replace(self, values=values)
 
     @property
     def n_players(self) -> int:

@@ -14,12 +14,12 @@ import pytest
 
 from pippen.model.claim import (
     ClaimResult,
-    NotEnoughSeasonsError,
     TeamSeasonRatings,
     aggregate_to_team,
     compare_candidates,
     paired_comparison,
 )
+from pippen.model.panel import NotEnoughSeasonsError, TeamPanel
 
 # ------------------------------------------------------------------ aggregation
 
@@ -66,9 +66,7 @@ def test_a_missing_rating_drops_that_player_not_the_team() -> None:
 # ------------------------------------------------------------------ the comparison
 
 
-def _panel(
-    seasons: int = 4, teams: int = 30, seed: int = 5
-) -> tuple[pd.DataFrame, pd.Series, pd.Series]:
+def _panel(seasons: int = 4, teams: int = 30, seed: int = 5) -> TeamPanel:
     """A panel where one candidate genuinely predicts and one is noise."""
     rng = np.random.default_rng(seed)
     rows = []
@@ -85,51 +83,42 @@ def _panel(
                 }
             )
     frame = pd.DataFrame(rows).set_index(["season", "team"])
-    return (
-        frame[["good", "noise"]],
-        frame["target"],
-        pd.Series([i[0] for i in frame.index], index=frame.index),
-    )
+    return TeamPanel.build(frame[["good", "noise"]], frame["target"])
 
 
 def test_a_predictive_candidate_beats_a_noise_candidate() -> None:
-    features, target, seasons = _panel()
-    result = compare_candidates(features, target, seasons)
+    result = compare_candidates(_panel())
     assert result.winner == "good"
     assert result.table.iloc[0]["rmse"] < result.table.iloc[1]["rmse"]
 
 
 def test_every_candidate_is_scored() -> None:
-    features, target, seasons = _panel()
-    result = compare_candidates(features, target, seasons)
+    result = compare_candidates(_panel())
     assert set(result.table["candidate"]) == {"good", "noise"}
 
 
 def test_the_gap_to_the_best_is_reported() -> None:
-    features, target, seasons = _panel()
-    result = compare_candidates(features, target, seasons)
+    result = compare_candidates(_panel())
     assert result.table.iloc[0]["vs_best"] == 0.0
     assert result.table.iloc[1]["vs_best"] > 0.0
 
 
 def test_one_season_cannot_be_compared() -> None:
-    features, target, seasons = _panel(seasons=1)
     with pytest.raises(NotEnoughSeasonsError, match="at least two"):
-        compare_candidates(features, target, seasons)
+        compare_candidates(_panel(seasons=1))
 
 
 def test_folds_hold_out_whole_seasons() -> None:
     # If a fold split within a season, a model would be predicting the rest of
     # a season it had already seen rather than the future.
-    features, target, seasons = _panel(seasons=3)
-    result = compare_candidates(features, target, seasons)
+    result = compare_candidates(_panel(seasons=3))
     assert result.folds == 3
 
 
 def test_a_candidate_that_is_entirely_missing_is_skipped_not_crashed() -> None:
-    features, target, seasons = _panel()
-    features = features.assign(absent=np.nan)
-    result = compare_candidates(features, target, seasons)
+    panel = _panel()
+    widened = TeamPanel.build(panel.features.assign(absent=np.nan), panel.target)
+    result = compare_candidates(widened)
     assert "absent" not in set(result.table["candidate"])
 
 
@@ -176,8 +165,7 @@ def test_team_ratings_describe_their_spread() -> None:
 
 
 def test_a_real_difference_is_detected() -> None:
-    features, target, seasons = _panel(seasons=5)
-    result = compare_candidates(features, target, seasons)
+    result = compare_candidates(_panel(seasons=5))
     comparison = paired_comparison(result, "good", "noise")
     assert comparison.better == "good"
     assert comparison.distinguishable
@@ -203,16 +191,14 @@ def test_a_difference_that_is_only_noise_is_not_claimed() -> None:
                 }
             )
     frame = pd.DataFrame(rows).set_index(["season", "team"])
-    seasons = pd.Series([i[0] for i in frame.index], index=frame.index)
-    result = compare_candidates(frame[["a", "b"]], frame["target"], seasons)
+    result = compare_candidates(TeamPanel.build(frame[["a", "b"]], frame["target"]))
     comparison = paired_comparison(result, "a", "b")
     assert not comparison.distinguishable
     assert "not distinguishable" in comparison.describe()
 
 
 def test_the_better_candidate_is_identified_whichever_order_is_given() -> None:
-    features, target, seasons = _panel(seasons=4)
-    result = compare_candidates(features, target, seasons)
+    result = compare_candidates(_panel(seasons=4))
     forwards = paired_comparison(result, "good", "noise")
     backwards = paired_comparison(result, "noise", "good")
     assert forwards.better == backwards.better == "good"
@@ -220,14 +206,12 @@ def test_the_better_candidate_is_identified_whichever_order_is_given() -> None:
 
 
 def test_an_unscored_candidate_is_named() -> None:
-    features, target, seasons = _panel()
-    result = compare_candidates(features, target, seasons)
+    result = compare_candidates(_panel())
     with pytest.raises(KeyError, match="absent"):
         paired_comparison(result, "good", "absent")
 
 
 def test_squared_errors_are_kept_per_observation() -> None:
-    features, target, seasons = _panel(seasons=3, teams=10)
-    result = compare_candidates(features, target, seasons)
+    result = compare_candidates(_panel(seasons=3, teams=10))
     assert set(result.squared_errors.columns) == {"good", "noise"}
     assert len(result.squared_errors) == 30
