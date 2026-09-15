@@ -179,9 +179,27 @@ If a bound genuinely cannot be expressed, say so rather than looping.
 
 This project develops a machine learning model to quantify NBA player impact using simultaneous metrics and adjusting for metric reliability. The model will later expand to analyze player swaps and team impact.
 
-**Current Status:** Phases 0 and 1 are complete. The data layer works end to end: a
-clean checkout can fetch a season, validate it across tables, and get a green report.
-265 tests, mypy strict clean, documentation building strictly. No model trained yet.
+**Current Status:** Phases 0 through 3 are complete. 508 tests, mypy strict clean,
+documentation building strictly.
+
+RAPM is computed from data.nba.com possessions for NBA 2016-17 to 2024-25 and
+clears its gate at Spearman 0.914 against an independently built stint dataset.
+Metric reliability is measured across all 25 hoopR seasons rather than assigned.
+The fusion model is fitted and calibrated at 90.9 percent against a nominal 90.
+
+**The claim under test has been answered, and the answer is no.** Fusing public
+metrics does not predict next-season team net rating better than RAPM alone, and
+is not distinguishable from it (p = 0.171). Ridge and tuned LightGBM over every
+metric land in the same place (p = 0.742), so the ceiling belongs to the inputs
+rather than to the method. See `docs/methodology/claim-under-test.md`.
+
+Three findings shape what comes next. Box-score metrics are dominated by
+position, not impact, so a one-factor model of them recovers size. Reliability
+runs *against* validity across the metric set at r = -0.564, which is why
+nothing in this codebase turns reliability into a weight. And the fusion's
+intervals are a floor rather than a faithful estimate, because pinning the
+anchor also pins its residual scale; `docs/methodology/calibration.md` names the
+fix.
 
 Phases are now gated by outcomes rather than dates. See
 [ADR 0002](docs/architecture/decisions/0002-outcome-gated-phases.md) for why, `TODO.md`
