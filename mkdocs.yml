@@ -89,6 +89,9 @@ nav:
           - Overview: architecture/decisions/index.md
           - 0001 Python as orchestration: architecture/decisions/0001-python-as-orchestration-layer.md
           - 0002 Outcome-gated phases: architecture/decisions/0002-outcome-gated-phases.md
+          - 0003 Phase 2 gate changed: architecture/decisions/0003-phase-2-gate-changed.md
+          - 0004 Reliability bounds, never weights: architecture/decisions/0004-reliability-bounds-never-weights.md
+          - 0005 The anchor defines the latent quantity: architecture/decisions/0005-the-anchor-defines-the-latent-quantity.md
   - Learning notes:
       - Overview: learning/index.md
       - 0001 The data layer: learning/0001-data-layer.md

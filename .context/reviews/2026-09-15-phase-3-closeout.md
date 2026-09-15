@@ -25,7 +25,7 @@ about it. Items marked open are real work.
 | S1 | `CLAUDE.md` > Writing Style > no contrast-reveal construction | Six places, listed below | Open |
 | S2 | `CLAUDE.md` > Writing Style > bold sparingly | `docs/guides/licensing.md`, 11 bold spans in 58 lines | Open |
 | S3 | `CLAUDE.md` > Writing Style > no filler openers | `claim-under-test.md`: "and it is worth being precise about what could move it" | Open |
-| S4 | `CLAUDE.md` > Development Workflow > record significant decisions as ADRs | Only 0001 and 0002 exist | Open |
+| S4 | `CLAUDE.md` > Development Workflow > record significant decisions as ADRs | Only 0001 and 0002 exist | Closed, ADRs 0003-0005 |
 
 S1 in full, all of it written by the model that also wrote the rule:
 

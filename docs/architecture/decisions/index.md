@@ -34,3 +34,6 @@ to write the record before acting rather than after.
 |---|---|---|
 | [0001](0001-python-as-orchestration-layer.md) | Python as the orchestration layer | Accepted |
 | [0002](0002-outcome-gated-phases.md) | Outcome-gated phases instead of time-boxed weeks | Accepted |
+| [0003](0003-phase-2-gate-changed.md) | Phase 2's gate was changed in two ways | Accepted |
+| [0004](0004-reliability-bounds-never-weights.md) | Reliability bounds a metric's loading and never becomes its weight | Accepted |
+| [0005](0005-the-anchor-defines-the-latent-quantity.md) | The anchor defines the latent quantity | Accepted |
