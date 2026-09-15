@@ -164,7 +164,7 @@ Done when: `pip install pippen` gives a working metric, and the release was
 published by the workflow rather than by hand.
 Limit: agent-parallel, with one manual step that cannot be automated.
 
-- [ ] Freeze the public API, complete docstrings
+- [x] Freeze the public API, complete docstrings
 - [ ] Configure Trusted Publishing on PyPI (manual, needs the maintainer's login)
 - [ ] Zenodo integration for a citable DOI
 

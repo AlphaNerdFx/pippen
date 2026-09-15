@@ -78,6 +78,15 @@ path = "src/pippen/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pippen"]
+# The computed tables travel with the code. Rebuilding them needs hours of
+# rate-limited downloading, so an install that shipped only code would be a
+# library rather than a metric. See src/pippen/published.py.
+artifacts = ["src/pippen/_data/*.parquet"]
+
+[tool.hatch.build.targets.sdist]
+# The sdist carries the tests and the tooling config, so a downstream packager
+# can verify the build rather than trusting the wheel.
+include = ["src/pippen", "tests", "pyproject.toml", "README.md", "LICENSE", "Makefile"]
 
 # ---------------------------------------------------------------- ruff
 [tool.ruff]

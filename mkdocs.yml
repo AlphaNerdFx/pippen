@@ -92,6 +92,7 @@ nav:
           - 0003 Phase 2 gate changed: architecture/decisions/0003-phase-2-gate-changed.md
           - 0004 Reliability bounds, never weights: architecture/decisions/0004-reliability-bounds-never-weights.md
           - 0005 The anchor defines the latent quantity: architecture/decisions/0005-the-anchor-defines-the-latent-quantity.md
+          - 0006 Shipping computed tables: architecture/decisions/0006-shipping-computed-tables.md
   - Learning notes:
       - Overview: learning/index.md
       - 0001 The data layer: learning/0001-data-layer.md

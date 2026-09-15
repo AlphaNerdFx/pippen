@@ -37,3 +37,4 @@ to write the record before acting rather than after.
 | [0003](0003-phase-2-gate-changed.md) | Phase 2's gate was changed in two ways | Accepted |
 | [0004](0004-reliability-bounds-never-weights.md) | Reliability bounds a metric's loading and never becomes its weight | Accepted |
 | [0005](0005-the-anchor-defines-the-latent-quantity.md) | The anchor defines the latent quantity | Accepted |
+| [0006](0006-shipping-computed-tables.md) | The wheel ships computed tables, under a size-capped exemption | Accepted |
