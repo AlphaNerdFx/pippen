@@ -119,7 +119,8 @@ Three skills are used deliberately and repeatedly, not just when asked.
 
 | Skill | When | Why |
 |---|---|---|
-| `/teach` | After each significant implementation | The maintainer learns the concepts rather than only receiving code |
+| `/professor` | The moment a concept enters the code | The maintainer learns it while the code that uses it is in front of them, in conversation, with nothing written to disk |
+| `/teach` | After each significant implementation | The stateful counterpart, building lessons and records across sessions |
 | `/grill-me`, `/grilling` | Before building anything non-trivial | Stress-tests a plan while changing it is still cheap |
 
 The `teach` skill writes a stateful workspace (`MISSION.md`, `lessons/`,
@@ -443,7 +444,7 @@ src/pippen/
 3. NBA API calls stay at one request per second.
 4. `docs/research/` is never reformatted or edited. It is a record.
 
-**Skills** in `.claude/skills/`: `refresh-data`, `add-metric`, `release`.
+**Skills** in `.claude/skills/`: `refresh-data`, `add-metric`, `release`, `professor`.
 
 ---
 
