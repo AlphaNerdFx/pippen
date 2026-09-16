@@ -12,6 +12,8 @@ play-by-play. See docs/architecture/decisions/0006-shipping-computed-tables.md.
 
 from __future__ import annotations
 
+import posixpath
+import subprocess
 import sys
 from pathlib import Path
 from typing import Final
@@ -32,6 +34,32 @@ ALLOWED_PREFIXES: Final = {
 }
 
 
+def _staged_size(name: str) -> int | None:
+    """Return the size of the blob git has staged for a path.
+
+    The copy on disk is the wrong thing to measure. ``git add`` snapshots a file
+    into the index and the commit records the index, so a file staged at 500 MiB
+    and then truncated in the worktree passes a ``stat`` check and still enters
+    history at its full size.
+
+    Args:
+        name: Path of a staged file, relative to the repository root.
+
+    Returns:
+        Size in bytes, or None when the path has no index entry, which is what a
+        staged deletion looks like.
+    """
+    found = subprocess.run(
+        ["git", "cat-file", "-s", f":{name}"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if found.returncode != 0:
+        return None
+    return int(found.stdout.strip())
+
+
 def _verdict(name: str) -> str | None:
     """Return why a staged file is refused, or None when it is acceptable.
 
@@ -41,17 +69,22 @@ def _verdict(name: str) -> str | None:
     Returns:
         A human-readable reason, or None.
     """
+    # Match on the normalised path. A name like
+    # "src/pippen/_data/../../../data/season.parquet" starts with an exempt
+    # prefix while landing somewhere else entirely, so borrowing the exemption
+    # is a matter of spelling unless the traversal is collapsed first.
+    name = posixpath.normpath(name.replace("\\", "/"))
+
     if Path(name).suffix.lower() not in BLOCKED_SUFFIXES:
         return None
 
     for prefix, limit in ALLOWED_PREFIXES.items():
         if not name.startswith(prefix):
             continue
-        path = Path(name)
-        # A staged deletion has no file on disk and needs no size check.
-        if not path.is_file():
+        size = _staged_size(name)
+        # A staged deletion has no index entry and needs no size check.
+        if size is None:
             return None
-        size = path.stat().st_size
         if size > limit:
             return f"{size:,} bytes exceeds the {limit:,} byte cap for {prefix}"
         return None
