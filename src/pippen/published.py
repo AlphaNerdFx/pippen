@@ -41,8 +41,9 @@ import pandas as pd
 
 from pippen.data.possession_coefficient import coefficient_for_season
 
-#: Directory inside the package holding the shipped tables.
+#: Import package whose installed files are searched for the shipped tables.
 _DATA_PACKAGE: Final = "pippen"
+#: Directory inside that package holding them.
 _DATA_DIRECTORY: Final = "_data"
 
 #: Earliest season covered by the shipped RAPM, in NBA labels. data.nba.com
@@ -51,9 +52,6 @@ FIRST_RAPM_SEASON: Final = 2016
 
 #: Latest season covered. The upstream feed stopped being populated after it.
 LAST_RAPM_SEASON: Final = 2024
-
-#: Seasons pooled into each shipped rating.
-RAPM_WINDOW: Final = 3
 
 
 class MissingBundledDataError(FileNotFoundError):
