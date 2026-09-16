@@ -180,7 +180,9 @@ If a bound genuinely cannot be expressed, say so rather than looping.
 
 This project develops a machine learning model to quantify NBA player impact using simultaneous metrics and adjusting for metric reliability. The model will later expand to analyze player swaps and team impact.
 
-**Current Status:** Phases 0 through 3 are complete. 508 tests, mypy strict clean,
+**Current Status:** Phases 0 through 3 are complete. Phase 4 is complete apart
+from the publishing steps that need the maintainer's browser and logins, which
+`./scripts/setup_publishing.sh` walks. 526 tests, mypy strict clean,
 documentation building strictly.
 
 RAPM is computed from data.nba.com possessions for NBA 2016-17 to 2024-25 and
