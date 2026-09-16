@@ -186,6 +186,15 @@ finish() {
 
 TOTAL_STAGES=5
 
+# Every path below is repository-relative, .env included, so anchor the
+# wizard to the repository root rather than to wherever it was invoked.
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+# The version is read from the package so the tag cannot disagree with
+# what the wheel will carry.
+VERSION="$(sed -n 's/^__version__ = "\(.*\)"/\1/p' src/pippen/__init__.py)"
+TAG="v$VERSION"
+
 # Progress is recorded in .env, which is gitignored, so a run that stops after
 # stage 2 can resume at stage 3 instead of repeating browser work.
 done_already() { [[ "$(_existing "$1" 2>/dev/null || true)" == "done" ]]; }
@@ -283,7 +292,7 @@ if ! skip_if_done PIPPEN_SETUP_ZENODO; then
   say "minting a DOI that papers and other software can cite."
   printf '\n'
   warn "Zenodo only archives releases created AFTER the toggle is on."
-  warn "Do this before tagging in stage 5, or v0.1.0 gets no DOI."
+  warn "Do this before tagging in stage 5, or $TAG gets no DOI."
   printf '\n'
   open_url "https://zenodo.org/account/settings/github/"
   step "Log in with GitHub and authorise Zenodo if asked."
@@ -303,10 +312,25 @@ if ! skip_if_done PIPPEN_SETUP_ZENODO; then
 fi
 
 # ── 5 ─────────────────────────────────────────────────────────────────────
-stage "Release: tag v0.1.0"
-if ! skip_if_done PIPPEN_SETUP_RELEASED; then
+stage "Release: tag $TAG"
+if ! skip_if_done PIPPEN_SETUP_TAGGED; then
   branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)
   say "Branch: $branch"
+
+  # Zenodo mints the DOI against the date in CITATION.cff, so a stale date
+  # there becomes a permanent part of the citation.
+  dated=$(sed -n 's/^date-released: "\(.*\)"/\1/p' CITATION.cff)
+  today=$(date +%F)
+  if [[ "$dated" != "$today" ]]; then
+    warn "CITATION.cff records date-released: $dated, and today is $today."
+    warn "Update it and commit, then run this again."
+    confirm "Tag with the date as it stands?" || { finish; exit 0; }
+  fi
+  if [[ "$branch" != main ]]; then
+    warn "not on main. A detached HEAD reports itself as HEAD here."
+    warn "The tag would carry whatever this branch holds."
+    confirm "Tag from $branch anyway?" || { finish; exit 0; }
+  fi
 
   if [[ -n "$(git status --porcelain 2>/dev/null)" ]]; then
     warn "the working tree has uncommitted changes"
@@ -318,14 +342,14 @@ if ! skip_if_done PIPPEN_SETUP_RELEASED; then
   fi
   note "working tree is clean"
 
-  if git rev-parse -q --verify "refs/tags/v0.1.0" >/dev/null 2>&1; then
-    warn "tag v0.1.0 already exists locally"
+  if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null 2>&1; then
+    warn "tag $TAG already exists locally"
     say "Delete it first if you meant to recreate it:"
-    note "  git tag -d v0.1.0 && git push --delete origin v0.1.0"
+    note "  git tag -d $TAG && git push --delete origin $TAG"
     finish
     exit 0
   fi
-  note "tag v0.1.0 does not exist yet"
+  note "tag $TAG does not exist yet"
 
   if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
     note "gh is authenticated"
@@ -339,33 +363,26 @@ if ! skip_if_done PIPPEN_SETUP_RELEASED; then
   say "stage 1, and creates a GitHub release for Zenodo to archive."
   printf '\n'
   warn "A version published to PyPI can be deleted but never re-uploaded."
-  warn "0.1.0 is spent either way once this succeeds."
+  warn "$VERSION is spent either way once this succeeds."
   printf '\n'
 
-  if confirm "Tag v0.1.0 and push it?"; then
-    git tag -a v0.1.0 -m "v0.1.0"
-    git push origin v0.1.0
-    printf '  %s✓ pushed%s tag v0.1.0\n' "$GREEN" "$RESET"
-    mark_done PIPPEN_SETUP_RELEASED
+  if confirm "Tag $TAG and push it?"; then
+    git tag -a "$TAG" -m "$TAG"
+    git push origin "$TAG"
+    printf '  %s✓ pushed%s tag %s\n' "$GREEN" "$RESET" "$TAG"
+    mark_done PIPPEN_SETUP_TAGGED
     printf '\n'
-    say "Checking PyPI for 0.1.0. Bounded to about two minutes."
-    published=no
-    for _ in 1 2 3 4 5 6 7 8; do
-      sleep 15
-      if curl -fsS "https://pypi.org/pypi/pippen/json" 2>/dev/null \
-         | grep -q '"version": *"0.1.0"'; then
-        published=yes
-        break
-      fi
-      printf '  %s.%s' "$DIM" "$RESET"
-    done
+    say "The release job runs now. A required reviewer on the pypi"
+    say "environment holds it until you approve, so publication takes"
+    say "anything from a minute to as long as you leave it waiting."
     printf '\n'
-    if [[ "$published" == yes ]]; then
-      printf '  %s✓ pippen 0.1.0 is live on PyPI%s\n' "$GREEN" "$RESET"
-      open_url "https://pypi.org/project/pippen/0.1.0/"
+    if timeout 20 curl -fsS "https://pypi.org/pypi/pippen/json" 2>/dev/null \
+       | grep -q "\"version\": *\"$VERSION\""; then
+      printf '  %s✓ pippen %s is live on PyPI%s\n' "$GREEN" "$VERSION" "$RESET"
+      open_url "https://pypi.org/project/pippen/$VERSION/"
     else
-      note "not visible yet. A required reviewer on the pypi environment"
-      note "holds the job until approved, which is the expected case here."
+      note "$VERSION is not on PyPI yet, which is expected this soon."
+      note "Watch the run, approve it if it is waiting, then reload the page."
       open_url "https://github.com/AlphaNerdFx/pippen/actions/workflows/release.yml"
     fi
   else
