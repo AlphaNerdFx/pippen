@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lesson 0002: Prove what your wheel ships</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/quiz.js" defer></script>
+</head>
+<body>
+
+<p class="kicker">Lesson 0002 &middot; Packaging</p>
+<h1>Prove what your wheel ships</h1>
+<p class="standfirst">A built distribution is an archive you can open. By the end of this you will
+have opened yours and checked its contents against what you intended, instead
+of trusting that the build did the right thing.</p>
+
+<p>You are about to publish <code>pippen</code> 0.1.0 to PyPI. A version on PyPI
+can be deleted but never re-uploaded under the same number, so whatever 0.1.0
+contains is what 0.1.0 contains for good. The check below takes about two
+minutes and is the last cheap moment to run it.</p>
+
+<p>During the Phase 4 review, one of the questions a reviewer had to answer was
+whether the wheel and the sdist both carried the computed Parquet tables. That
+question has a definite answer, obtainable in one command, and this lesson is
+that command.</p>
+
+<h2>The knowledge, in four facts</h2>
+
+<h3>1. There are two kinds of distribution, and they hold different layouts</h3>
+
+<p>An <strong>sdist</strong> (source distribution) is a <code>.tar.gz</code> of
+your project as you wrote it. A <strong>wheel</strong> is a <code>.zip</code>,
+with the extension <code>.whl</code>, of your project as it will be installed.
+Installing a wheel is close to unzipping it into <code>site-packages</code>,
+which is why wheels install fast and why they replaced the old practice of
+running <code>setup.py</code> on the installing machine.</p>
+
+<p>The layouts differ, and the difference is the clearest way to see what each
+file is for:</p>
+
+<table>
+  <tr><th>Artifact</th><th>Path to the shipped table</th></tr>
+  <tr><td>sdist</td><td><code>pippen-0.1.0/src/pippen/_data/rapm_ratings.parquet</code></td></tr>
+  <tr><td>wheel</td><td><code>pippen/_data/rapm_ratings.parquet</code></td></tr>
+</table>
+
+<p>The <code>src/</code> directory exists in your repository to stop Python
+importing your package from the working directory instead of from the installed
+copy, which is how a test suite ends up passing against code that was never
+packaged. It has no meaning after installation, so the wheel does not carry it.</p>
+
+<h3>2. <code>RECORD</code> is the manifest</h3>
+
+<p>Inside a wheel, <code>pippen-0.1.0.dist-info/RECORD</code> lists every file
+the wheel installs, each with a hash and a byte count. That file is how
+<code>pip uninstall</code> knows precisely which files to remove and no others.
+<code>METADATA</code> beside it holds the name, version, dependencies and README
+that PyPI renders on your project page.</p>
+
+<h3>3. A zero-byte file can be a signal</h3>
+
+<p><code>pippen/py.typed</code> is empty, and emptiness is its entire content.
+Under <a href="https://peps.python.org/pep-0561/">PEP 561</a>, a type checker
+analysing someone else's code will ignore your inline annotations unless this
+marker is present in the installed package. Its presence is the declaration;
+nothing needs to be written inside it. The marker applies recursively, so
+shipping it is a promise that the whole package type-checks.</p>
+
+<h3>4. Package data has to be asked for</h3>
+
+<p>Files that are not <code>.py</code> do not travel by default. In
+<code>pyproject.toml</code> the wheel and the sdist are told separately, under
+<code>[tool.hatch.build.targets.wheel]</code> and
+<code>[tool.hatch.build.targets.sdist]</code>. Telling one and forgetting the
+other produces a package that works from a wheel and breaks for anyone who
+builds from source, which is a failure that will not show up on your machine.</p>
+
+<div class="task">
+<h3>Do this now</h3>
+<p>From the repository root:</p>
+<pre><code>uv build
+
+python -c "
+import zipfile
+z = zipfile.ZipFile('dist/pippen-0.1.0-py3-none-any.whl')
+for n in sorted(z.namelist()):
+    print(f'{z.getinfo(n).file_size:>9,}  {n}')
+"</code></pre>
+<p>Four things to find in the output, each a claim you are checking rather than
+assuming:</p>
+<ul>
+  <li><code>pippen/_data/rapm_ratings.parquet</code> at 227,822 bytes</li>
+  <li><code>pippen/_data/metric_reliability.parquet</code> at 42,049 bytes</li>
+  <li><code>pippen/py.typed</code> at 0 bytes</li>
+  <li>42 entries in total</li>
+</ul>
+<p>Then the same for the sdist, where the paths carry the <code>src/</code>
+prefix and the count is 79:</p>
+<pre><code>python -c "
+import tarfile
+t = tarfile.open('dist/pippen-0.1.0.tar.gz')
+for n in sorted(t.getnames()):
+    print(f'{t.getmember(n).size:>9,}  {n}')
+"</code></pre>
+<p>If a number disagrees with what you expected, that disagreement is the most
+valuable output this exercise can produce. Bring it to me.</p>
+</div>
+
+<h2>Check yourself</h2>
+
+<p>Answer from memory before scrolling back. Retrieving an answer you half
+remember builds retention in a way that re-reading the paragraph does not.</p>
+
+<div class="quiz" data-answer="b"
+     data-why-a="Nothing is dropped for lacking Python files. The wheel carries py.typed and two Parquet files, none of which are Python."
+     data-why-b="The wheel is the installed layout, and src/ exists only to keep your working directory off sys.path during development."
+     data-why-c="No renaming happens at upload. PyPI stores the file the build produced, byte for byte.">
+  <p class="q">Why does <code>src/</code> appear in the sdist and not in the wheel?</p>
+  <div class="quiz-opts">
+    <button value="a">A wheel drops folders lacking python</button>
+    <button value="b">A wheel stores the installed layout</button>
+    <button value="c">A wheel renames folders during upload</button>
+  </div>
+  <p class="quiz-fb" hidden></p>
+</div>
+
+<div class="quiz" data-answer="a"
+     data-why-a="PEP 561 makes the marker's existence the declaration. A type checker reading your installed package looks for the file and never looks inside it."
+     data-why-b="It lists nothing. The file is zero bytes, and PEP 561 specifies no format for its contents."
+     data-why-c="Its absence does the opposite: checkers skip your annotations entirely and treat the package as untyped.">
+  <p class="q">The <code>py.typed</code> file in the wheel is zero bytes. What does it do?</p>
+  <div class="quiz-opts">
+    <button value="a">Its presence alone signals inline types</button>
+    <button value="b">Its contents list every typed module</button>
+    <button value="c">Its absence enables faster type checks</button>
+  </div>
+  <p class="quiz-fb" hidden></p>
+</div>
+
+<div class="quiz" data-answer="c"
+     data-why-a="A wheel contains no build machinery. Rebuilding needs the sdist, or the repository."
+     data-why-b="Dependencies live in METADATA, resolved at install time rather than from RECORD."
+     data-why-c="RECORD lists every installed file with a hash and a size, which is what lets pip uninstall remove your files and leave everything else alone.">
+  <p class="q">What does <code>RECORD</code> in the <code>dist-info</code> directory let pip do?</p>
+  <div class="quiz-opts">
+    <button value="a">Rebuild the wheel from source archives</button>
+    <button value="b">Resolve the versions of its dependencies</button>
+    <button value="c">Remove exactly the files it installed</button>
+  </div>
+  <p class="quiz-fb" hidden></p>
+</div>
+
+<h2>The habit this is building</h2>
+
+<p>Inspecting your own artifact is the packaging version of something you
+already do without thinking in analysis: you do not report a coefficient without
+looking at the residuals. The build is a transformation, and a transformation
+you have never looked at the output of is an assumption.</p>
+
+<p>The same move applies to a Docker image (<code>docker run --rm IMAGE ls</code>),
+a compiled binary (<code>ldd</code>, <code>nm</code>) and a deployed bundle
+(open the source map). In each case the question is identical: the thing that
+will run somewhere else, what is actually in it?</p>
+
+<div class="aside">
+This is the first failure mode to suspect when a package works for you and not
+for a user. Your machine has the repository on it, so an import that should have
+come from the wheel can quietly resolve against your working tree instead. The
+wheel is the only copy the user gets.
+</div>
+
+<h2>Where to go next</h2>
+
+<p><strong>Primary source, worth reading in full:</strong>
+<a href="https://packaging.python.org/en/latest/guides/writing-pyproject-toml/">Writing your pyproject.toml</a>,
+from the Python Packaging User Guide. It is maintained by the people who
+maintain the tooling, and it is the one packaging document that does not go
+stale, which cannot be said for most Stack Overflow answers on this topic.</p>
+
+<p><strong>Reference sheet:</strong>
+<a href="../reference/packaging-commands.html">Packaging commands and layouts</a>,
+for the commands in this lesson without the explanation around them.</p>
+
+<p><strong>Earlier note:</strong>
+<a href="https://alphanerdfx.github.io/pippen/learning/0001-data-layer/">0001: What the data layer taught</a>, which
+covers atomic writes and validation at the boundary.</p>
+
+<div class="footer">
+<p>Something here unclear, or a number in the exercise that did not match? Ask
+me. I am the teacher for this workspace, and a question about the part that did
+not land is more useful to me than a completed exercise.</p>
+<p class="sources">Sources:</p>
+<ul class="sources">
+  <li><a href="https://peps.python.org/pep-0561/">PEP 561, Distributing and Packaging Type Information</a></li>
+  <li><a href="https://packaging.python.org/en/latest/guides/writing-pyproject-toml/">Python Packaging User Guide, Writing your pyproject.toml</a></li>
+  <li><a href="https://typing.python.org/en/latest/spec/distributing.html">Typing specification, Distributing type information</a></li>
+</ul>
+</div>
+
+</body>
+</html>

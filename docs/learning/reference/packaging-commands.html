@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reference: Packaging commands and layouts</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+
+<p class="kicker">Reference &middot; Packaging</p>
+<h1>Packaging commands and layouts</h1>
+<p class="standfirst">Compressed from <a href="../lessons/0002-prove-what-your-wheel-ships.html">Lesson 0002</a>.
+Built to be printed and kept beside the keyboard.</p>
+
+<h2>Inspect a built distribution</h2>
+
+<table>
+  <tr><th>Question</th><th>Command</th></tr>
+  <tr>
+    <td>What is in the wheel?</td>
+    <td><code>unzip -l dist/*.whl</code></td>
+  </tr>
+  <tr>
+    <td>What is in the sdist?</td>
+    <td><code>tar tzvf dist/*.tar.gz</code></td>
+  </tr>
+  <tr>
+    <td>Read a file without unpacking</td>
+    <td><code>unzip -p dist/*.whl pippen-0.1.0.dist-info/METADATA</code></td>
+  </tr>
+  <tr>
+    <td>Does it carry a given file?</td>
+    <td><code>unzip -l dist/*.whl | grep py.typed</code></td>
+  </tr>
+  <tr>
+    <td>Build both artifacts</td>
+    <td><code>uv build</code></td>
+  </tr>
+  <tr>
+    <td>Check metadata before upload</td>
+    <td><code>uvx twine check dist/*</code></td>
+  </tr>
+</table>
+
+<h2>Where things live</h2>
+
+<table>
+  <tr><th></th><th>Repository</th><th>sdist</th><th>Wheel</th></tr>
+  <tr>
+    <td>Package code</td>
+    <td><code>src/pippen/</code></td>
+    <td><code>pippen-0.1.0/src/pippen/</code></td>
+    <td><code>pippen/</code></td>
+  </tr>
+  <tr>
+    <td>Shipped tables</td>
+    <td><code>src/pippen/_data/</code></td>
+    <td><code>pippen-0.1.0/src/pippen/_data/</code></td>
+    <td><code>pippen/_data/</code></td>
+  </tr>
+  <tr>
+    <td>Metadata</td>
+    <td><code>pyproject.toml</code></td>
+    <td><code>pippen-0.1.0/PKG-INFO</code></td>
+    <td><code>pippen-0.1.0.dist-info/</code></td>
+  </tr>
+  <tr>
+    <td>Tests</td>
+    <td><code>tests/</code></td>
+    <td>included</td>
+    <td>absent</td>
+  </tr>
+</table>
+
+<p class="aside">The wheel is the installed layout. <code>src/</code> exists to keep the
+working directory off <code>sys.path</code> during development and has no meaning
+after installation.</p>
+
+<h2>Inside <code>dist-info</code></h2>
+
+<table>
+  <tr><th>File</th><th>Holds</th><th>Used by</th></tr>
+  <tr><td><code>METADATA</code></td><td>Name, version, dependencies, README</td><td>pip resolver, PyPI page</td></tr>
+  <tr><td><code>RECORD</code></td><td>Every installed file, with hash and size</td><td><code>pip uninstall</code></td></tr>
+  <tr><td><code>WHEEL</code></td><td>Wheel format version, whether pure Python</td><td>The installer</td></tr>
+  <tr><td><code>entry_points.txt</code></td><td>Console scripts, such as <code>pippen</code></td><td>Script generation at install</td></tr>
+</table>
+
+<h2>Filename grammar</h2>
+
+<pre><code>pippen-0.1.0-py3-none-any.whl
+│      │     │   │    │
+│      │     │   │    └─ platform tag: any OS
+│      │     │   └────── ABI tag: no compiled extensions
+│      │     └────────── Python tag: any Python 3
+│      └──────────────── version
+└─────────────────────── distribution name</code></pre>
+
+<p>A wheel tagged <code>py3-none-any</code> is a <strong>pure-Python wheel</strong>: one
+file that installs everywhere. A package with compiled C would instead publish one
+wheel per platform, such as <code>cp310-manylinux_2_17_x86_64</code>.</p>
+
+<h2>Declaring package data, hatchling</h2>
+
+<pre><code>[tool.hatch.build.targets.wheel]
+packages = ["src/pippen"]
+artifacts = ["src/pippen/_data/*.parquet"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/", "tests/", "README.md", "LICENSE"]</code></pre>
+
+<p>The two targets are configured separately and do not inherit from each other.
+Declaring one and forgetting the other yields a package that works from a wheel
+and fails for anyone building from source.</p>
+
+<h2>Reading package data at runtime</h2>
+
+<pre><code>from importlib.resources import as_file, files
+
+resource = files("pippen").joinpath("_data").joinpath(filename)
+with as_file(resource) as path:
+    return pd.read_parquet(path)</code></pre>
+
+<p>Never compute a path from <code>__file__</code>. An installed package is not
+guaranteed to be a directory of loose files: it can be inside a zip, and
+<code>files()</code> asks the loader that actually imported the module where its
+resources are. <code>as_file()</code> materialises a real path when a library needs
+one, and cleans up afterwards if extraction was required.</p>
+
+<h2>Version numbers</h2>
+
+<table>
+  <tr><th>Change</th><th>Bump</th><th>Promise</th></tr>
+  <tr><td>Bug fix, no API change</td><td>0.1.<strong>1</strong></td><td>Safe upgrade</td></tr>
+  <tr><td>New function added</td><td>0.<strong>2</strong>.0</td><td>Safe upgrade, more available</td></tr>
+  <tr><td>Signature or behaviour changed</td><td><strong>1</strong>.0.0</td><td>Callers may break</td></tr>
+</table>
+
+<p>Below 1.0.0 the guarantee is weaker by convention: a minor bump may break
+callers, which is what <code>0.x</code> communicates. That is why the README says
+the API is 0.x and may still change.</p>
+
+<p class="aside">A version published to PyPI can be yanked or deleted, and can
+never be re-uploaded under the same number. Publishing is append-only.</p>
+
+<div class="footer">
+<p>Back to <a href="../lessons/0002-prove-what-your-wheel-ships.html">Lesson 0002</a>
+&middot; <a href="https://alphanerdfx.github.io/pippen/learning/">All learning notes</a></p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+/* Shared stylesheet for every lesson and reference sheet in this workspace.
+   Linked, never inlined, so the course looks like one course. */
+
+:root {
+  --ink: #1a1a1a;
+  --ink-soft: #55534e;
+  --rule: #d8d4cc;
+  --ground: #fffef9;
+  --accent: #7a2e1d;
+  --code-bg: #f4f1ea;
+  --ok: #2d6a3f;
+  --no: #8a2a2a;
+  --measure: 34rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e8e4dc;
+    --ink-soft: #a8a29a;
+    --rule: #3a3833;
+    --ground: #16150f;
+    --accent: #e0a08c;
+    --code-bg: #20201a;
+    --ok: #7fbf8f;
+    --no: #e08a8a;
+  }
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0 auto;
+  padding: 3rem 1.25rem 6rem;
+  max-width: var(--measure);
+  background: var(--ground);
+  color: var(--ink);
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.kicker {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 0.5rem;
+}
+
+h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 0.4rem; font-weight: 600; }
+h2 {
+  font-size: 1.2rem;
+  margin: 2.75rem 0 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+  font-weight: 600;
+}
+h3 { font-size: 1.02rem; margin: 1.75rem 0 0.4rem; font-weight: 600; }
+
+.standfirst { color: var(--ink-soft); font-size: 1.1rem; margin: 0 0 2rem; }
+
+p, li { hyphens: auto; }
+a { color: var(--accent); text-underline-offset: 2px; }
+
+code, pre, kbd {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 0.85em;
+}
+code { background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 3px; }
+pre {
+  background: var(--code-bg);
+  padding: 0.9rem 1rem;
+  border-radius: 5px;
+  border-left: 3px solid var(--rule);
+  overflow-x: auto;
+  line-height: 1.45;
+}
+pre code { background: none; padding: 0; }
+
+blockquote {
+  margin: 1.5rem 0;
+  padding: 0.1rem 0 0.1rem 1.1rem;
+  border-left: 3px solid var(--accent);
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.aside {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  border-left: 2px solid var(--rule);
+  padding: 0.4rem 0 0.4rem 1rem;
+  margin: 1.5rem 0;
+}
+
+table { border-collapse: collapse; width: 100%; margin: 1.25rem 0; font-size: 0.93rem; }
+th, td { text-align: left; padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.76rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-soft); }
+
+.task {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 1rem 1.15rem;
+  margin: 1.5rem 0;
+  background: color-mix(in srgb, var(--code-bg) 45%, transparent);
+}
+.task > h3 { margin-top: 0; }
+
+.footer {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.sources { font-size: 0.88rem; }
+.sources li { margin-bottom: 0.3rem; }
+
+@media print {
+  body { max-width: none; padding: 0; font-size: 11pt; }
+  pre, .task, .quiz { break-inside: avoid; }
+  .quiz-opts button { border: 1px solid #999 !important; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.75em; color: #666; word-break: break-all; }
+}
+
+/* Quiz widget. Markup contract is documented in assets/quiz.js. */
+.quiz { border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.15rem; margin: 1.5rem 0; }
+.quiz .q { font-weight: 600; margin: 0 0 0.85rem; }
+.quiz-opts { display: flex; flex-direction: column; gap: 0.45rem; }
+.quiz-opts button {
+  font: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--ground);
+  color: var(--ink);
+  cursor: pointer;
+}
+.quiz-opts button:hover:not([disabled]) { border-color: var(--accent); }
+.quiz-opts button[disabled] { cursor: default; opacity: 0.75; }
+.quiz-opts button.is-right { border-color: var(--ok); color: var(--ok); opacity: 1; font-weight: 600; }
+.quiz-opts button.is-wrong { border-color: var(--no); color: var(--no); opacity: 1; }
+.quiz-fb { margin: 0.85rem 0 0; font-size: 0.92rem; color: var(--ink-soft); }
+.quiz-fb strong { color: var(--ink); }

@@ -62,6 +62,11 @@ extra_javascript:
 exclude_docs: |
   research/*.md
   !research/index.md
+  learning/MISSION.md
+  learning/NOTES.md
+  learning/RESOURCES.md
+  learning/GLOSSARY.md
+  learning/learning-records/
 
 nav:
   - Home: index.md
