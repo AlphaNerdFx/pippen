@@ -10,12 +10,13 @@ Reliability-adjusted NBA player impact estimates, with calibrated uncertainty.
 
 [![PyPI](https://img.shields.io/pypi/v/pippen.svg)](https://pypi.org/project/pippen/)
 
-> **Status: 0.1.0, and the central claim has been answered.** RAPM is computed
+> **Status: the central claim has been answered.** RAPM is computed
 > and validated, metric reliability is measured across 25 seasons, and both
 > ship inside the wheel. The fused rating does not beat RAPM alone and is not
 > distinguishable from it. That result is published in
 > [the claim under test](https://alphanerdfx.github.io/pippen/methodology/claim-under-test/)
-> rather than omitted. The API is 0.x and may still change.
+> rather than omitted. The API is 0.x and may still change. The PyPI badge
+> above carries the published version.
 
 ---
 

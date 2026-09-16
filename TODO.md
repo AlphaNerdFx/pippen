@@ -168,6 +168,11 @@ Limit: agent-parallel, with one manual step that cannot be automated.
 - [ ] Configure Trusted Publishing on PyPI (manual, needs the maintainer's login)
 - [ ] Zenodo integration for a citable DOI
 
+Both open boxes need a browser and a login. `./scripts/setup_publishing.sh`
+walks them, records progress in the gitignored `.env`, and can be stopped and
+resumed. It also revokes the stored PyPI token, which is the step that actually
+reduces risk and the one most easily skipped.
+
 ---
 
 ## Phase 5: Serving
