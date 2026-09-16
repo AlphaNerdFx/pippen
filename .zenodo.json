@@ -1,0 +1,34 @@
+{
+  "title": "PIPPEN: Player Impact from Pooled Priors and Estimated Noise",
+  "description": "<p>Regularized Adjusted Plus-Minus computed from public play-by-play for NBA 2016-17 through 2024-25, validated at a Spearman correlation of 0.914 against an independently constructed stint dataset. Shipped alongside it are the measured split-half reliability of fifteen box-score metrics across twenty-five seasons, and the possession coefficient measured per season rather than assumed at the conventional 0.44.</p><p>The project set out to fuse public metrics by weighting each by its reliability, and the measurements ruled that out: across this metric set reliability correlates -0.564 with correlation against RAPM. The fused rating does not predict next-season team net rating better than RAPM alone and is not statistically distinguishable from it, a negative result published rather than omitted.</p>",
+  "license": "Apache-2.0",
+  "upload_type": "software",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "AlphaNerdFx"
+    }
+  ],
+  "keywords": [
+    "nba",
+    "basketball",
+    "sports-analytics",
+    "rapm",
+    "plus-minus",
+    "measurement-error-model",
+    "reliability",
+    "reproducible-research"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/AlphaNerdFx/pippen",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://pypi.org/project/pippen/",
+      "relation": "isIdenticalTo",
+      "scheme": "url"
+    }
+  ]
+}

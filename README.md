@@ -8,8 +8,14 @@ Reliability-adjusted NBA player impact estimates, with calibrated uncertainty.
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://www.python.org)
 
-> **Status: pre-release.** The data layer and the metric are under active
-> construction. Nothing here is stable yet, and no results have been published.
+[![PyPI](https://img.shields.io/pypi/v/pippen.svg)](https://pypi.org/project/pippen/)
+
+> **Status: 0.1.0, and the central claim has been answered.** RAPM is computed
+> and validated, metric reliability is measured across 25 seasons, and both
+> ship inside the wheel. The fused rating does not beat RAPM alone and is not
+> distinguishable from it. That result is published in
+> [the claim under test](https://alphanerdfx.github.io/pippen/methodology/claim-under-test/)
+> rather than omitted. The API is 0.x and may still change.
 
 ---
 
@@ -130,6 +136,22 @@ Full documentation, including the method write-up and its limitations, lives at
 
 Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), and note
 that this project ships a [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Releasing
+
+Publishing uses [Trusted Publishing](https://docs.pypi.org/trusted-publishers/),
+so no PyPI token is stored in this repository or in GitHub's secret store.
+`.github/workflows/release.yml` proves the workflow's identity to PyPI through a
+short-lived OpenID Connect token instead.
+
+The one-time browser setup, plus tagging a release, is scripted:
+
+```bash
+./scripts/setup_publishing.sh
+```
+
+It is resumable, so a run that stops halfway picks up where it left off, and it
+refuses to tag a dirty working tree.
 
 ## License
 

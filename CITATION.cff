@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+title: "PIPPEN: Player Impact from Pooled Priors and Estimated Noise"
+message: "If you use this software or its published tables, please cite it."
+type: software
+authors:
+  # Replace this with your legal name before minting a DOI. A citation
+  # carrying a handle rather than a name is hard to credit in academic work.
+  - name: "AlphaNerdFx"
+    alias: "AlphaNerdFx"
+repository-code: "https://github.com/AlphaNerdFx/pippen"
+url: "https://alphanerdfx.github.io/pippen/"
+license: Apache-2.0
+version: 0.1.0
+date-released: "2026-09-16"
+keywords:
+  - nba
+  - basketball
+  - sports-analytics
+  - rapm
+  - plus-minus
+  - measurement-error-model
+  - reliability
+abstract: >-
+  Regularized Adjusted Plus-Minus computed from public play-by-play for NBA
+  2016-17 through 2024-25, validated at a Spearman correlation of 0.914 against
+  an independently constructed stint dataset. Shipped alongside it are the
+  measured split-half reliability of fifteen box-score metrics across
+  twenty-five seasons, and the possession coefficient measured per season rather
+  than assumed at the conventional 0.44, which came out below that convention in
+  every season measured.
+
+  The project set out to fuse public metrics by weighting each by its
+  reliability, and the measurements ruled that out. Across this metric set
+  reliability correlates -0.564 with correlation against RAPM, so the most
+  repeatable metrics are the least related to winning. Reliability is therefore
+  used as a bound on how much of a metric a measurement-error model may
+  attribute to the latent quantity, never as a weight. The resulting fused
+  rating does not predict next-season team net rating better than RAPM alone
+  and is not statistically distinguishable from it, a negative result the
+  project publishes rather than omits.
