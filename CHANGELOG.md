@@ -35,6 +35,10 @@ below ships at once.
   nominal 90.
 - Public API frozen at six names, with the computed tables shipped inside the
   wheel so `pip install pippen` needs no download.
+- `first_season`, `last_season` and `seasons_played` on the ratings table,
+  naming the seasons a player actually recorded a possession in. 2,994 of the
+  5,427 rows cover fewer than the window's three seasons, so the window alone
+  overstates the evidence behind more than half the table.
 - HTTP service over the shipped tables, with a two-stage non-root container and
   a KServe manifest validated against the CRD schema.
 - Streamlit dashboard: player lookup, comparison, measured reliability, and a

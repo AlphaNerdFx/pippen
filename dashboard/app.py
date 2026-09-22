@@ -14,6 +14,7 @@ import pandas as pd
 import streamlit as st
 
 import pippen
+from pippen import seasons
 
 #: Diverging pair. Points per 100 possessions is signed and zero means
 #: league-average, so polarity is the job. Blue above, red below, with the
@@ -33,13 +34,45 @@ st.set_page_config(page_title="pippen", page_icon="🏀", layout="wide")
 
 @st.cache_data
 def ratings() -> pd.DataFrame:
-    """Return the shipped RAPM table with a readable window label."""
-    table = pippen.rapm_ratings()
-    table = table.copy()
-    table["window"] = (
-        table["window_start"].astype(str) + "-" + (table["window_end"] % 100).map("{:02d}".format)
-    )
+    """Return the shipped RAPM table with labels a reader can trust.
+
+    Two labels, because they answer different questions. ``window`` is the
+    three-season span the ridge fit ran over. ``played`` is the span in which
+    this player actually recorded a possession, which for 2,994 of the 5,427
+    rows is shorter. Labelling a row by its window implies three seasons of
+    evidence where there may be one.
+
+    Both use the project's own season naming, so 2021 reads as 2021-22 rather
+    than as a bare year that could mean either convention.
+    """
+    table = pippen.rapm_ratings().copy()
+    table["window"] = [
+        f"{seasons.describe(start)} to {seasons.describe(end)}"
+        for start, end in zip(table["window_start"], table["window_end"], strict=True)
+    ]
+    table["played"] = [
+        seasons.describe(first)
+        if first == last
+        else f"{seasons.describe(first)} to {seasons.describe(last)}"
+        for first, last in zip(table["first_season"], table["last_season"], strict=True)
+    ]
     return table
+
+
+def _axis_labels(rows: pd.DataFrame) -> list[str]:
+    """Return one unique label per row, leading with the seasons played.
+
+    A player who played a single season appears in up to three windows, each
+    giving a different estimate of that same season because the fit saw
+    different team-mates. Those rows share a ``played`` span, so the window's
+    final season disambiguates them rather than letting two bars collapse into
+    one.
+    """
+    repeated = rows["played"].duplicated(keep=False)
+    return [
+        f"{played} · fit to {seasons.describe(end)}" if is_repeat else played
+        for played, end, is_repeat in zip(rows["played"], rows["window_end"], repeated, strict=True)
+    ]
 
 
 @st.cache_data
@@ -73,24 +106,36 @@ def player_view() -> None:
     # Split the signed value into two columns so the diverging pair can be named
     # exactly. Streamlit assigns its own scheme when colour comes from a
     # category column, and polarity is too important to leave to a default.
-    plot = rows[["window", "total"]].copy()
+    plot = rows[["total"]].copy()
+    plot["span"] = _axis_labels(rows)
     plot["Above average"] = plot["total"].clip(lower=0)
     plot["Below average"] = plot["total"].clip(upper=0)
     st.bar_chart(
         plot,
-        x="window",
+        x="span",
         y=["Above average", "Below average"],
         color=[ABOVE, BELOW],
         height=320,
     )
 
+    partial = int((rows["seasons_played"] < 3).sum())
+    note = (
+        f" In {partial} of them they played fewer than the window's three seasons,"
+        " so the bar is labelled by the seasons they actually played."
+        if partial
+        else ""
+    )
     st.caption(
-        f"{chosen} appears in {len(rows)} windows. Possessions behind each estimate are in the "
-        "table below: they are the precision signal, and no interval is published. "
+        f"{chosen} appears in {len(rows)} fitted windows.{note} Possessions behind each estimate "
+        "are in the table below: they are the precision signal, and no interval is published. "
         "See the Limits page."
     )
     st.dataframe(
-        rows[["window", "offensive", "defensive", "total", "possessions"]].set_index("window"),
+        rows[
+            ["played", "window", "seasons_played", "offensive", "defensive", "total", "possessions"]
+        ]
+        .rename(columns={"played": "seasons played", "window": "fitted over"})
+        .set_index("seasons played"),
         use_container_width=True,
     )
 
@@ -106,7 +151,13 @@ def compare_view() -> None:
         return
 
     rows = table[table["player"].isin(chosen)]
-    wide = rows.pivot_table(index="window", columns="player", values="total").sort_index()
+    # Pivoted on the window rather than on seasons played: two players have
+    # different tenures, and only the fitted window is a shared axis.
+    wide = (
+        rows.pivot_table(index=["window_end", "window"], columns="player", values="total")
+        .sort_index()
+        .droplevel("window_end")
+    )
     st.line_chart(wide, height=380)
     st.caption(
         "Each line is one player's total impact per 100 possessions across three-season windows. "

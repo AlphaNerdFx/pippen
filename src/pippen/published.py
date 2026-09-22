@@ -111,6 +111,17 @@ def rapm_ratings(window_end: int | None = None, *, min_possessions: float = 0.0)
         ``total`` in points per 100 possessions. Both components are signed so
         that higher is better, so ``total`` is their sum.
 
+        ``first_season``, ``last_season`` and ``seasons_played`` describe the
+        seasons in which that player actually recorded a possession inside the
+        window, which is not always the whole window. 2,994 of the 5,427 rows
+        cover fewer than three seasons, so reading ``window_start`` to
+        ``window_end`` as the evidence behind a rating overstates it. Austin
+        Reaves appears under the window ending 2021 having played only 2021-22.
+
+        The window is still the right unit for the fit: a player is estimated
+        against everyone who shared the floor across all three seasons. It is
+        the wrong unit for a label.
+
     Raises:
         MissingBundledDataError: If the table is not in the installed package.
         ValueError: If ``window_end`` names a window that was not computed.

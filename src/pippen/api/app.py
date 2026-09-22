@@ -55,8 +55,21 @@ class Rating(BaseModel):
     #: returned rather than dropped so the gap is visible to a caller instead of
     #: silently changing the row count.
     player: str | None
-    window_start: int = Field(description="First season of the window, NBA labelling.")
-    window_end: int = Field(description="Last season of the window, NBA labelling.")
+    window_start: int = Field(description="First season of the fitted window, NBA labelling.")
+    window_end: int = Field(description="Last season of the fitted window, NBA labelling.")
+    first_season: int = Field(
+        description="First season in the window where this player recorded a possession."
+    )
+    last_season: int = Field(
+        description="Last season in the window where this player recorded a possession."
+    )
+    seasons_played: int = Field(
+        description=(
+            "Seasons of the window this player actually appeared in, 1 to 3. Below 3 means "
+            "the window overstates the evidence: the rating rests on fewer seasons than its "
+            "label suggests."
+        )
+    )
     offensive: float = Field(description="Points per 100 possessions added on offence.")
     defensive: float = Field(description="Points per 100 possessions prevented on defence.")
     total: float = Field(description="Offensive plus defensive.")

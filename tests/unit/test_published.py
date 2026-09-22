@@ -167,3 +167,46 @@ def test_the_coefficient_is_a_plain_float() -> None:
     # serialises it to JSON.
     value = pippen.possession_coefficient(2024)
     assert type(value) is float
+
+
+def test_the_tenure_columns_sit_inside_their_window() -> None:
+    """A player cannot have played a season the window does not contain."""
+    ratings = pippen.rapm_ratings()
+    assert (ratings["first_season"] >= ratings["window_start"]).all()
+    assert (ratings["last_season"] <= ratings["window_end"]).all()
+    assert (ratings["first_season"] <= ratings["last_season"]).all()
+    assert set(ratings["seasons_played"].unique()) <= {1, 2, 3}
+
+
+def test_most_rows_do_not_cover_the_whole_window() -> None:
+    """The reason the tenure columns exist, pinned so it cannot be forgotten.
+
+    Labelling a rating by its window implies three seasons of evidence. For
+    more than half these rows that is an overstatement, which is why the
+    dashboard and the API both lead with the seasons actually played.
+    """
+    ratings = pippen.rapm_ratings()
+    partial = ratings["seasons_played"] < 3
+    assert partial.sum() > len(ratings) / 2
+
+
+def test_a_player_can_miss_a_season_in_the_middle_of_a_window() -> None:
+    """seasons_played is not last minus first: 83 rows have a gap.
+
+    Seth Curry played 2016-17 and 2018-19 and missed 2017-18 injured, so his
+    2016-2018 window spans three seasons and rests on two.
+    """
+    ratings = pippen.rapm_ratings()
+    span = ratings["last_season"] - ratings["first_season"] + 1
+    assert (ratings["seasons_played"] <= span).all()
+    assert (ratings["seasons_played"] < span).any(), "expected at least one gap season"
+
+
+def test_austin_reaves_is_labelled_by_the_season_he_played() -> None:
+    """The row that prompted the columns. He debuted in 2021-22."""
+    reaves = pippen.rapm_ratings()
+    reaves = reaves[reaves["player_id"] == 1630559].sort_values("window_end")
+    earliest = reaves.iloc[0]
+    assert earliest["window_start"] == 2019, "his earliest window opens in 2019-20"
+    assert earliest["first_season"] == earliest["last_season"] == 2021
+    assert earliest["seasons_played"] == 1

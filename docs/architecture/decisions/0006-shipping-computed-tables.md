@@ -32,7 +32,7 @@ The tables in question are a different size and a different kind of thing:
 
 | File | Rows | Bytes |
 |---|---|---|
-| `rapm_ratings.parquet` | 5,427 | 227,822 |
+| `rapm_ratings.parquet` | 5,427 | 235,428 |
 | `metric_reliability.parquet` | 750 | 42,049 |
 
 A rating is one row per player per three-season window. The millions of

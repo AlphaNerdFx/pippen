@@ -157,7 +157,8 @@ published as one.
 
 ## Phase 4: Package
 
-Ships: v0.1.0 on PyPI.
+Ships: the first release on PyPI. Cut as v1.0.0, because 0.1.0 was prepared
+and never published.
 
 Entry: Phase 3 has produced numbers worth installing.
 Done when: `pip install pippen` gives a working metric, and the release was
