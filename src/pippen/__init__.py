@@ -53,7 +53,7 @@ from pippen.published import (
     rapm_ratings,
 )
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 
 __all__ = [
     "FIRST_RAPM_SEASON",

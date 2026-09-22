@@ -10,8 +10,8 @@ authors:
 repository-code: "https://github.com/AlphaNerdFx/pippen"
 url: "https://alphanerdfx.github.io/pippen/"
 license: Apache-2.0
-version: 0.1.0
-date-released: "2026-09-16"
+version: 1.0.0
+date-released: "2026-09-22"
 keywords:
   - nba
   - basketball
