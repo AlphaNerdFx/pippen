@@ -1,0 +1,68 @@
+# KServe InferenceService for pippen.
+#
+# This project runs on free tiers and does not operate a cluster. The manifest
+# exists so the Kubernetes path is written, validated and reviewable rather than
+# claimed. CI runs kubeconform against it; docs/architecture/deployment.md
+# records why nothing applies it to a real cluster.
+#
+# Validate locally:
+#   kubeconform -strict -summary deploy/kubernetes/inferenceservice.yaml
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: pippen
+  labels:
+    app.kubernetes.io/name: pippen
+    app.kubernetes.io/component: inference
+spec:
+  predictor:
+    # Scale to zero between requests. The same property the free tier gives by
+    # sleeping, stated explicitly rather than inherited from a host's policy.
+    minReplicas: 0
+    maxReplicas: 2
+    # One in-flight request per replica. Responses are a filtered read of a
+    # 228 KB table, so concurrency buys nothing and a queue is cheaper to reason
+    # about than contention inside one process.
+    containerConcurrency: 1
+    containers:
+      - name: kserve-container
+        image: ghcr.io/alphanerdfx/pippen:latest
+        ports:
+          - containerPort: 7860
+            protocol: TCP
+        env:
+          - name: PORT
+            value: "7860"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "512Mi"
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+        # The image ships its data inside the wheel and writes nothing, so the
+        # filesystem can be read-only and every capability dropped. A handler
+        # that cannot write cannot be made to persist anything it is tricked into
+        # fetching.
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 7860
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 7860
+          initialDelaySeconds: 5
+          periodSeconds: 10
