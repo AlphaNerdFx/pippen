@@ -205,7 +205,7 @@ scale; `docs/methodology/calibration.md` names the fix.
 
 Phases are now gated by outcomes rather than dates. See
 [ADR 0002](docs/architecture/decisions/0002-outcome-gated-phases.md) for why, `TODO.md`
-for the roadmap, and `.context/HANDOVER.md` for current state.
+for the roadmap, and `HANDOFF.md` for current state.
 
 **Key Deliverables:**
 - 8 markdown documentation files (metrics analysis, development pipeline, deployment, data sources)
