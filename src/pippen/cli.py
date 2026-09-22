@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Annotated
 
 import pandas as pd
@@ -9,7 +10,8 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from pippen import __version__
+from pippen import __version__, published
+from pippen import drift as drift_report
 from pippen.data import hoopr, possession_coefficient
 from pippen.data import validate as data_validate
 from pippen.model import dataset as rapm_dataset
@@ -674,15 +676,19 @@ def evaluate(
         console.print(f"  box score combined: {report.box_only_comparison.describe()}")
 
 
-def _not_yet(command: str, when: str) -> int:
-    """Report that a command is scheduled but not yet implemented.
-
-    Args:
-        command: The command name.
-        when: Human-readable description of when it lands.
-
-    Returns:
-        The process exit code to use.
-    """
-    console.print(f"[yellow]{command}[/yellow] is not implemented yet. It lands in {when}.")
-    return 2
+@app.command()
+def drift(
+    out: Annotated[
+        Path | None,
+        typer.Option(help="Write the report here as Markdown instead of printing it."),
+    ] = None,
+) -> None:
+    """Compare the earliest shipped rating window against the latest."""
+    results = drift_report.report(published.rapm_ratings())
+    if out is None:
+        for result in results:
+            console.print(result.describe())
+        return
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(drift_report.render(results), encoding="utf-8")
+    console.print(f"wrote {out}")
