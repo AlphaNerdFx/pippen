@@ -180,14 +180,20 @@ reduces risk and the one most easily skipped.
 Ships: a live endpoint.
 
 Entry: Phase 4 released.
-Done when: a public URL returns a player's estimate with its interval, and the
-container image builds from a clean checkout.
+Done when: a public URL returns a player's estimate, and the container image
+builds from a clean checkout.
 Limit: agent-parallel, with a manual deployment step.
 
-- [ ] FastAPI service with request and response models
-- [ ] Multi-stage Dockerfile, non-root
-- [ ] Deploy to Hugging Face Spaces
-- [ ] KServe manifests, validated against a local kind cluster
+The original wording asked for the estimate "with its interval". No interval
+ships, and the only candidate was withdrawn in Phase 2 for rising with
+possessions rather than falling. Responses carry `possessions` as the per-player
+precision signal and the measured 0.796 reliability as the population one. See
+[ADR 0007](docs/architecture/decisions/0007-the-api-serves-shipped-tables-and-no-interval.md).
+
+- [x] FastAPI service with request and response models
+- [x] Multi-stage Dockerfile, non-root
+- [ ] Deploy to Hugging Face Spaces (manual, needs the maintainer's HF token)
+- [x] KServe manifests, validated with kubeconform against the KServe CRD schema
 
 ---
 
@@ -196,27 +202,51 @@ Limit: agent-parallel, with a manual deployment step.
 Ships: a public dashboard.
 
 Entry: Phase 5 serving estimates.
-Done when: a visitor can look up a player, see the interval, and read what the
-metric cannot tell them without having to go looking for it.
+Done when: a visitor can look up a player, see the precision behind the number,
+and read what the metric cannot tell them without having to go looking for it.
 Limit: review-bound. Design judgement does not delegate well.
 
-- [ ] Player lookup with credible intervals
-- [ ] Player comparison
-- [ ] Measured reliability of each input, shown honestly
-- [ ] A page saying what the metric cannot tell you
+Same amendment as Phase 5: no interval ships, so the dashboard shows
+`possessions` and a league-wide scatter of impact against possessions, where the
+funnel is the precision story. See
+[ADR 0007](docs/architecture/decisions/0007-the-api-serves-shipped-tables-and-no-interval.md).
+
+- [x] Player lookup, with possessions as the precision signal
+- [x] Player comparison
+- [x] Measured reliability of each input, shown honestly
+- [x] A page saying what the metric cannot tell you
+- [ ] Deploy to Hugging Face Spaces (manual, needs the maintainer's HF token)
 
 ---
 
 ## Phase 7: Automation
 
 Entry: Phase 5 complete.
-Done when: a scheduled run refreshes data, retrains, and publishes without
-anyone touching it, and a drift report appears in the docs.
+Done when: a scheduled run refreshes data, a drift report appears in the docs,
+and the model card states what the metric is for and what it cannot do.
 Limit: agent-parallel.
 
-- [ ] Scheduled refresh, retrain, publish
-- [ ] Evidently drift report rendered into the docs
-- [ ] Model card
+Retraining on a schedule is not done, and will not be under the current design.
+[ADR 0006](docs/architecture/decisions/0006-shipping-computed-tables.md) records
+that rebuilding the shipped tables needs hours of rate-limited downloading,
+which is what a CI runner cannot do and why the tables ship in git at all. A
+scheduled job that cannot finish the thing it exists to do would be automation
+theatre. `refresh-data.yml` proves the current season is fetchable and
+internally consistent, which is the part that fits inside a runner.
+
+Evidently was named in the plan and is not used. The drift page needs a
+Population Stability Index and a Kolmogorov-Smirnov test over a 5,427-row table
+already in memory, and scipy is already a dependency. `src/pippen/drift.py` is
+the ~60 lines that replace the framework.
+
+The page is generated at docs build time by `mkdocs-gen-files` rather than
+committed. This repository runs no bot commits, and a scheduled job pushing a
+regenerated Markdown file would be exactly that.
+
+- [x] Scheduled refresh (`refresh-data.yml`, already in place)
+- [ ] Scheduled retrain and publish (blocked by ADR 0006, see above)
+- [x] Drift report rendered into the docs, computed with scipy rather than Evidently
+- [x] Model card
 
 ---
 

@@ -212,6 +212,12 @@ def test_the_other_twenty_four_pass_through(code: str) -> None:
 
 
 def test_all_thirty_teams_map() -> None:
+    # team_crosswalk reads the canonical team list from nba_api, which lives in
+    # the optional `sources` extra. CI installs only `dev`, so without this skip
+    # the test fails on a MissingDependencyError that says nothing about the
+    # behaviour under test.
+    pytest.importorskip("nba_api", reason="team_crosswalk needs the sources extra")
+
     # Pseudo-teams such as the All-Star EAST have no NBA counterpart and are
     # simply absent rather than mapped to something wrong.
     espn = pd.DataFrame(

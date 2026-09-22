@@ -30,7 +30,6 @@ dependencies = [
   "pyarrow>=14.0",
   "scipy>=1.11",
   "scikit-learn>=1.3",
-  "duckdb>=1.0",
   "pandera>=0.20",
   "requests>=2.31",
   "typer>=0.12",
@@ -43,7 +42,9 @@ dependencies = [
 sources = ["nba_api>=1.10", "pbpstats>=1.3"]
 fit = ["numpyro>=0.15", "jax>=0.4.28", "lightgbm>=4.3", "optuna>=4.0", "mlflow>=2.16", "shap>=0.45"]
 api = ["fastapi>=0.115", "uvicorn[standard]>=0.30", "pydantic>=2.8"]
-dashboard = ["streamlit>=1.38", "plotly>=5.23"]
+# Streamlit's native charts cover every form this dashboard needs, and altair
+# ships with streamlit for anything they do not. plotly earned nothing.
+dashboard = ["streamlit>=1.38"]
 docs = ["mkdocs-material>=9.5", "mkdocstrings[python]>=0.26", "mkdocs-gen-files>=0.5"]
 dev = [
   "pytest>=8.0",
@@ -54,6 +55,7 @@ dev = [
   "pre-commit>=3.8",
   "types-requests",
   "pandas-stubs",
+  "httpx2",
 ]
 # Slower checks that prove the numbers rather than the syntax. Kept out of `dev`
 # so the everyday install stays fast; CI installs this explicitly.
@@ -141,9 +143,9 @@ plugins = []
 
 [[tool.mypy.overrides]]
 module = [
-  "pbpstats.*", "nba_api.*", "duckdb.*", "sklearn.*", "scipy.*",
+  "pbpstats.*", "nba_api.*", "sklearn.*", "scipy.*",
   "numpyro.*", "jax.*", "lightgbm.*", "shap.*", "optuna.*", "mlflow.*",
-  "streamlit.*", "plotly.*", "pandera.*",
+  "streamlit.*", "pandera.*",
   # Only present with the `rigour` extra, which the lint job does not install.
   "pytest_benchmark.*",
 ]

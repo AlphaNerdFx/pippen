@@ -81,6 +81,48 @@ jobs:
           name: dist
           path: dist/
 
+  manifests:
+    name: Kubernetes manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # The manifests are never applied to a cluster: this project runs on free
+      # tiers. Validating them in CI is what keeps them honest, so the
+      # Kubernetes path is written and checked rather than claimed.
+      - name: Install kubeconform
+        run: |
+          curl -fsSL -o /tmp/kubeconform.tar.gz \
+            https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-amd64.tar.gz
+          tar xzf /tmp/kubeconform.tar.gz -C /usr/local/bin kubeconform
+      # KServe types live in a CRD, so the default schema set does not know
+      # them. -strict rejects unknown fields; without the CRD location every
+      # resource would be skipped and the step would pass having checked nothing.
+      - name: Validate against the KServe CRD schema
+        run: |
+          kubeconform -strict -summary \
+            -schema-location default \
+            -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
+            deploy/kubernetes/
+
+  container:
+    name: Container image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Builds from a clean checkout, which is Phase 5's stated exit condition.
+      - name: Build the image
+        run: docker build -f deploy/Dockerfile -t pippen:ci .
+      - name: The service answers on a non-root container
+        run: |
+          docker run -d --name pippen-ci -p 7860:7860 pippen:ci
+          # curl's own bounded retry, not a shell loop. CONTRIBUTING.md forbids
+          # polling in a loop, and --retry-connrefused covers the boot window
+          # while still exiting on its own.
+          curl -fsS --retry 20 --retry-delay 2 --retry-connrefused \
+            http://localhost:7860/health | tee /dev/stderr | grep -q '"status":"ok"'
+          test "$(docker exec pippen-ci id -u)" = "10001"
+          docker rm -f pippen-ci
+
   docs:
     name: Docs build
     runs-on: ubuntu-latest
