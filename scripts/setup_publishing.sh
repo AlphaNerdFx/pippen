@@ -269,11 +269,15 @@ if ! skip_if_done PIPPEN_SETUP_TOKEN_REVOKED; then
   step "Click it, then 'Remove token', and confirm."
   pause "Press Enter once it is revoked on PyPI."
   printf '\n'
-  if grep -qE '^PYPI_TOKEN=' "$ENV_FILE" 2>/dev/null; then
+  # Tolerate "PYPI_TOKEN = value" as well as "PYPI_TOKEN=value". A hand-edited
+  # .env often carries spaces around the equals sign, and a strict ^KEY= pattern
+  # reports the token absent and marks this step done with the token still there.
+  token_line='^[[:space:]]*PYPI_TOKEN[[:space:]]*='
+  if grep -qE "$token_line" "$ENV_FILE" 2>/dev/null; then
     say "PYPI_TOKEN is still present in $ENV_FILE."
     if confirm "Remove that line now?"; then
       tmp=$(mktemp)
-      grep -vE '^PYPI_TOKEN=' "$ENV_FILE" > "$tmp" || true
+      grep -vE "$token_line" "$ENV_FILE" > "$tmp" || true
       mv "$tmp" "$ENV_FILE"
       printf '  %s✓ removed%s PYPI_TOKEN from %s\n' "$GREEN" "$RESET" "$ENV_FILE"
     else
