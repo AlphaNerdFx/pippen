@@ -83,3 +83,4 @@ mutmut-stats.json
 # Agent worktrees. Each is a full checkout on its own branch, created and
 # removed per task, and must never be committed into the repository it copies.
 .claude/worktrees/
+graphify-out/
